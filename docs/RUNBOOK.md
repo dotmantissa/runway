@@ -42,7 +42,18 @@ pnpm evidence compare-walrus
 
 The publication command writes ten useful synthetic records to a dedicated builder namespace, with persisted job IDs, content hashes and blob IDs. Enable it only when the relayer is healthy. It stops on the first failure and resumes known jobs. The fresh-process comparison reads current fixture state and a bounded manifest, then retrieves actual outcomes remotely. It fails rather than substitutes local history. It is implemented, but its Mainnet acceptance remains open until those operations succeed.
 
-If a process loses a submission response, the record stays `submitting`/`needs_review`. Do not clear this state and resubmit. Reconcile the idempotency key and remote job with the relayer, then attach the returned job ID to the existing logical record through an authorized administrative operation. Known `running` jobs resume polling after lease expiry. Uploaded content becomes `verified` only after matching logical ID, scope, blob ID, schema and payload hash are retrieved. An upstream permanent failed job requires service resolution and an explicitly reconciled replacement, not blind automatic retries.
+If a process loses a submission response, the record stays `submitting`/`needs_review`. Do not clear this state and resubmit. Obtain the existing job ID from the relayer using the original logical record ID as the idempotency key. Known `running` jobs resume polling after lease expiry. Uploaded content becomes `verified` only after matching logical ID, record type, scope, blob ID, schema and payload hash are retrieved. An upstream permanent failed job requires service resolution and an explicitly reconciled replacement, not blind automatic retries.
+
+Administrators with the existing PostgreSQL connection and configured Memory delegate can inspect and recover an application record with:
+
+```sh
+pnpm memory:recover --workspace <workspace-id> --record <record-id> --remote-job <existing-job-id>
+pnpm memory:recover --workspace <workspace-id> --record <record-id> --remote-job <existing-job-id> --apply
+```
+
+The first command only reads local and remote state. Omit `--remote-job` if the record already has its remote job ID. The `--apply` command requires a completed remote job and retrieves its content before changing local state. It checks the entire immutable envelope, rejects another namespace or job, and refuses to race a running worker or changed record. It atomically finalizes the record and publication jobs, preserving their previous errors/results in the activity audit. Repeating a successful recovery leaves one recovery audit event. Neither command calls `remember`, enables writes, changes consent, or replaces a failed job. Already published content can be verified while future publication is disabled.
+
+These commands require `DATABASE_URL` and deliberately do not run migrations. Do not connect them to the active embedded development store. Leave pending jobs and terminal failed jobs intact; rerun inspection after the provider completes an existing job. A `not_found` result or failure to retrieve exact content does not authorize resubmission. The compatibility/evidence scripts use separate file-backed manifests; this recovery command only handles application records in PostgreSQL.
 
 Stopping consent prevents new publication; it does not erase remote history. Current records and outcomes remain local until separately authorized publication. Personal namespaces are operator-managed, not user-owned accounts.
 

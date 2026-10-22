@@ -3,17 +3,25 @@
   "namespace": "runway-a05f69083ffbe3aec697d7db",
   "acceptedJobId": "1b65bee7-4539-46de-8bfe-d1e9e7518473",
   "state": "failed",
-  "checkedAt": "2026-10-22T10:43:47.703Z",
+  "checkedAt": "2026-10-22T14:39:01.454Z",
   "error": "Internal Error: Embedding API error (401 Unauthorized): {\"error\":{\"message\":\"User not found.\",\"code\":401}}",
   "compatibility": {
     "status": "ok",
     "version": "0.1.0",
     "write_ready": true,
-    "writes": "degraded"
+    "writes": "ok"
   },
   "signedAccessVerified": true,
   "priorMemoryCount": 0,
-  "lastStatusCheck": "2026-10-22T10:43:47.367Z",
+  "lastStatusCheck": "2026-10-22T14:39:00.595Z",
   "remoteStatus": "failed",
-  "completedRecords": 0
+  "completedRecords": 0,
+  "lastEmbeddingProbe": {
+    "checkedAt": "2026-10-22T14:42:42.367Z",
+    "operation": "embed-only-no-storage",
+    "state": "timed_out",
+    "errorType": "MemWalRequestTimeout",
+    "requestTimeoutMs": 20000,
+    "httpResponseStatus": null
+  }
 }

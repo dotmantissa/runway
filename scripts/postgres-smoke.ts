@@ -5,10 +5,15 @@ import pg from "pg";
 import { Database } from "../apps/server/src/db/index.js";
 import { createApp } from "../apps/server/src/app.js";
 import { config } from "../apps/server/src/config.js";
-import { MemoryAdapter } from "../apps/server/src/adapters/memwal/index.js";
+import {
+  MemoryAdapter,
+  namespace,
+} from "../apps/server/src/adapters/memwal/index.js";
+import { recoverMemory } from "../apps/server/src/services/memory-recovery.js";
 import { runJobs } from "../apps/server/src/jobs.js";
 import {
   id,
+  hash,
   load,
   queueJob,
   sampleState,
@@ -158,6 +163,104 @@ try {
   );
   checks.push(
     "Concurrent worker connections claim and complete a leased job once",
+  );
+  const recordId = id(),
+    remoteJobId = id();
+  const payload = {
+    synthetic: true,
+    lesson: "Test recovery without a remote write.",
+  };
+  const envelope = {
+    schemaVersion: 1 as const,
+    recordId,
+    recordType: "lesson",
+    workspaceScopeAlias: namespace(w.id),
+    recordedAt: new Date().toISOString(),
+    eventAt: "2026-10-22",
+    payloadHash: hash(payload),
+    payload,
+  };
+  await first.query(
+    "INSERT INTO memory_records(id,workspace_id,record_type,payload,payload_hash,summary,event_at,recorded_at,status,error) VALUES($1,$2,'lesson',$3,$4,'Synthetic recovery lesson',$5,$6,'needs_review','Interrupted submission')",
+    [
+      recordId,
+      w.id,
+      JSON.stringify(payload),
+      envelope.payloadHash,
+      envelope.eventAt,
+      envelope.recordedAt,
+    ],
+  );
+  const recoveryJobId = await first.transaction((tx) =>
+    queueJob(tx, w, "memory_publish", { recordId }),
+  );
+  await first.query(
+    "UPDATE jobs SET status='needs_review',error='Interrupted submission' WHERE id=$1",
+    [recoveryJobId],
+  );
+  // Force both connections to inspect the same pre-recovery record before committing.
+  let recalls = 0;
+  let release!: () => void;
+  const bothRecalled = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const memory = new MemoryAdapter();
+  memory.create = () =>
+    ({
+      getRememberStatus: async () => ({
+        job_id: remoteJobId,
+        namespace: namespace(w.id),
+        status: "done",
+        blob_id: "injected-recovery-blob",
+      }),
+      destroy: () => {},
+    }) as any;
+  memory.recall = async () => {
+    if (++recalls === 2) release();
+    await bothRecalled;
+    return {
+      outcomes: [],
+      historyHash: hash([]),
+      records: [envelope],
+      verifiedAt: new Date().toISOString(),
+    };
+  };
+  const recovery = { workspaceId: w.id, recordId, remoteJobId, apply: true };
+  const recovered = await Promise.allSettled([
+    recoverMemory(first, memory, recovery),
+    recoverMemory(second, memory, recovery),
+  ]);
+  assert.equal(recovered.filter((r) => r.status === "fulfilled").length, 1);
+  const conflict = recovered.find(
+    (r) => r.status === "rejected",
+  ) as PromiseRejectedResult;
+  assert.equal(conflict.reason.code, "RECOVERY_CONFLICT");
+  assert.equal(
+    (
+      await first.query("SELECT status FROM memory_records WHERE id=$1", [
+        recordId,
+      ])
+    ).rows[0].status,
+    "verified",
+  );
+  assert.equal(
+    (await first.query("SELECT status FROM jobs WHERE id=$1", [recoveryJobId]))
+      .rows[0].status,
+    "done",
+  );
+  const recoveryEvents = (
+    await first.query(
+      "SELECT details FROM audit WHERE workspace_id=$1 AND details->>'recordId'=$2",
+      [w.id, recordId],
+    )
+  ).rows;
+  assert.equal(recoveryEvents.length, 1);
+  assert.equal(
+    recoveryEvents[0].details.previous.error,
+    "Interrupted submission",
+  );
+  checks.push(
+    "Concurrent memory recovery verifies existing content once and preserves interrupted-job evidence without resubmission",
   );
   await app.close();
   app = undefined;

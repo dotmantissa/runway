@@ -21,6 +21,7 @@
     "typecheck": "tsc --noEmit",
     "db:migrate": "tsx scripts/migrate.ts",
     "smoke:memory": "tsx scripts/memory-smoke.ts",
+    "memory:recover": "tsx scripts/memory-recover.ts",
     "smoke:tatum": "tsx scripts/tatum-smoke.ts",
     "smoke:postgres": "tsx scripts/postgres-smoke.ts",
     "evidence": "tsx scripts/evidence.ts",

@@ -104,6 +104,7 @@ export class MemoryAdapter {
               expected = manifest.find((m) => m.id === e.recordId);
             if (
               expected &&
+              e.recordType === expected.record_type &&
               e.workspaceScopeAlias === scope &&
               expected.payload_hash === e.payloadHash &&
               (!expected.blob_id || expected.blob_id === hit.blob_id)
