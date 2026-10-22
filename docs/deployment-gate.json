@@ -12,7 +12,7 @@
     "source": "tatum_verified",
     "amountAtomic": "0"
   },
-  "receipt": "No funded live receipt demonstrated",
+  "receipt": "Funded native-USDC receipt verified through the local authenticated Tatum adapter on 2026-10-22; hosted user receipt verification and invoice allocation pending",
   "memory": "Existing remote job remains failed; no completed memory",
   "browser": {
     "state": "verified",

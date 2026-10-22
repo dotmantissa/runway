@@ -32,7 +32,7 @@ The server requires outbound native HTTP/2 to Tatum gRPC and HTTPS to MemWal. Ve
 
 ## Sponsor gates and memory recovery
 
-`docs/tatum-gate.json` records successful authenticated metadata/balance reads. A funded live receipt has not been demonstrated. `docs/memory-gate.json` records a signed remember accepted then failed by the relayer's embedding service. Never count accepted/failed jobs as completed Mainnet records.
+`docs/tatum-gate.json` records successful authenticated metadata/balance reads and a funded native-USDC receipt verified by the actual Mainnet adapter. Full smoke evidence stays in ignored `research/tatum-smoke.json`; the public artifact omits wallet identifiers and financial details. Hosted verification in the receiving wallet’s signed workspace and invoice allocation remain pending. `docs/memory-gate.json` records a signed remember accepted then failed by the relayer's embedding service. Never count accepted/failed jobs as completed Mainnet records.
 
 ```sh
 pnpm evidence compare-local
@@ -48,7 +48,7 @@ Stopping consent prevents new publication; it does not erase remote history. Cur
 
 ## Scope still requiring evidence
 
-Target-user interviews and observed trials, a funded live Sui receipt, ten completed Mainnet memories, live Walrus/database parity, fresh remote recall, video, blog and submission remain unfinished. The Vercel production URL is https://runway-ten-xi.vercel.app; see `docs/deployment-gate.json` for hosted checks. Optional paid invoice parsing was omitted because core memory acceptance has not passed. No award eligibility or completed user validation is inferred from local tests.
+Target-user interviews and observed trials, authenticated receipt allocation, ten completed Mainnet memories, live Walrus/database parity, fresh remote recall, video, blog and submission remain unfinished. The Vercel production URL is https://runway-ten-xi.vercel.app; see `docs/deployment-gate.json` for hosted checks. Optional paid invoice parsing was omitted because core memory acceptance has not passed. No award eligibility or completed user validation is inferred from local tests.
 
 Existing local records can be explicitly published from their Activity inspector after consent and server writes are enabled. This does not silently backfill old records. Nonlocal jobs keep their existing lifecycle and require reconciliation before retry.
 

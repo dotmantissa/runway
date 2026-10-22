@@ -6,7 +6,7 @@ Runway is an implemented cash-flow planner for freelancers paid in stablecoins. 
 
 The responsive app includes an isolated wallet-free example, Sui wallet sign-in, invoices and CSV review, expenses, plan acceptance, receipt reconciliation, corrected payment history, activity, and memory inspection. Start with Node 22 and `pnpm install --frozen-lockfile`, then `pnpm dev:all`. Open http://localhost:5174. See the [runbook](docs/RUNBOOK.md) for configuration, tests, production execution, and recovery.
 
-Verified locally: exact optimizer/property cases, scoped API and nonce/CSRF/idempotency tests, persistent restart, browser save/reload journey, responsive accessibility at 1440/390/320 pixels, and production build/startup. Tatum authenticated Sui Mainnet metadata and balance reads succeeded. MemWal signed access succeeded, but the accepted write failed upstream with an embedding-service HTTP 401. Live receipt, completed memory, remote parity and real user trials remain open. The Vercel release passed hosted save/reload, responsive accessibility, wallet-module and authenticated Tatum-job checks; evidence is recorded in `docs/deployment-gate.json`. See [sponsor compatibility](docs/integration-compatibility.md).
+Verified locally: exact optimizer/property cases, scoped API and nonce/CSRF/idempotency tests, persistent restart, browser save/reload journey, responsive accessibility at 1440/390/320 pixels, and production build/startup. Tatum authenticated Sui Mainnet metadata, balance and a funded native-USDC receipt passed the real adapter checks. Authenticated invoice allocation remains pending. MemWal previously accepted a write that failed upstream with an embedding-service HTTP 401; a later signed-access check also returned 401. Completed memory, remote parity and real user trials remain open. The Vercel release passed hosted save/reload, responsive accessibility, wallet-module and authenticated Tatum-job checks; evidence is recorded in `docs/deployment-gate.json`. See [sponsor compatibility](docs/integration-compatibility.md).
 
 The sections below preserve the original research and strategy. They describe planned acceptance evidence and award goals, not completed user research or sponsor milestones.
 
@@ -22,21 +22,21 @@ The revised plan targets **9/10 competitiveness**, conditional on three pieces o
 
 In the hero replay, 800 USDC must cover a 250 USDC flexible purchase, 600 USDC rent and a 100 USDC reserve. An invoice promised Friday is forecast for Tuesday from prior outcomes. Runway identifies Monday's rent exposure and proposes reducing the purchase by **150 USDC**. Expected income stays separate from confirmed funds. A fresh runtime reproduces the recommendation from authorized memories.
 
-| Document | What it contains |
-| --- | --- |
-| [Research dossier](RESEARCH.md) | Verified winners, pain points, implementation patterns, competitors, candidate comparison, source register |
-| [Product and technical plan](BUILD_PLAN.md) | Scope, memory loop, architecture, reconciliation, agent payments, evaluation, demo |
-| [Implementation architecture](ARCHITECTURE.md) | Exact modules, domain rules, schemas, API contracts, workflows, sponsor adapters, concurrency and operational gates |
-| [Frontend design specification](DESIGN_SPEC.md) | Original visual system, every screen/state, circle motion, copy, logo/icons, accessibility and performance acceptance |
-| [Implementation work packages](IMPLEMENTATION.md) | Dependency-ordered build steps, requirement trace, dates, hour budgets, outputs and verification |
-| [Validation protocol](VALIDATION.md) | Interview gates, controlled history comparison, exact stress-test cases and evidence needed for the 9/10 target |
-| [Delivery plan](DELIVERY.md) | Dated milestones, time and cost estimates, fallback gates, judge evidence, submission checklist |
+| Document                                          | What it contains                                                                                                      |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| [Research dossier](RESEARCH.md)                   | Verified winners, pain points, implementation patterns, competitors, candidate comparison, source register            |
+| [Product and technical plan](BUILD_PLAN.md)       | Scope, memory loop, architecture, reconciliation, agent payments, evaluation, demo                                    |
+| [Implementation architecture](ARCHITECTURE.md)    | Exact modules, domain rules, schemas, API contracts, workflows, sponsor adapters, concurrency and operational gates   |
+| [Frontend design specification](DESIGN_SPEC.md)   | Original visual system, every screen/state, circle motion, copy, logo/icons, accessibility and performance acceptance |
+| [Implementation work packages](IMPLEMENTATION.md) | Dependency-ordered build steps, requirement trace, dates, hour budgets, outputs and verification                      |
+| [Validation protocol](VALIDATION.md)              | Interview gates, controlled history comparison, exact stress-test cases and evidence needed for the 9/10 target       |
+| [Delivery plan](DELIVERY.md)                      | Dated milestones, time and cost estimates, fallback gates, judge evidence, submission checklist                       |
 
 Prioritize **Consumer Finance first place** and **Best Walrus Memory**. Pursue **Best Use of Agent Payments** after the validated stress-test and memory loop work. Add the AI Builder award only if the project is genuinely built primarily there and remains technically maintainable. One submission can demonstrate finance and agent workflows; qualification for the Markets track is weaker and requires organizer confirmation.
 
 The published event lists three $500 first-place track awards and three $500 special awards, rather than one overall grand prize. Winning all three special awards alongside one first place would total $2,000 if stacking is allowed. This is a conditional prize scenario, not an expected payout or a probability estimate.
 
-The research and planning package is complete and the local application is implemented. Interviews, prototype trials, completed remote memory proof, a funded live receipt, submission and presentation artifacts remain future tasks. No prize or user-validation outcome is claimed. The original 120-hour schedule remains a planning estimate.
+The research and planning package is complete and the local application is implemented. Interviews, prototype trials, completed remote memory proof, authenticated receipt allocation, submission and presentation artifacts remain future tasks. No prize or user-validation outcome is claimed. The original 120-hour schedule remains a planning estimate.
 
 The project directory is now **`/home/dotmantissa/hackathons/runway`**. The detailed architecture governs implementation choices; the design specification treats [nearhackathon.com](https://nearhackathon.com/) as a craft benchmark and defines an original Runway layout, payment-date orbit, logo and human product copy. It prohibits authored frontend em dashes and emoji. The browser tab and shortcut assets use the same original brand.
 
