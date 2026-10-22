@@ -1,6 +1,6 @@
 # Running Runway
 
-Requires Node 22 or newer and pnpm 9. PostgreSQL 17 is the production store. Development uses persistent PGlite PostgreSQL at `.data` when `DATABASE_URL` is unset. A separate worker requires real PostgreSQL; do not open the same embedded store from two processes.
+Requires Node 22 or newer and pnpm 9. Production uses persistent PostgreSQL. The optional Docker stack pins PostgreSQL 17; native PostgreSQL 18.6 has passed concurrency and recovery checks. Development uses persistent PGlite PostgreSQL at `.data` when `DATABASE_URL` is unset. A separate worker requires real PostgreSQL; do not open the same embedded store from two processes.
 
 ```sh
 pnpm install --frozen-lockfile
@@ -28,7 +28,7 @@ For a local production-build preview, run `APP_ORIGIN=http://localhost:3001 pnpm
 
 Build `Dockerfile` or run the built Node server. Set `NODE_ENV=production`, `DATABASE_URL`, `APP_ORIGIN=https://your-host`, and provider secrets through the host secret manager. Route HTTPS to port 3001. Fastify serves the Vite assets and SPA routes from `dist/web`; migration sources must remain at `apps/server/src/db/migrations`. Keep `INLINE_WORKER=true` for a single process, or run `pnpm start:worker` with PostgreSQL for a separate worker. The readiness endpoint checks database/migration state and a recent worker heartbeat; liveness does not call paid services.
 
-The server requires outbound native HTTP/2 to Tatum gRPC and HTTPS to MemWal. A static host or Workers-only environment cannot run this backend. No hosting deployment was completed during local implementation. Back up PostgreSQL using the host's database backup facility before schema changes.
+The server requires outbound native HTTP/2 to Tatum gRPC and HTTPS to MemWal. Vercel runs the API in a Node function as described below; a static-only host cannot run the backend. Back up PostgreSQL using the host's database backup facility before schema changes.
 
 ## Sponsor gates and memory recovery
 
@@ -48,6 +48,33 @@ Stopping consent prevents new publication; it does not erase remote history. Cur
 
 ## Scope still requiring evidence
 
-Target-user interviews and observed trials, a funded live Sui receipt, ten completed Mainnet memories, live Walrus/database parity, fresh remote recall, production deployment, video, blog and submission remain unfinished. Optional paid invoice parsing was omitted because core memory acceptance has not passed. No award eligibility or completed user validation is inferred from local tests.
+Target-user interviews and observed trials, a funded live Sui receipt, ten completed Mainnet memories, live Walrus/database parity, fresh remote recall, video, blog and submission remain unfinished. The Vercel production URL is https://runway-ten-xi.vercel.app; see `docs/deployment-gate.json` for hosted checks. Optional paid invoice parsing was omitted because core memory acceptance has not passed. No award eligibility or completed user validation is inferred from local tests.
 
 Existing local records can be explicitly published from their Activity inspector after consent and server writes are enabled. This does not silently backfill old records. Nonlocal jobs keep their existing lifecycle and require reconciliation before retry.
+
+## Vercel
+
+`vercel.json` builds the original Vite frontend and routes `/api/*` to `api/index.js`. The function retains a connection pool between warm requests and uses persistent PostgreSQL for finance state, sessions and durable jobs. Migrations run transactionally under an advisory lock, so simultaneous function startups do not race on schema creation.
+
+Set Node 22, `NODE_ENV=production`, `DATABASE_URL` (a pooled PostgreSQL URL), `APP_ORIGIN` (the exact production HTTPS origin), `INLINE_WORKER=false`, `JOB_MODE=scheduled`, and a generated `CRON_SECRET` of at least 32 characters. Configure sponsor secrets through Vercel encrypted environment variables. Leave `MEMORY_WRITES_ENABLED=false` until the live relayer issue is resolved. No secrets belong in `vercel.json` or frontend variables.
+
+Authorized API activity schedules a bounded job drain through Vercel `waitUntil`; job polling resumes known remote jobs. The protected `/api/v1/internal/jobs` route provides a daily recovery sweep, compatible with Vercel Hobby cron limits. Background work has a 60-second drain budget; one in-flight operation can run longer within the 300-second function limit. Bounded remote recall also has a 60-second overall budget. Backlogs continue on subsequent API activity or the daily sweep. This is not a continuously running worker; use the native worker deployment for continuous high-volume processing.
+
+```sh
+vercel link --project runway
+vercel pull --yes --environment=production
+vercel build --prod
+vercel deploy --prebuilt --prod
+```
+
+Verify `/api/v1/health/ready`, SPA deep links, sample save/reload, workspace isolation, and the unauthorized cron response on the actual hosted origin. Production cookies require HTTPS. The migration and sanitized evidence files are explicitly included in the function bundle.
+
+## Native PostgreSQL verification
+
+```sh
+RUNWAY_TEST_DATABASE_URL=postgresql://user:password@localhost:5432/test_database pnpm smoke:postgres
+```
+
+Use a dedicated test database. The command creates and drops its own disposable schema; it does not import real participants or call paid providers. It verifies concurrent migrations, transaction rollback, concurrent idempotent finance commands, competing job claims and saved-session recovery, and saves sanitized results in `docs/postgres-gate.json`.
+
+The memory smoke command checks an existing job without enabling writes. When no job is known, a new compatibility write requires `MEMORY_WRITES_ENABLED=true`. Unknown submission responses remain `needs_review` through repeated restarts. Existing evidence fields and job IDs are preserved atomically. Do not delete failed evidence to force a replacement.

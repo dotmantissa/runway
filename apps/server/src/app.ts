@@ -4,7 +4,7 @@ import rateLimit from "@fastify/rate-limit";
 import staticFiles from "@fastify/static";
 import { resolve } from "node:path";
 import { existsSync, readFileSync } from "node:fs";
-import { randomBytes } from "node:crypto";
+import { randomBytes, timingSafeEqual } from "node:crypto";
 import { z } from "zod";
 import { verifyPersonalMessageSignature } from "@mysten/sui/verify";
 import { parse } from "csv-parse/sync";
@@ -43,6 +43,7 @@ import { MemoryAdapter } from "./adapters/memwal/index.js";
 import { TatumAdapter, type ChainAdapter } from "./adapters/tatum/index.js";
 import { explain } from "./adapters/llm/index.js";
 import { runJobs } from "./jobs.js";
+import { scheduledJobs } from "./scheduled-jobs.js";
 
 type Session = { workspace_id: string; csrf: string; token_hash: string };
 const API = "/api/v1";
@@ -74,12 +75,14 @@ export async function createApp(
     chain?: ChainAdapter;
     worker?: boolean;
     serveStatic?: boolean;
+    background?: (operation: Promise<unknown>) => void;
   } = {},
 ) {
   const db = options.db || new Database();
   await db.initialize();
   const chain = options.chain || new TatumAdapter(),
     mem = new MemoryAdapter();
+  const drainJobs = scheduledJobs(db, chain, mem);
   const app = Fastify({
     logger: false,
     bodyLimit: 300000,
@@ -141,6 +144,21 @@ export async function createApp(
   app.addHook("preHandler", async (req) => {
     if (!req.url.startsWith(API)) return;
     const path = req.url.split("?")[0];
+    if (path === API + "/internal/jobs") {
+      const supplied = Buffer.from(req.headers.authorization || "");
+      const expected = Buffer.from("Bearer " + config.cronSecret);
+      if (
+        !config.cronSecret ||
+        supplied.length !== expected.length ||
+        !timingSafeEqual(supplied, expected)
+      )
+        throw new AppError(
+          401,
+          "JOB_AUTH",
+          "Background processing requires its service credential.",
+        );
+      return;
+    }
     if (
       !["GET", "HEAD", "OPTIONS"].includes(req.method) &&
       req.headers.origin !== config.origin
@@ -285,7 +303,7 @@ export async function createApp(
     const migrations = (
       await db.query("SELECT max(version)::int AS version FROM migrations")
     ).rows[0].version;
-    if (config.production) {
+    if (config.production && config.jobMode === "inline") {
       const heartbeat = (
         await db.query(
           "SELECT 1 FROM worker_heartbeats WHERE seen_at>now()-interval '30 seconds' LIMIT 1",
@@ -300,6 +318,20 @@ export async function createApp(
     }
     return { status: "ready", database: db.mode, migrations };
   });
+  app.get(API + "/internal/jobs", async () => ({
+    processed: await drainJobs(),
+  }));
+  if (options.background)
+    app.addHook("onResponse", async (req, reply) => {
+      const path = req.url.split("?")[0];
+      if (
+        reply.statusCode < 400 &&
+        path.startsWith(API) &&
+        !path.startsWith(API + "/health/") &&
+        path !== API + "/internal/jobs"
+      )
+        options.background!(drainJobs().catch(() => {}));
+    });
   app.get(API + "/evidence", async (req) => {
     const read = (file: string) => {
       try {
@@ -1617,7 +1649,7 @@ export async function createApp(
   }
   let running = false;
   const interval =
-    (options.worker ?? config.inlineWorker)
+    (options.worker ?? (config.inlineWorker && config.jobMode === "inline"))
       ? setInterval(async () => {
           if (running) return;
           running = true;

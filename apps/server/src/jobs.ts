@@ -38,7 +38,7 @@ export async function runJobs(
     );
     return j;
   });
-  if (!job) return;
+  if (!job) return false;
   const heartbeat = setInterval(() => {
     void db
       .query("UPDATE worker_heartbeats SET seen_at=now() WHERE id=$1", [owner])
@@ -245,4 +245,5 @@ export async function runJobs(
     "UPDATE jobs SET status=$1,result=$2,error=$3,lease_owner=NULL,lease_until=NULL,run_after=now()+interval '3 seconds' WHERE id=$4 AND lease_owner=$5",
     [status, JSON.stringify(result), safeError, job.id, owner],
   );
+  return true;
 }

@@ -5,14 +5,14 @@
   "type": "module",
   "packageManager": "pnpm@9.0.0",
   "engines": {
-    "node": ">=22"
+    "node": "22.x"
   },
   "scripts": {
     "dev": "tsx apps/server/src/server.ts",
     "dev:web": "vite --config apps/web/vite.config.ts",
     "dev:all": "concurrently -k \"pnpm dev\" \"pnpm dev:web\"",
     "worker:dev": "tsx apps/server/src/worker.ts",
-    "build": "tsc --noEmit && vite build --config apps/web/vite.config.ts && tsup apps/server/src/server.ts apps/server/src/worker.ts --format esm --out-dir dist/server --platform node --target node22 --splitting --external @mysten-incubation/memwal --external @electric-sql/pglite",
+    "build": "tsc --noEmit && vite build --config apps/web/vite.config.ts && tsup apps/server/src/server.ts apps/server/src/worker.ts apps/server/src/vercel.ts --format esm --out-dir dist/server --platform node --target node22 --splitting --external @mysten-incubation/memwal --external @electric-sql/pglite",
     "start": "node dist/server/server.js",
     "start:server": "node dist/server/server.js",
     "start:worker": "node dist/server/worker.js",
@@ -22,6 +22,7 @@
     "db:migrate": "tsx scripts/migrate.ts",
     "smoke:memory": "tsx scripts/memory-smoke.ts",
     "smoke:tatum": "tsx scripts/tatum-smoke.ts",
+    "smoke:postgres": "tsx scripts/postgres-smoke.ts",
     "evidence": "tsx scripts/evidence.ts",
     "copy:check": "tsx scripts/check-copy.ts"
   },
@@ -38,6 +39,7 @@
     "@protobuf-ts/grpc-transport": "2.11.1",
     "@radix-ui/react-dialog": "1.1.15",
     "@tanstack/react-query": "5.90.5",
+    "@vercel/functions": "3.10.3",
     "csv-parse": "6.1.0",
     "drizzle-orm": "0.44.7",
     "fastify": "5.6.1",

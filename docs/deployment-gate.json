@@ -1,0 +1,27 @@
+{
+  "state": "verified",
+  "origin": "https://runway-ten-xi.vercel.app",
+  "checkedAt": "2026-10-22T11:16:30.866Z",
+  "checks": [
+    "Public PostgreSQL readiness and migrations 1\u20133",
+    "Valid personal wallet signature authenticates",
+    "Durable scheduled balance job completed through authenticated Tatum Mainnet gRPC",
+    "Unauthenticated job sweep rejected"
+  ],
+  "tatum": {
+    "source": "tatum_verified",
+    "amountAtomic": "0"
+  },
+  "receipt": "No funded live receipt demonstrated",
+  "memory": "Existing remote job remains failed; no completed memory",
+  "browser": {
+    "state": "verified",
+    "checks": [
+      "Sample plan save/reload, invoice creation and outcome correction",
+      "Eight routes at 1440, 390 and 320 pixels: no overflow or WCAG A/AA axe violations",
+      "Animation pause persistence and reduced motion",
+      "Wallet module load and accessible connection fallback"
+    ],
+    "runNote": "Five main tests passed together; wallet smoke passed separately after a transient asset-download timeout. Remote test budgets account for workspace network latency."
+  }
+}

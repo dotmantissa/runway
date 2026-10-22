@@ -17,6 +17,8 @@ const schema = z.object({
   WALRUS_RELAYER_URL: z.url().default("https://relayer.memory.walrus.xyz"),
   MEMORY_WRITES_ENABLED: z.enum(["true", "false"]).default("false"),
   INLINE_WORKER: z.enum(["true", "false"]).default("true"),
+  JOB_MODE: z.enum(["inline", "scheduled"]).default("inline"),
+  CRON_SECRET: z.string().default(""),
 });
 const parsed = schema.safeParse(process.env);
 if (!parsed.success)
@@ -49,6 +51,8 @@ export const config = {
   memoryUrl: env.WALRUS_RELAYER_URL,
   memoryWrites: env.MEMORY_WRITES_ENABLED === "true",
   inlineWorker: env.INLINE_WORKER === "true",
+  jobMode: env.JOB_MODE,
+  cronSecret: env.CRON_SECRET,
 };
 if (
   config.production &&
@@ -57,3 +61,10 @@ if (
     !config.origin.startsWith("https://"))
 )
   throw new Error("Production requires DATABASE_URL and an HTTPS APP_ORIGIN.");
+if (
+  config.jobMode === "scheduled" &&
+  (!config.databaseUrl || config.cronSecret.length < 32)
+)
+  throw new Error(
+    "Scheduled jobs require DATABASE_URL and a CRON_SECRET of at least 32 characters.",
+  );

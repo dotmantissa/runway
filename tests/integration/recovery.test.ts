@@ -22,6 +22,62 @@ import {
 } from "../../apps/server/src/services/state.js";
 import { runJobs } from "../../apps/server/src/jobs.js";
 describe("restart and memory reliability", () => {
+  it("authenticates scheduled processing and drains jobs without an inline timer", async () => {
+    const secret = config.cronSecret;
+    config.cronSecret = "test-only-cron-secret-" + "x".repeat(32);
+    const operations: Promise<unknown>[] = [];
+    const app = await createApp({
+      db: new Database(undefined, "memory://"),
+      worker: false,
+      serveStatic: false,
+      background: (operation) => {
+        operations.push(operation);
+      },
+    });
+    try {
+      expect(
+        (await app.inject({ method: "GET", url: "/api/v1/internal/jobs" }))
+          .statusCode,
+      ).toBe(401);
+      expect(
+        (
+          await app.inject({
+            method: "GET",
+            url: "/api/v1/internal/jobs",
+            headers: { authorization: "Bearer wrong" },
+          })
+        ).statusCode,
+      ).toBe(401);
+      expect(
+        (
+          await app.inject({
+            method: "GET",
+            url: "/api/v1/internal/jobs",
+            headers: { authorization: "Bearer " + config.cronSecret },
+          })
+        ).json(),
+      ).toEqual({ processed: 0 });
+      expect(operations).toHaveLength(0);
+      const login = await app.inject({
+        method: "POST",
+        url: "/api/v1/demo/session",
+        headers: { origin: config.origin },
+        payload: { fixtureId: "hero" },
+      });
+      expect(login.statusCode).toBe(200);
+      expect(operations).toHaveLength(1);
+      await Promise.all(operations);
+      expect(
+        (await app.inject({ method: "GET", url: "/api/v1/health/ready" }))
+          .statusCode,
+      ).toBe(200);
+      expect(operations).toHaveLength(1);
+    } finally {
+      await Promise.all(operations);
+      await app.close();
+      config.cronSecret = secret;
+    }
+  });
   it("keeps reconciliation pending if finances change during a remote balance read", async () => {
     const db = new Database(undefined, "memory://");
     await db.initialize();

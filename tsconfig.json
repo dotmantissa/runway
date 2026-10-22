@@ -12,5 +12,5 @@
     "skipLibCheck": true,
     "types": ["node", "vite/client"]
   },
-  "include": ["apps", "packages", "scripts", "tests", "*.ts"]
+  "include": ["api", "apps", "packages", "scripts", "tests", "*.ts"]
 }

@@ -88,12 +88,15 @@ export class MemoryAdapter {
         "Runway payment outcomes corrections client policy",
         ...manifest.map((m) => `Runway record ${m.id}`),
       ];
+      const deadline = Date.now() + 60000;
       for (const query of queries) {
+        const remaining = deadline - Date.now();
+        if (remaining <= 0) break;
         const result = await client.recall({
           query,
           namespace: scope,
           limit: Math.min(100, Math.max(10, manifest.length * 2)),
-          timeoutMs: 15000,
+          timeoutMs: Math.min(15000, remaining),
         });
         for (const hit of result.results) {
           try {

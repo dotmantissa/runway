@@ -7,3 +7,7 @@ Tatum authenticated native gRPC metadata and total native-USDC balance reads suc
 MemWal health and signed listing succeeded using the configured delegate and the user-supplied account. A synthetic remember request was accepted, then failed in the relayer embedding service with HTTP 401, User not found. See `memory-gate.json` for the accepted job ID. No completed write or content-matching recall has been demonstrated. Dependent Mainnet acceptance gates remain open. Local work may continue, with explicit local provenance.
 
 Credentials belong only in the ignored local `.env` or the deployment secret manager. Retry scripts with `pnpm smoke:tatum` and `pnpm smoke:memory`. Never label a queued or failed record as stored on Mainnet.
+
+The 22 October recovery check confirmed the same existing job remains terminal failed. Signed listing succeeds; public health reports degraded writes. The compatibility script now preserves prior evidence and refuses duplicate submission after lost responses. Service health alone does not establish embedding availability.
+
+Native PostgreSQL 18.6 passed isolated concurrent startup, transaction rollback, finance idempotency, worker leasing and session restart checks; see `postgres-gate.json`. Vercel Node-function routing and scheduled background processing are implemented; hosted verification is recorded separately from local checks.

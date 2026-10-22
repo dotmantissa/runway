@@ -43,6 +43,9 @@ importers:
       "@tanstack/react-query":
         specifier: 5.90.5
         version: 5.90.5(react@19.2.0)
+      "@vercel/functions":
+        specifier: 3.10.3
+        version: 3.10.3
       csv-parse:
         specifier: 6.1.0
         version: 6.1.0
@@ -1745,6 +1748,41 @@ packages:
         integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==,
       }
 
+  "@vercel/cli-config@0.3.3":
+    resolution:
+      {
+        integrity: sha512-5T0ZtIFgcFHuPFuuoJKno5ZeKvLQGiS/JAFMI1zG1HBw2dklScoHdA0LDb/SoeRYD53N33iXFAqyRA0tHLhdnQ==,
+      }
+
+  "@vercel/cli-exec@1.0.1":
+    resolution:
+      {
+        integrity: sha512-g9XerViJ/paZujufXYcu5XYI2vU2rtB4sgdpjUHde5RnOkdmpu0ngH46LCFGHoPXO/C+qDPSczIHIRN+8Q2YKQ==,
+      }
+    engines: { node: ">= 18" }
+
+  "@vercel/functions@3.10.3":
+    resolution:
+      {
+        integrity: sha512-EjMUf+myWckV9vj5FbzRG1wQP1IFRgmlOu2ho1FiFTjLs1mFnY4dxeI8Swk9pszj4jv/jGdvlmqRKHipuEt5bw==,
+      }
+    engines: { node: ">= 20" }
+    peerDependencies:
+      "@aws-sdk/credential-provider-web-identity": "*"
+      ws: ">=8"
+    peerDependenciesMeta:
+      "@aws-sdk/credential-provider-web-identity":
+        optional: true
+      ws:
+        optional: true
+
+  "@vercel/oidc@4.0.3":
+    resolution:
+      {
+        integrity: sha512-0sljpA/leE1vLkY7DVOs/z/OH6x1hgKhrF+IY2YdbRYm/6UnQjeu0SMnzOKLtkJWp13srUFkWdir4iU3feFYfg==,
+      }
+    engines: { node: ">= 20" }
+
   "@vitejs/plugin-react@5.0.4":
     resolution:
       {
@@ -2375,6 +2413,13 @@ packages:
         integrity: sha512-7RUKfXgSMMkzt6ZuXmqapOurLGPPfgj6l9uRZ7lRGolvk0y2yocc35LdcxKC5PQZdn2DMqioAQ2NoWcrTKmm6g==,
       }
 
+  execa@5.1.1:
+    resolution:
+      {
+        integrity: sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==,
+      }
+    engines: { node: ">=10" }
+
   expect-type@1.4.0:
     resolution:
       {
@@ -2511,6 +2556,13 @@ packages:
       }
     engines: { node: ">=6" }
 
+  get-stream@6.0.1:
+    resolution:
+      {
+        integrity: sha512-ts6Wi+2j3jQjqi70w5AlN8DFnkSwC+MqmxEzdEALB2qXZYV3X/b1CTfgPLGJNMeAWxdPfU8FO1ms3NUfaHCPYg==,
+      }
+    engines: { node: ">=10" }
+
   get-tsconfig@4.14.3:
     resolution:
       {
@@ -2556,6 +2608,13 @@ packages:
       }
     engines: { node: ">= 0.8" }
 
+  human-signals@2.1.0:
+    resolution:
+      {
+        integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==,
+      }
+    engines: { node: ">=10.17.0" }
+
   inherits@2.0.4:
     resolution:
       {
@@ -2576,6 +2635,13 @@ packages:
       }
     engines: { node: ">=8" }
 
+  is-stream@2.0.1:
+    resolution:
+      {
+        integrity: sha512-hFoiJiTl63nn+kstHGBtewWSKnQLpyb155KHheA1l39uvtO9nWIop1p3udqPcUd/xbF1VLMO4n7OI6p7RbngDg==,
+      }
+    engines: { node: ">=8" }
+
   isexe@2.0.0:
     resolution:
       {
@@ -2588,6 +2654,12 @@ packages:
         integrity: sha512-ykkVRwrYvFm1nb2AJfKKYPr0emF6IiXDYUaFx4Zn9ZuIH7MrzEZ3sD5RlqGXNRpHtvUHJyOnCEFxOlNDtGo7wg==,
       }
     engines: { node: 20 || >=22 }
+
+  jose@5.10.0:
+    resolution:
+      {
+        integrity: sha512-s+3Al/p9g32Iq+oqXxkW//7jk2Vig6FF1CFqzVXoTUXt2qz89YWbL+OwS17NFYEvxC35n0FKeGO2LGYSxeM2Gg==,
+      }
 
   jose@6.2.13:
     resolution:
@@ -2737,6 +2809,12 @@ packages:
         integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==,
       }
 
+  merge-stream@2.0.0:
+    resolution:
+      {
+        integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==,
+      }
+
   mime@3.0.0:
     resolution:
       {
@@ -2744,6 +2822,13 @@ packages:
       }
     engines: { node: ">=10.0.0" }
     hasBin: true
+
+  mimic-fn@2.1.0:
+    resolution:
+      {
+        integrity: sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==,
+      }
+    engines: { node: ">=6" }
 
   minimatch@10.2.6:
     resolution:
@@ -2799,6 +2884,13 @@ packages:
       }
     engines: { node: ">=18" }
 
+  npm-run-path@4.0.1:
+    resolution:
+      {
+        integrity: sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==,
+      }
+    engines: { node: ">=8" }
+
   object-assign@4.1.1:
     resolution:
       {
@@ -2812,6 +2904,20 @@ packages:
         integrity: sha512-0eJJY6hXLGf1udHwfNftBqH+g73EU4B504nZeKpz1sYRKafAghwxEJunB2O7rDZkL4PGfsMVnTXZ2EjibbqcsA==,
       }
     engines: { node: ">=14.0.0" }
+
+  onetime@5.1.2:
+    resolution:
+      {
+        integrity: sha512-kbpaSSGJTWdAY5KPVeMOKXSrPtr8C8C7wodJbcsd51jRnmD+GZu8Y0VoU6Dm5Z4vWr0Ig/1NKuWRKf7j5aaYSg==,
+      }
+    engines: { node: ">=6" }
+
+  os-paths@4.4.0:
+    resolution:
+      {
+        integrity: sha512-wrAwOeXp1RRMFfQY8Sy7VaGVmPocaLwSFOYCGKSyo8qmJ+/yaafCl5BCA1IQZWqFSRBrKDYFeR9d/VyQzfH/jg==,
+      }
+    engines: { node: ">= 6.0" }
 
   package-json-from-dist@1.0.1:
     resolution:
@@ -3321,6 +3427,12 @@ packages:
         integrity: sha512-ybx0WO1/8bSBLEWXZvEd7gMW3Sn3JFlW3TvX1nREbDLRNQNaeNN8WK0meBwPdAaOI7TtRRRJn/Es1zhrrCHu7g==,
       }
 
+  signal-exit@3.0.7:
+    resolution:
+      {
+        integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==,
+      }
+
   signal-exit@4.1.0:
     resolution:
       {
@@ -3401,6 +3513,13 @@ packages:
         integrity: sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==,
       }
     engines: { node: ">=8" }
+
+  strip-final-newline@2.0.0:
+    resolution:
+      {
+        integrity: sha512-BrpvfNAE3dcvq7ll3xVumzjKjZQ5tI1sEUIKr3Uoks0XUl45St3FlatVqef9prk4jRDzhW6WZg+3bk93y6pLjA==,
+      }
+    engines: { node: ">=6" }
 
   strip-literal@3.1.0:
     resolution:
@@ -3741,6 +3860,20 @@ packages:
       }
     engines: { node: ">=10" }
 
+  xdg-app-paths@5.5.1:
+    resolution:
+      {
+        integrity: sha512-hI3flOB4PLZIy5prbtTpirobtPE2ZtZ52szO+2mM9Efp6ErM398La+C1lIpNWDfNoQk+6Lsi6nMcCwVB7pxeMQ==,
+      }
+    engines: { node: ">= 6.0" }
+
+  xdg-portable@7.3.0:
+    resolution:
+      {
+        integrity: sha512-sqMMuL1rc0FmMBOzCpd0yuy9trqF2yTTVe+E9ogwCSWQCdDEtQUwrZPT6AxqtsFGRNxycgncbP/xmOOSPw5ZUw==,
+      }
+    engines: { node: ">= 6.0" }
+
   xtend@4.0.2:
     resolution:
       {
@@ -3774,6 +3907,12 @@ packages:
         integrity: sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==,
       }
     engines: { node: ">=12" }
+
+  zod@4.1.11:
+    resolution:
+      {
+        integrity: sha512-WPsqwxITS2tzx1bzhIKsEs19ABD5vmCVa4xBo2tq/SrV4RNZtfws1EnCWQXM6yh8bD08a1idvkB5MZSBiZsjwg==,
+      }
 
   zod@4.1.12:
     resolution:
@@ -4666,6 +4805,25 @@ snapshots:
 
   "@types/trusted-types@2.0.7": {}
 
+  "@vercel/cli-config@0.3.3":
+    dependencies:
+      xdg-app-paths: 5.5.1
+      zod: 4.1.11
+
+  "@vercel/cli-exec@1.0.1":
+    dependencies:
+      execa: 5.1.1
+
+  "@vercel/functions@3.10.3":
+    dependencies:
+      "@vercel/oidc": 4.0.3
+
+  "@vercel/oidc@4.0.3":
+    dependencies:
+      "@vercel/cli-config": 0.3.3
+      "@vercel/cli-exec": 1.0.1
+      jose: 5.10.0
+
   "@vitejs/plugin-react@5.0.4(vite@7.1.12(@types/node@22.18.10)(tsx@4.20.6))":
     dependencies:
       "@babel/core": 7.29.7
@@ -5019,6 +5177,18 @@ snapshots:
     dependencies:
       "@types/estree": 1.0.9
 
+  execa@5.1.1:
+    dependencies:
+      cross-spawn: 7.0.6
+      get-stream: 6.0.1
+      human-signals: 2.1.0
+      is-stream: 2.0.1
+      merge-stream: 2.0.0
+      npm-run-path: 4.0.1
+      onetime: 5.1.2
+      signal-exit: 3.0.7
+      strip-final-newline: 2.0.0
+
   expect-type@1.4.0: {}
 
   fast-decode-uri-component@1.0.1: {}
@@ -5108,6 +5278,8 @@ snapshots:
 
   get-nonce@1.0.1: {}
 
+  get-stream@6.0.1: {}
+
   get-tsconfig@4.14.3:
     dependencies:
       resolve-pkg-maps: 1.0.0
@@ -5145,17 +5317,23 @@ snapshots:
       statuses: 2.0.2
       toidentifier: 1.0.1
 
+  human-signals@2.1.0: {}
+
   inherits@2.0.4: {}
 
   ipaddr.js@2.5.0: {}
 
   is-fullwidth-code-point@3.0.0: {}
 
+  is-stream@2.0.1: {}
+
   isexe@2.0.0: {}
 
   jackspeak@4.2.3:
     dependencies:
       "@isaacs/cliui": 9.0.0
+
+  jose@5.10.0: {}
 
   jose@6.2.13: {}
 
@@ -5226,7 +5404,11 @@ snapshots:
     dependencies:
       "@jridgewell/sourcemap-codec": 1.6.0
 
+  merge-stream@2.0.0: {}
+
   mime@3.0.0: {}
+
+  mimic-fn@2.1.0: {}
 
   minimatch@10.2.6:
     dependencies:
@@ -5255,9 +5437,19 @@ snapshots:
 
   node-releases@2.0.59: {}
 
+  npm-run-path@4.0.1:
+    dependencies:
+      path-key: 3.1.1
+
   object-assign@4.1.1: {}
 
   on-exit-leak-free@2.1.2: {}
+
+  onetime@5.1.2:
+    dependencies:
+      mimic-fn: 2.1.0
+
+  os-paths@4.4.0: {}
 
   package-json-from-dist@1.0.1: {}
 
@@ -5534,6 +5726,8 @@ snapshots:
 
   siginfo@2.0.0: {}
 
+  signal-exit@3.0.7: {}
+
   signal-exit@4.1.0: {}
 
   sonic-boom@4.2.1:
@@ -5570,6 +5764,8 @@ snapshots:
   strip-ansi@6.0.1:
     dependencies:
       ansi-regex: 5.0.1
+
+  strip-final-newline@2.0.0: {}
 
   strip-literal@3.1.0:
     dependencies:
@@ -5798,6 +5994,15 @@ snapshots:
       string-width: 4.2.3
       strip-ansi: 6.0.1
 
+  xdg-app-paths@5.5.1:
+    dependencies:
+      os-paths: 4.4.0
+      xdg-portable: 7.3.0
+
+  xdg-portable@7.3.0:
+    dependencies:
+      os-paths: 4.4.0
+
   xtend@4.0.2: {}
 
   y18n@5.0.8: {}
@@ -5815,5 +6020,7 @@ snapshots:
       string-width: 4.2.3
       y18n: 5.0.8
       yargs-parser: 21.1.1
+
+  zod@4.1.11: {}
 
   zod@4.1.12: {}

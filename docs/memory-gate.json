@@ -3,9 +3,17 @@
   "namespace": "runway-a05f69083ffbe3aec697d7db",
   "acceptedJobId": "1b65bee7-4539-46de-8bfe-d1e9e7518473",
   "state": "failed",
-  "checkedAt": "2026-10-22",
-  "error": "Embedding API returned 401 Unauthorized: User not found.",
-  "lastStatusCheck": "2026-10-22",
+  "checkedAt": "2026-10-22T10:43:47.703Z",
+  "error": "Internal Error: Embedding API error (401 Unauthorized): {\"error\":{\"message\":\"User not found.\",\"code\":401}}",
+  "compatibility": {
+    "status": "ok",
+    "version": "0.1.0",
+    "write_ready": true,
+    "writes": "degraded"
+  },
   "signedAccessVerified": true,
+  "priorMemoryCount": 0,
+  "lastStatusCheck": "2026-10-22T10:43:47.367Z",
+  "remoteStatus": "failed",
   "completedRecords": 0
 }
