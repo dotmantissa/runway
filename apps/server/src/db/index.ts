@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { PGlite } from '@electric-sql/pglite';
 import pg from 'pg';
@@ -10,7 +10,7 @@ export class Database implements SQL {
   private queue:Promise<unknown>=Promise.resolve();
   readonly mode: 'postgres'|'embedded-postgres';
   constructor(url=config.databaseUrl, directory=config.dataDir) { this.mode=url?'postgres':'embedded-postgres';if(url)this.pool=new pg.Pool({connectionString:url,max:10});else this.embedded=new PGlite(directory); }
-  async initialize() { const sql=await readFile(resolve('apps/server/src/db/migrations/001_initial.sql'),'utf8');if(this.pool)await this.pool.query(sql);else await this.embedded!.exec(sql); }
+  async initialize() { const dir=resolve('apps/server/src/db/migrations');for(const file of (await readdir(dir)).filter(f=>f.endsWith('.sql')).sort()){const sql=await readFile(resolve(dir,file),'utf8');if(this.pool)await this.pool.query(sql);else await this.embedded!.exec(sql);} }
   async query<T=any>(sql:string,params:unknown[]=[]):Promise<{rows:T[]}> { if(this.pool)return this.pool.query(sql,params as any[]) as any;return this.exclusive(()=>this.embedded!.query<T>(sql,params)); }
   private async exclusive<T>(fn:()=>Promise<T>):Promise<T> { const prior=this.queue;let release!:()=>void;this.queue=new Promise<void>(r=>{release=r});await prior;try{return await fn();}finally{release();} }
   async transaction<T>(fn:(tx:SQL)=>Promise<T>):Promise<T> {
