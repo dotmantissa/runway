@@ -7,13 +7,27 @@
   "functions": {
     "api/index.js": {
       "maxDuration": 300,
-      "includeFiles": "{apps/server/src/db/migrations/**,docs/*.json}"
+      "includeFiles": "{apps/server/src/db/migrations/**,docs/*.json}",
+      "excludeFiles": "{.env,.env.*,**/.env,**/.env.*,research/**,TASKS.md,**/AGENT.md,**/AGENTS.md}"
     }
   },
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/index.js" },
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.js"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
   ],
-  "crons": [{ "path": "/api/v1/internal/jobs", "schedule": "0 5 * * *" }]
+  "crons": [
+    {
+      "path": "/api/v1/internal/jobs",
+      "schedule": "0 5 * * *"
+    }
+  ]
 }
