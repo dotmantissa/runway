@@ -67,6 +67,7 @@ import {
 import { hero, FIXTURE_CLOCK } from "../../../packages/fixtures/src/index.js";
 import type { State } from "../../server/src/services/state.js";
 
+const Story = lazy(() => import("./story.js"));
 const WalletSignIn = lazy(() => import("./wallet.js"));
 const InvoiceAssistant = lazy(() => import("./invoice-assistant.js"));
 const WalletGuard = lazy(() =>
@@ -168,6 +169,16 @@ export function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/evidence" element={<Evidence />} />
+        <Route
+          path="/story"
+          element={
+            <PublicLayout>
+              <Suspense fallback={<Loading />}>
+                <Story />
+              </Suspense>
+            </PublicLayout>
+          }
+        />
         <Route path="/app" element={<Shell />}>
           <Route index element={<Navigate to="overview" replace />} />
           <Route path="overview" element={<Overview />} />
@@ -207,6 +218,7 @@ function PublicLayout({ children }: { children: ReactNode }) {
       <footer className="public-footer">
         <Brand />
         <span>Plan around the next payment.</span>
+        <Link to="/story">Read the build story</Link>
         <Link to="/privacy">Privacy</Link>
         <Link to="/evidence">Source and evidence</Link>
       </footer>
@@ -418,6 +430,7 @@ function Landing() {
       <footer className="public-footer">
         <Brand />
         <span>Plan around the next payment.</span>
+        <Link to="/story">Read the build story</Link>
         <Link to="/privacy">Privacy</Link>
         <Link to="/evidence">Source and evidence</Link>
       </footer>
@@ -2782,10 +2795,9 @@ function Evidence() {
                 the same conservative reduction.
               </p>
               <p>
-                Walrus and database parity, fresh-process recall, and ten
-                completed Mainnet records remain unverified until actual stored
-                content can be retrieved. No local history is labeled as
-                recalled from Walrus.
+                {q.data.comparison.state === "verified"
+                  ? "A fresh process retrieved the required Mainnet records with matching content hashes and reproduced the database-backed calculation. This proves continuity with the same history, rather than a forecasting advantage over another store."
+                  : "Remote history and database parity have not been verified. Local history is not labeled as recalled from Walrus."}
               </p>
               {q.data.comparison.state === "verified" ? (
                 <details>
@@ -2796,6 +2808,72 @@ function Evidence() {
             </section>
           </>
         ) : null}
+        {q.data?.corrections?.state === "verified" ? (
+          <section className="evidence-block">
+            <h2>Corrections survive a fresh recall</h2>
+            <SourceLabel source="verified" />
+            <p>
+              Both original and corrected synthetic records were retrieved from
+              Mainnet. With history held fixed, changing the reserve from 100 to
+              50 USDC changes the permitted reduction from 150 to 100 USDC.
+            </p>
+            <p>
+              A separate client-association correction leaves three active Cedar
+              payments. The superseded record stays inspectable, and the engine
+              refuses a four-payment timing estimate.
+            </p>
+            <p className="helper">
+              The proof harness resolves the recalled policy versions. The app
+              keeps its current financial state in the database.
+            </p>
+            <details>
+              <summary>View correction evidence</summary>
+              <pre>{JSON.stringify(q.data.corrections, null, 2)}</pre>
+            </details>
+          </section>
+        ) : null}
+        {q.data?.evaluation?.state === "completed" ? (
+          <section className="evidence-block">
+            <h2>What the synthetic replay found</h2>
+            <SourceLabel source="synthetic_replay" />
+            <p>
+              {q.data.evaluation.counts.eligiblePredictions} temporal
+              predictions, {q.data.evaluation.counts.insufficientHistory} cases
+              without enough history, and zero real participants.
+            </p>
+            <p>
+              Average timing error was{" "}
+              {q.data.evaluation.metrics.historyMeanAbsoluteErrorDays} days with
+              history and{" "}
+              {q.data.evaluation.metrics.promisedMeanAbsoluteErrorDays} days
+              using the promised date. History reduced observed reserve breaches
+              from {q.data.evaluation.metrics.promisedObservedReserveBreaches}{" "}
+              to {q.data.evaluation.metrics.historyObservedReserveBreaches},
+              while proposing unnecessary reductions in several cases.
+            </p>
+            <p>
+              These authored trajectories test behavior. They do not establish
+              better forecasting or customer savings.
+            </p>
+            <details>
+              <summary>View every replay result</summary>
+              <pre>{JSON.stringify(q.data.evaluation, null, 2)}</pre>
+            </details>
+          </section>
+        ) : null}
+        <section className="evidence-block">
+          <h2>Optional paid invoice assistant</h2>
+          <p>
+            The bounded parser and approval flow are implemented. A funded
+            Mainnet purchase has not been verified. Payments are disabled in the
+            public demo; the sample is free and synthetic.
+          </p>
+        </section>
+        <p>
+          <Link className="text-link" to="/story">
+            Read the build story and watch the demo
+          </Link>
+        </p>
         <CTA to="/demo">Explore the example</CTA>
       </article>
     </PublicLayout>

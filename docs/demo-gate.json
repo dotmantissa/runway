@@ -1,0 +1,113 @@
+{
+  "state": "encoded",
+  "recordedAt": "2026-10-22T17:06:13.947Z",
+  "source": "http://localhost:5174",
+  "actualBrowser": true,
+  "syntheticFinancialData": true,
+  "mockedApiResponses": false,
+  "fundedPaymentPerformed": false,
+  "silentWithVisibleEnglishCaptions": true,
+  "durationSeconds": 156.015,
+  "dimensions": {
+    "width": 1440,
+    "height": 1000
+  },
+  "webmSha256": "f2efaf177a14a0cf2c9ec451c6d6b9d46e789f4b27d69bb8a7382b5bba3a3d04",
+  "webmBytes": 11569181,
+  "scenes": [
+    {
+      "start": 0,
+      "end": 12.003,
+      "title": "Runway \u00b7 Synthetic example",
+      "text": "A client promises Friday. Payment history suggests Tuesday. Plan around the bill that cannot wait."
+    },
+    {
+      "start": 12.004,
+      "end": 29.004,
+      "title": "Confirmed money and expected income stay separate",
+      "text": "800 USDC confirmed. A 1,200 USDC invoice is still expected. Rent and the reserve leave zero available now."
+    },
+    {
+      "start": 29.005,
+      "end": 41.005,
+      "title": "Compare the client's promised date",
+      "text": "If the invoice arrives Friday, Monday rent is covered in that scenario. The receipt remains uncertain."
+    },
+    {
+      "start": 41.005,
+      "end": 60.007,
+      "title": "Four past payments change the timing estimate",
+      "text": "Delays of 3, 4, 4 and 5 days put the median on Tuesday, after Monday rent. Reducing the purchase by 150 USDC preserves the reserve."
+    },
+    {
+      "start": 60.007,
+      "end": 70.007,
+      "title": "A separate stress test",
+      "text": "No payment in the period also requires a 150 USDC reduction. History gives a client-specific reason to consider that risk."
+    },
+    {
+      "start": 70.008,
+      "end": 82.009,
+      "title": "Review before accepting",
+      "text": "Only the flexible purchase changes: 250 to 100 USDC. Fixed bills and the 100 USDC reserve remain constraints."
+    },
+    {
+      "start": 82.009,
+      "end": 92.011,
+      "title": "Saved across a reload",
+      "text": "The accepted spending plan persists. Saving a plan moves no funds and does not turn an invoice into cash."
+    },
+    {
+      "start": 92.011,
+      "end": 109.012,
+      "title": "Invoice assistant \u00b7 Free synthetic sample",
+      "text": "The parser extracts an invoice draft. Review and edit the fields before saving. No payment was made."
+    },
+    {
+      "start": 109.012,
+      "end": 119.011,
+      "title": "An expectation needs explicit confirmation",
+      "text": "This sample is saved only after review. The optional 0.01 USDC paid service requires an isolated wallet and per-purchase approval."
+    },
+    {
+      "start": 119.012,
+      "end": 132.012,
+      "title": "Actual sponsor operations, separate from the sample",
+      "text": "Authenticated Tatum Mainnet reads and thirteen synthetic Walrus records have evidence. A fresh process reproduces the remote history calculation."
+    },
+    {
+      "start": 132.012,
+      "end": 144.014,
+      "title": "Corrections supersede old facts",
+      "text": "Fresh recall retrieves both versions. A corrected reserve changes the action; a corrected client association prevents a stale timing estimate."
+    },
+    {
+      "start": 144.014,
+      "end": 156.015,
+      "title": "Evidence includes the limits",
+      "text": "The synthetic replay includes missed delays and unnecessary reductions. Real user trials and a funded paid-parser purchase remain unverified."
+    }
+  ],
+  "pageErrors": [],
+  "mp4Sha256": "e2d54a83a8953f2604efa00abc0c1cb72413cdfbdd3f5cf3230512b075a9a0e9",
+  "mp4Bytes": 3299338,
+  "encoding": "H.264/yuv420p, CRF23, MP4 faststart; silent captioned actual browser recording",
+  "publishedPaths": {
+    "video": "/demo/runway-demo.mp4",
+    "fallback": "/demo/runway-demo.webm",
+    "captions": "/demo/runway-demo.vtt",
+    "story": "/story"
+  },
+  "playbackVerified": {
+    "checkedAt": "2026-10-22T17:09:18.517Z",
+    "environment": "local Playwright Chromium; actual browser-selected static source",
+    "duration": 155.92,
+    "width": 1440,
+    "height": 1000,
+    "source": "http://localhost:5174/demo/runway-demo.webm",
+    "h264Support": "",
+    "seekedSeconds": [5, 82, 140],
+    "playback": true
+  },
+  "mp4FullDecodeVerified": true
+}

@@ -72,6 +72,7 @@ for (const width of [1440, 390, 320])
       "/app/activity",
       "/app/settings",
       "/evidence",
+      "/story",
       "/privacy",
     ]) {
       await page.goto(path);

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "source": "synthetic_replay",
+  "purpose": "Frozen engineering trajectories; no user forecasting-performance claim. Forecast only from outcomes already resolved before each held-out due date. No tuning against this fixture.",
+  "minimumHistory": 4,
+  "openingAtomic": "800000000",
+  "reserveAtomic": "100000000",
+  "invoiceAtomic": "1200000000",
+  "purchaseAtomic": "250000000",
+  "rentAtomic": "600000000",
+  "series": [
+    {
+      "id": "persistently-late",
+      "delaysDays": [3, 4, 4, 5, 4, 6, 2, 4]
+    },
+    {
+      "id": "punctual",
+      "delaysDays": [0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      "id": "improving",
+      "delaysDays": [6, 5, 4, 3, 2, 1, 0, 0]
+    },
+    {
+      "id": "alternating",
+      "delaysDays": [0, 6, 0, 6, 0, 6, 0, 6]
+    },
+    {
+      "id": "sparse",
+      "delaysDays": [3, 4, 4]
+    }
+  ]
+}

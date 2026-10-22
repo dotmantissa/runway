@@ -1,6 +1,6 @@
 # Runway: evidence required for the 9/10 target
 
-This is a protocol for future work. **No interviews, prototype trials, forecasting evaluation or live integration tests have been completed.** A feature list alone does not justify raising the earlier 7/10 assessment. The 9/10 target is a subjective judgment of competitiveness after evidence, not a 90% chance of winning.
+This document defines the user-validation protocol. **No interviews, observed prototype trials or real-user forecasting evaluation have been completed.** The implemented application now has actual Tatum Mainnet receipt verification, thirteen content-verified synthetic Mainnet memories, fresh-process parity/correction proof and a [synthetic temporal evaluation](docs/evaluation.json). That replay covers 16 eligible predictions and 19 insufficient-history cases; history mean error (2.1875 days) is worse than the promised-date baseline (1.9375 days). These engineering results do not satisfy the user-validation gates below. The [study kit](docs/USER_STUDY_KIT.md) is ready for actual recruitment and observation. A feature list alone does not justify raising the earlier 7/10 assessment. The 9/10 target is a subjective judgment of competitiveness after evidence, not a 90% chance of winning.
 
 ## 1. Validate the decision before expanding the product
 
@@ -36,11 +36,11 @@ Publish actual counts and representative consented evidence. Three trial users c
 
 Freeze a fixture's current confirmed funds, unpaid expenses, invoice promise, planning horizon, reserve/reduction rules, account scope, model/prompt and engine versions. Derived client statistics and historical chat are excluded from these current inputs. The history manifest contains required IDs/version metadata, not precomputed forecasts.
 
-| Condition | History supplied | Expected interpretation |
-| --- | --- | --- |
-| **A: no history** | None; no chat or historical cache. | Insufficient-history label; show the client's promised-date scenario and no-receipt stress separately. |
-| **B: Walrus history** | Required records recalled from completed Mainnet memories with versions/provenance checked. | Client timing estimate, exposure and proposal derived from those records. |
-| **C: Postgres history** | Exactly the same normalized records supplied directly from the database. | Identical deterministic statistics, timeline and action to B. |
+| Condition               | History supplied                                                                            | Expected interpretation                                                                                |
+| ----------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| **A: no history**       | None; no chat or historical cache.                                                          | Insufficient-history label; show the client's promised-date scenario and no-receipt stress separately. |
+| **B: Walrus history**   | Required records recalled from completed Mainnet memories with versions/provenance checked. | Client timing estimate, exposure and proposal derived from those records.                              |
+| **C: Postgres history** | Exactly the same normalized records supplied directly from the database.                    | Identical deterministic statistics, timeline and action to B.                                          |
 
 Run B in a fresh process/session without the original chat or cached historical outcomes. It may read the identical current financial state from Postgres; it must obtain its historical evidence through Walrus. Capture current-input hash, engine version, retrieved record IDs/content hashes, timing estimate, timeline, gap and action. Compare engine outputs, not whether LLM prose happens to be identical. Missing history is an incomplete-retrieval failure, not condition A.
 
@@ -52,18 +52,18 @@ The no-history no-receipt stress also proposes 150 USDC in the hero. The memory 
 
 Use the dated [hero scenario](BUILD_PLAN.md#the-hero-demo). Its horizon is 29 October–4 November 2026. It is a synthetic fixture, distinct from live Mainnet funds.
 
-| Case | Required output |
-| --- | --- |
-| Promised Friday receipt | After Monday rent: 1,150 USDC projected; no action needed for that scenario; available-now still 0 and commitment shortage 150. |
-| Median four-day delay | Tuesday receipt; Monday balance -50; rent gap 50; reserve-floor gap 150; reduce purchase 250→100. |
-| No receipt through 4 November | Same 150 reduction preserves floor throughout this supplied horizon; does not claim coverage of later undisclosed bills. |
-| Purchase reduction capped at 100 | Proposed maximum leaves Monday at 50; reserve-floor gap 50 remains; no feasible plan under the current rules. |
-| Reserve corrected 100→50 | Proposed reduction becomes 100; Monday ends at 50. Latest confirmed version applies, available-now remains 0. |
-| Reliable on-time client | History does not invent a delay; expected invoice still excluded from available-now; no-receipt stress remains visible. |
-| New client | Insufficient history; no precise personalized arrival probability; no invented late-payment memory. |
-| Receipt and rent on same date, time unknown | Evaluate outflow first; do not presume the uncertain receipt can fund the earlier obligation. |
-| Wrong client association corrected | Remove the superseded association from that client's timing statistics and recompute both affected clients. |
-| Missing required memory/stale RPC | Incomplete-history/stale-state message; no fresh claim of verified money or reconstructed history. |
+| Case                                        | Required output                                                                                                                 |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Promised Friday receipt                     | After Monday rent: 1,150 USDC projected; no action needed for that scenario; available-now still 0 and commitment shortage 150. |
+| Median four-day delay                       | Tuesday receipt; Monday balance -50; rent gap 50; reserve-floor gap 150; reduce purchase 250→100.                               |
+| No receipt through 4 November               | Same 150 reduction preserves floor throughout this supplied horizon; does not claim coverage of later undisclosed bills.        |
+| Purchase reduction capped at 100            | Proposed maximum leaves Monday at 50; reserve-floor gap 50 remains; no feasible plan under the current rules.                   |
+| Reserve corrected 100→50                    | Proposed reduction becomes 100; Monday ends at 50. Latest confirmed version applies, available-now remains 0.                   |
+| Reliable on-time client                     | History does not invent a delay; expected invoice still excluded from available-now; no-receipt stress remains visible.         |
+| New client                                  | Insufficient history; no precise personalized arrival probability; no invented late-payment memory.                             |
+| Receipt and rent on same date, time unknown | Evaluate outflow first; do not presume the uncertain receipt can fund the earlier obligation.                                   |
+| Wrong client association corrected          | Remove the superseded association from that client's timing statistics and recompute both affected clients.                     |
+| Missing required memory/stale RPC           | Incomplete-history/stale-state message; no fresh claim of verified money or reconstructed history.                              |
 
 Engine verification also covers receipt allocation once, partial and ambiguous payments, pending-transfer reservations, wrong token/recipient and accepted-versus-proposed actions. Authentication and invoice prompt-injection checks remain part of the [technical acceptance cases](BUILD_PLAN.md#evaluate-improvement-honestly). Optional payment/recovery cases apply only if those features ship.
 

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "workspaceId": "runway-builder-evidence-v1",
+  "scope": "runway-a05f69083ffbe3aec697d7db",
+  "synthetic": true,
+  "recordedAt": "2026-10-22T16:50:59.045Z",
+  "records": [
+    {
+      "id": "runway-evidence-v1-policy-correction-1",
+      "type": "policy",
+      "supersedesId": "runway-evidence-v1-hero-policy",
+      "payload": {
+        "reserveAtomic": "50000000",
+        "horizonDays": 14,
+        "timezone": "Africa/Lagos",
+        "version": 2
+      },
+      "summary": "Synthetic confirmed correction: reserve floor is now 50 USDC, replacing the original 100 USDC policy.",
+      "payloadHash": "749ec9759c17962f73d708be6a59dd724d1c6da2bf108350074688f5c3ded81d",
+      "recordedAt": "2026-10-22T16:50:59.045Z",
+      "eventAt": "2026-10-29",
+      "status": "verified",
+      "remote_job_id": "f5eb4e16-9575-449f-90e8-ce4abcb309d4",
+      "remoteStatus": "done",
+      "blob_id": "sp82bsDpDJPHb579jJdvhoyP7yGDnGaLzxMqOX6BO0A",
+      "verifiedAt": "2026-10-22T16:51:35.609Z"
+    },
+    {
+      "id": "runway-evidence-v1-outcome-correction-1",
+      "type": "outcome",
+      "supersedesId": "runway-evidence-v1-cedar-outcome-1",
+      "payload": {
+        "id": "cedar-outcome-1-corrected",
+        "invoiceId": "cedar-history-1",
+        "clientId": "other-synthetic-client",
+        "dueDate": "2026-07-24",
+        "paidDate": "2026-07-27",
+        "amountAtomic": "1200000000",
+        "source": "synthetic_replay",
+        "recordedAt": "2026-10-22T16:50:59.045Z",
+        "supersedesId": "cedar-outcome-1"
+      },
+      "summary": "Synthetic payment correction: first payment belonged to a different client. Supersede its Cedar association; only three Cedar outcomes remain, insufficient for a timing estimate.",
+      "payloadHash": "c9c34bec3aad6ab50ec1dc479731c57296ba05da31f8a9a4f7f00f24337973fa",
+      "recordedAt": "2026-10-22T16:50:59.045Z",
+      "eventAt": "2026-10-29",
+      "status": "verified",
+      "remote_job_id": "2c17e93f-b1f9-4bd4-93ca-6ea2aa674851",
+      "remoteStatus": "done",
+      "blob_id": "G89fG1BsbaKseh8SzbCP8oNFP2fO2hRFtClck9T_Wn0",
+      "verifiedAt": "2026-10-22T16:52:04.384Z"
+    }
+  ]
+}

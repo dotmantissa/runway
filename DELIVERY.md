@@ -1,5 +1,7 @@
 # Delivery plan: 21 October–10 November 2026
 
+> Implementation update, 22 October 2026: code and the core deployment are complete. Thirteen synthetic Mainnet records, fresh-process parity and remote correction proof are verified. The [submission package](docs/SUBMISSION.md), published build story and captioned recording are prepared; [synthetic evaluation](docs/EVALUATION.md) retains adverse results. Interviews/trials, owner-authenticated allocation, a funded parser purchase, eligibility/contact review and actual submission remain open. The schedule and checklist below preserve the original plan, not a current completion ledger.
+
 The hard deadline is **10 November, 17:00 UTC / 18:00 Lagos**. Target a complete submission by **9 November, 17:00 UTC**. The plan assumes approximately 120 focused builder hours plus contingency. If capacity is below 80 hours, cut optional awards and follow the reduced scope below.
 
 Execute the detailed [architecture](ARCHITECTURE.md), [frontend specification](DESIGN_SPEC.md) and [work packages](IMPLEMENTATION.md). Frontend composition, logo, copy and original circle motion start on 23–24 October and develop throughout the finance/memory slices; 7–8 November is final polish, not the first design pass.
@@ -19,18 +21,18 @@ accounts and compatible APIs
 
 Agent payments run only after the finance/memory and user-evidence gates pass. AI Builder must be decided at the beginning if its award matters; a shell generated at the end would not honestly establish “built primarily” there. The [validation protocol](VALIDATION.md) defines evidence that must be collected, not achievements already claimed.
 
-| Dates | Milestone | Exit evidence / time estimate |
-| --- | --- | --- |
-| **21–22 Oct** | Validate accounts/rules, recruit interviews and try AI Builder export if pursuing that award. | Authenticated Mainnet Tatum reads; completed MemWal write/recall; versions/transport recorded. **8h** |
-| **23–24 Oct** | Five interviews/evidence gate, original logo/tokens/copy/landing foundation and stress-test prototype; at most 2h optional MPP spike. | Three consequential episodes, two usable histories, two volunteers; deliberate responsive foundation and exact 150 USDC fixture. Segment gaps documented. **14h** |
-| **25–27 Oct** | Scoped auth, sample mode, invoice/expense UI, versioned action engine, receipt verification and durable jobs. | Complete financial browser journey, real small Tatum receipt, exact feasible/infeasible cases and acceptance concurrency. **20h** |
-| **28–30 Oct** | Outcome/action memory, policies, evidence/explanation drawers and controlled A/B/C comparison. | At least 10 completed/recalled memories; same current-input hash; Monday exposure/150 adjustment; exact Walrus/Postgres output parity. **20h** |
-| **31 Oct–2 Nov** | Fresh-runtime continuity, superseding corrections, reliability and first two volunteer trials. Broad recovery stays optional. | Fresh history retrieval matches; stale/missing records handled; current policy wins; observed feedback recorded and material issues fixed. **14h** |
-| **3–4 Nov** | Conditional paid parser with budget/replay/job recovery; otherwise improve user feedback and evaluation. | Payment feature ships only if full reliability checks pass within **8h**; cut it if unfinished. Real digest/output required. |
-| **5–6 Nov** | Third user trial, retest feedback fixes and frozen chronological evaluation. | Two of three users complete decision tasks without coaching; actual results, denominators and synthetic/consented/live split published. **12h** |
-| **7–8 Nov** | Finish responsive/motion/copy/logo/favicon quality, deploy demo, write blog/README and record 2–3 minute video. | Browser/keyboard/reduced-motion checks, working public routes, real evidence, clean secrets and retention. **16h** |
-| **9 Nov** | Feature freeze, clean-room setup and full submission rehearsal. | Fresh clone builds, actual sponsor paths work, links accessible, required IDs ready. **8h** |
-| **10 Nov** | Final checks and submission only. | Submit well before 17:00 UTC; retain confirmation. Keep emergency margin. |
+| Dates            | Milestone                                                                                                                             | Exit evidence / time estimate                                                                                                                                     |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **21–22 Oct**    | Validate accounts/rules, recruit interviews and try AI Builder export if pursuing that award.                                         | Authenticated Mainnet Tatum reads; completed MemWal write/recall; versions/transport recorded. **8h**                                                             |
+| **23–24 Oct**    | Five interviews/evidence gate, original logo/tokens/copy/landing foundation and stress-test prototype; at most 2h optional MPP spike. | Three consequential episodes, two usable histories, two volunteers; deliberate responsive foundation and exact 150 USDC fixture. Segment gaps documented. **14h** |
+| **25–27 Oct**    | Scoped auth, sample mode, invoice/expense UI, versioned action engine, receipt verification and durable jobs.                         | Complete financial browser journey, real small Tatum receipt, exact feasible/infeasible cases and acceptance concurrency. **20h**                                 |
+| **28–30 Oct**    | Outcome/action memory, policies, evidence/explanation drawers and controlled A/B/C comparison.                                        | At least 10 completed/recalled memories; same current-input hash; Monday exposure/150 adjustment; exact Walrus/Postgres output parity. **20h**                    |
+| **31 Oct–2 Nov** | Fresh-runtime continuity, superseding corrections, reliability and first two volunteer trials. Broad recovery stays optional.         | Fresh history retrieval matches; stale/missing records handled; current policy wins; observed feedback recorded and material issues fixed. **14h**                |
+| **3–4 Nov**      | Conditional paid parser with budget/replay/job recovery; otherwise improve user feedback and evaluation.                              | Payment feature ships only if full reliability checks pass within **8h**; cut it if unfinished. Real digest/output required.                                      |
+| **5–6 Nov**      | Third user trial, retest feedback fixes and frozen chronological evaluation.                                                          | Two of three users complete decision tasks without coaching; actual results, denominators and synthetic/consented/live split published. **12h**                   |
+| **7–8 Nov**      | Finish responsive/motion/copy/logo/favicon quality, deploy demo, write blog/README and record 2–3 minute video.                       | Browser/keyboard/reduced-motion checks, working public routes, real evidence, clean secrets and retention. **16h**                                                |
+| **9 Nov**        | Feature freeze, clean-room setup and full submission rehearsal.                                                                       | Fresh clone builds, actual sponsor paths work, links accessible, required IDs ready. **8h**                                                                       |
+| **10 Nov**       | Final checks and submission only.                                                                                                     | Submit well before 17:00 UTC; retain confirmation. Keep emergency margin.                                                                                         |
 
 Total planned work: **120h**. Keep approximately **20h additional contingency** for hosted API instability, transport/version differences, deployment and video retakes. These are estimates, not observed build times.
 
@@ -64,14 +66,14 @@ For a two-person team, split frontend/story/evaluation from backend/memory/recon
 
 ## Working budget
 
-| Item | Planning allowance | Assumption |
-| --- | ---: | --- |
-| App hosting and Postgres | $0–30 | Small demo; familiar free tier if suitable, paid worker only if necessary. |
-| LLM calls, parsing and evaluation | $10–40 | Short evidence summaries, cached replays, bounded request volume. |
-| Tatum | $0 initially; $20 contingency | Verify current account entitlement and actual method costs; do not assume contingency buys a specific plan. |
-| Sui gas/storage fallback and tool-wallet funding | $5–20 | Small live transactions; hosted MemWal may front memory storage. No large demo fund transfers. |
-| Domain | $0–15 | Optional; platform URL suffices. |
-| **Planning envelope** | **$15–125** | Not a vendor quote; excludes labor and optional AI Builder charges. |
+| Item                                             |            Planning allowance | Assumption                                                                                                  |
+| ------------------------------------------------ | ----------------------------: | ----------------------------------------------------------------------------------------------------------- |
+| App hosting and Postgres                         |                         $0–30 | Small demo; familiar free tier if suitable, paid worker only if necessary.                                  |
+| LLM calls, parsing and evaluation                |                        $10–40 | Short evidence summaries, cached replays, bounded request volume.                                           |
+| Tatum                                            | $0 initially; $20 contingency | Verify current account entitlement and actual method costs; do not assume contingency buys a specific plan. |
+| Sui gas/storage fallback and tool-wallet funding |                         $5–20 | Small live transactions; hosted MemWal may front memory storage. No large demo fund transfers.              |
+| Domain                                           |                         $0–15 | Optional; platform URL suffices.                                                                            |
+| **Planning envelope**                            |                   **$15–125** | Not a vendor quote; excludes labor and optional AI Builder charges.                                         |
 
 Tatum's [pricing page](https://tatum.io/pricing) currently lists 100K lifetime credits and 3 requests/second for free accounts. The [Sui page](https://tatum.io/chain/sui) says many standard methods cost 2 credits, but method weights and entitlement must be checked in the dashboard.
 
@@ -81,15 +83,15 @@ The managed MemWal relayer fronts storage per its docs, but quota, rate limits a
 
 ## Evidence mapped to judging
 
-| Criterion | What the reviewer should inspect |
-| --- | --- |
+| Criterion                      | What the reviewer should inspect                                                                                                                                        |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Walrus/Tatum integration — 30% | Same-input comparison shows referenced outcomes change the client timing/exposure; real Mainnet blobs and fresh recall; actual Tatum receipts/balances determine state. |
-| Technical quality — 30% | Typed boundaries, integer money, scoped auth, versioned corrections, exact receipt matching, durable jobs/cursors, observed failures and focused verification. |
-| Creativity — 20% | Deadline stress test identifies first exposed bill and minimum permitted reduction; user episodes/trials establish its practical value. |
-| Presentation — 20% | One coherent 2–3 minute story, exact 150 USDC action, working demo, reproducible setup, actual user evidence and clear source labels. |
-| Best Walrus Memory | Controlled comparison, fresh runtime, superseding corrections, outcome-linked action records, Postgres parity and actual evaluation. |
-| Best Agent Payments | 402 challenge → Sui settlement → useful tool output → remembered result, including safe retry behavior. |
-| Best AI Builder | Real generation/export history and clear account of which parts were primarily built there, if eligible. |
+| Technical quality — 30%        | Typed boundaries, integer money, scoped auth, versioned corrections, exact receipt matching, durable jobs/cursors, observed failures and focused verification.          |
+| Creativity — 20%               | Deadline stress test identifies first exposed bill and minimum permitted reduction; user episodes/trials establish its practical value.                                 |
+| Presentation — 20%             | One coherent 2–3 minute story, exact 150 USDC action, working demo, reproducible setup, actual user evidence and clear source labels.                                   |
+| Best Walrus Memory             | Controlled comparison, fresh runtime, superseding corrections, outcome-linked action records, Postgres parity and actual evaluation.                                    |
+| Best Agent Payments            | 402 challenge → Sui settlement → useful tool output → remembered result, including safe retry behavior.                                                                 |
+| Best AI Builder                | Real generation/export history and clear account of which parts were primarily built there, if eligible.                                                                |
 
 Never assign predicted judge scores as measured achievements. Our internal candidate comparison is a selection tool.
 

@@ -1,0 +1,61 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:12.003
+Runway · Synthetic example
+A client promises Friday. Payment history suggests Tuesday. Plan around the bill that cannot wait.
+
+2
+00:00:12.004 --> 00:00:29.004
+Confirmed money and expected income stay separate
+800 USDC confirmed. A 1,200 USDC invoice is still expected. Rent and the reserve leave zero available now.
+
+3
+00:00:29.005 --> 00:00:41.005
+Compare the client's promised date
+If the invoice arrives Friday, Monday rent is covered in that scenario. The receipt remains uncertain.
+
+4
+00:00:41.005 --> 00:01:00.007
+Four past payments change the timing estimate
+Delays of 3, 4, 4 and 5 days put the median on Tuesday, after Monday rent. Reducing the purchase by 150 USDC preserves the reserve.
+
+5
+00:01:00.007 --> 00:01:10.007
+A separate stress test
+No payment in the period also requires a 150 USDC reduction. History gives a client-specific reason to consider that risk.
+
+6
+00:01:10.008 --> 00:01:22.009
+Review before accepting
+Only the flexible purchase changes: 250 to 100 USDC. Fixed bills and the 100 USDC reserve remain constraints.
+
+7
+00:01:22.009 --> 00:01:32.011
+Saved across a reload
+The accepted spending plan persists. Saving a plan moves no funds and does not turn an invoice into cash.
+
+8
+00:01:32.011 --> 00:01:49.012
+Invoice assistant · Free synthetic sample
+The parser extracts an invoice draft. Review and edit the fields before saving. No payment was made.
+
+9
+00:01:49.012 --> 00:01:59.011
+An expectation needs explicit confirmation
+This sample is saved only after review. The optional 0.01 USDC paid service requires an isolated wallet and per-purchase approval.
+
+10
+00:01:59.012 --> 00:02:12.012
+Actual sponsor operations, separate from the sample
+Authenticated Tatum Mainnet reads and thirteen synthetic Walrus records have evidence. A fresh process reproduces the remote history calculation.
+
+11
+00:02:12.012 --> 00:02:24.014
+Corrections supersede old facts
+Fresh recall retrieves both versions. A corrected reserve changes the action; a corrected client association prevents a stale timing estimate.
+
+12
+00:02:24.014 --> 00:02:36.015
+Evidence includes the limits
+The synthetic replay includes missed delays and unnecessary reductions. Real user trials and a funded paid-parser purchase remain unverified.

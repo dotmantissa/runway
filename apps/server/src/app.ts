@@ -359,10 +359,18 @@ export async function createApp(
       memory: read("memory-gate.json"),
       comparison: read("comparison.json"),
       agentPayments: read("agent-payments-gate.json"),
-      completedMainnetRecords:
-        read("memory-manifest.json").records?.filter(
-          (r: any) => r.status === "verified",
-        ).length || 0,
+      corrections: read("memory-corrections.json"),
+      evaluation: read("evaluation.json"),
+      completedMainnetRecords: [
+        "memory-manifest.json",
+        "memory-corrections-manifest.json",
+      ].reduce(
+        (count, file) =>
+          count +
+          (read(file).records?.filter((r: any) => r.status === "verified")
+            .length || 0),
+        0,
+      ),
     });
   });
   app.post(

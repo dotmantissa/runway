@@ -1,0 +1,45 @@
+{
+  "checkedAt": "2026-10-22",
+  "officialEvent": "https://tatum.io/hackathon/total-recall",
+  "embeddedForm": "https://recall-tatum-walrus.vercel.app",
+  "source": "Current public page and client JavaScript; not a submitted form.",
+  "deadlineUtc": "2026-11-10T17:00:00Z",
+  "requirements": [
+    "Mainnet Memory integration and at least ten stored memories",
+    "Tatum onchain reads where relevant",
+    "Published build post",
+    "Working demo and public repository",
+    "Two to three minute demo video"
+  ],
+  "formFieldKeys": [
+    "acceptTerms",
+    "email",
+    "discordId",
+    "linkedinUrl",
+    "telegramId",
+    "howHeard",
+    "heardFromSource",
+    "firstWeb3Project",
+    "tatumAccountId",
+    "suiAddress",
+    "accountId",
+    "memwalAgentId",
+    "description",
+    "demoVideoUrl",
+    "repoUrl",
+    "additionalDocs",
+    "walrusExperience",
+    "tatumAiBuilderExperience",
+    "walrusFriction",
+    "socialPosts"
+  ],
+  "intendedPrimaryTrack": "Consumer Finance Apps",
+  "formSubmitted": false,
+  "termsAccepted": false,
+  "unresolved": [
+    "Rules introduction still refers to feedback/forms while detailed tracks describe memory apps.",
+    "Prize stacking and MPP award interpretation require organizer determination.",
+    "AI Builder primarily-built qualification not claimed.",
+    "Personal eligibility and intended public/contact identifiers require builder confirmation."
+  ]
+}

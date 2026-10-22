@@ -25,7 +25,11 @@
     "smoke:tatum": "tsx scripts/tatum-smoke.ts",
     "smoke:postgres": "tsx scripts/postgres-smoke.ts",
     "evidence": "tsx scripts/evidence.ts",
-    "copy:check": "tsx scripts/check-copy.ts"
+    "copy:check": "tsx scripts/check-copy.ts",
+    "evidence:corrections": "tsx scripts/memory-corrections.ts",
+    "evaluate": "tsx scripts/evaluate.ts",
+    "demo:record": "node scripts/record-demo.mjs",
+    "demo:encode": "node scripts/encode-demo.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "0.3.14",

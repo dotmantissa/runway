@@ -1,0 +1,75 @@
+{
+  "state": "verified",
+  "synthetic": true,
+  "freshProcess": true,
+  "pid": 250600,
+  "verifiedAt": "2026-10-22T16:52:46.215Z",
+  "scope": "runway-a05f69083ffbe3aec697d7db",
+  "requiredRecords": [
+    {
+      "id": "runway-evidence-v1-cedar-outcome-1",
+      "payloadHash": "ccb26a6c3c3789ab074f95d052a663ed13e8360a0d940f9a11ecde65b2f29abc",
+      "blobId": "xcT4sqagMDjhAZQflsG96UfBVZ85T0TpLSbP_arLxW8"
+    },
+    {
+      "id": "runway-evidence-v1-cedar-outcome-2",
+      "payloadHash": "53008ab0713d25a74dbd482cb77c38f33492a0552c17713befe203a392ef73e9",
+      "blobId": "BV2P0oIr37r69NMq0jkpbmG3P9AzgeP18kxjX5pLmbg"
+    },
+    {
+      "id": "runway-evidence-v1-cedar-outcome-3",
+      "payloadHash": "de660e8881ee453b35257253efbae0a023b82c25f0b328e2cf8a620632ae7b28",
+      "blobId": "Sd2QRXS4_5kW8IWR2B5WUVMrIqyhdBIzlE8y0-V52W0"
+    },
+    {
+      "id": "runway-evidence-v1-cedar-outcome-4",
+      "payloadHash": "7610d7a875efc51dd4ac379109e7548ccd03877b1fc3f15712f9f5e7c9e0b8b1",
+      "blobId": "9To_qfgeGwcj_z4z6ufwZFkq_6GjkyfhcVjCWFZY7QM"
+    },
+    {
+      "id": "runway-evidence-v1-hero-policy",
+      "payloadHash": "572613e52d2337e2398f59afec0e193aebc35b049e189f2fac5fad3f6ff06158",
+      "blobId": "1UtcgD-XuwgbbGtgdyku04qWV-3O0YQdj4znnSoVCM4"
+    },
+    {
+      "id": "runway-evidence-v1-policy-correction-1",
+      "payloadHash": "749ec9759c17962f73d708be6a59dd724d1c6da2bf108350074688f5c3ded81d",
+      "blobId": "sp82bsDpDJPHb579jJdvhoyP7yGDnGaLzxMqOX6BO0A"
+    },
+    {
+      "id": "runway-evidence-v1-outcome-correction-1",
+      "payloadHash": "c9c34bec3aad6ab50ec1dc479731c57296ba05da31f8a9a4f7f00f24337973fa",
+      "blobId": "G89fG1BsbaKseh8SzbCP8oNFP2fO2hRFtClck9T_Wn0"
+    }
+  ],
+  "recordCount": 7,
+  "historyHash": "d87ff97e35545535d36ae7d5a0ab95c3aa0c77be15e991206d68824565d3edee",
+  "policy": {
+    "originalId": "runway-evidence-v1-hero-policy",
+    "correctedId": "runway-evidence-v1-policy-correction-1",
+    "originalReserveAtomic": "100000000",
+    "correctedReserveAtomic": "50000000",
+    "originalReductionAtomic": "150000000",
+    "correctedReductionAtomic": "100000000",
+    "resolution": "Confirmed version 2 supersedes version 1; both remotely recalled. Historical outcomes held fixed for policy comparison."
+  },
+  "outcome": {
+    "supersededId": "cedar-outcome-1",
+    "correctionId": "cedar-outcome-1-corrected",
+    "activeOutcomeIds": [
+      "cedar-outcome-1-corrected",
+      "cedar-outcome-2",
+      "cedar-outcome-3",
+      "cedar-outcome-4"
+    ],
+    "cedarSampleCount": 3,
+    "timingEstimate": "insufficient_history",
+    "databaseParity": true,
+    "resolution": "Both original and correction recalled; superseded client association excluded before statistics. No stale four-payment forecast."
+  },
+  "boundaries": [
+    "Synthetic integration proof; no personal financial records published.",
+    "Policy version selection is demonstrated by this evidence harness; application current financial state remains database-backed.",
+    "A correction changes the active interpretation and does not delete the original stored record."
+  ]
+}

@@ -59,7 +59,7 @@ Stopping consent prevents new publication; it does not erase remote history. Cur
 
 ## Scope still requiring evidence
 
-Target-user interviews and observed trials, authenticated receipt allocation, a funded agent purchase, remote correction/retention evidence through judging, video, blog and submission remain unfinished. Ten synthetic Mainnet memories plus a compatibility record and fresh-process Walrus/database parity are now verified. The Vercel production URL is https://runway-ten-xi.vercel.app; see `docs/deployment-gate.json` for hosted checks. The optional invoice agent and priced parser are now implemented at the user's request; their funded Mainnet acceptance remains unperformed. See the [invoice agent guide](INVOICE_AGENT.md) for feature flags, isolated-wallet setup, exact price/limits and recovery. No award eligibility or completed user validation is inferred from local tests.
+Target-user interviews and observed trials, authenticated receipt allocation, a funded agent purchase and actual submission remain unfinished. Thirteen synthetic Mainnet memories (ten useful originals, two corrections, one compatibility record), fresh-process Walrus/database parity and remote supersession are verified. The published build story and actual captioned browser recording are available at `/story`; see [the submission draft](SUBMISSION.md). Retention is checked metadata, and availability must continue through judging. The Vercel production URL is https://runway-ten-xi.vercel.app; see `docs/deployment-gate.json` for hosted checks. The optional invoice agent and priced parser are now implemented at the user's request; their funded Mainnet acceptance remains unperformed. See the [invoice agent guide](INVOICE_AGENT.md) for feature flags, isolated-wallet setup, exact price/limits and recovery. No award eligibility or completed user validation is inferred from local tests.
 
 Existing local records can be explicitly published from their Activity inspector after consent and server writes are enabled. This does not silently backfill old records. Nonlocal jobs keep their existing lifecycle and require reconciliation before retry.
 
@@ -89,3 +89,20 @@ RUNWAY_TEST_DATABASE_URL=postgresql://user:password@localhost:5432/test_database
 Use a dedicated test database. The command creates and drops its own disposable schema; it does not import real participants or call paid providers. It verifies concurrent migrations, transaction rollback, concurrent idempotent finance commands, competing job claims and saved-session recovery, and saves sanitized results in `docs/postgres-gate.json`.
 
 The memory smoke command checks an existing job without enabling writes. When no job is known, a new compatibility write requires `MEMORY_WRITES_ENABLED=true`. Unknown submission responses remain `needs_review` through repeated restarts. Existing evidence fields and job IDs are preserved atomically. Do not delete failed evidence to force a replacement.
+
+## Correction proof, synthetic evaluation and media
+
+```sh
+pnpm evidence:corrections verify
+pnpm evaluate
+pnpm demo:record
+pnpm demo:encode
+```
+
+The correction verifier is read-only and recalls seven exact manifest records in a new process. It proves a changed reserve interpretation and a superseded client association; it never overwrites the frozen original comparison or publishes personal data. `MEMORY_WRITES_ENABLED=true pnpm evidence:corrections publish` resumes the two existing correction jobs; it does not create new logical versions. If a submission response is unknown, reconcile it before rerunning.
+
+The evaluation fixture in `docs/evaluation-fixture.json` is frozen and synthetic. Its report preserves every included/excluded row and unfavorable outcomes. Do not tune against those rows and claim independent user performance.
+
+The recording script needs the local app and Playwright Chromium with its normal system libraries (`pnpm exec playwright install --with-deps chromium` on a suitable development machine). It captures real browser interactions without mocked API responses, uses only the isolated synthetic example, and writes a WebM with visible English captions, a VTT and sanitized media evidence. Run `pnpm demo:encode` with FFmpeg on PATH (or `DEMO_FFMPEG=/path/to/ffmpeg`). The published MP4 is a H.264 transcode of that capture. Rerecording changes generated media and must be verified before release. It is silent with complete on-screen narration and a text transcript.
+
+An ignored mode600 `.env.agent` now contains a prepared **unfunded** isolated tool wallet and parser challenge secret. Do not generate a replacement or print its contents. Proposed owner/recipient values are copied from the existing private receipt evidence and await confirmation. Flags remain false, and no host configuration or payment has been changed by this preparation. Funding details are in ignored `research/tool-wallet-public.json`; public submission identifiers are in ignored `research/submission-fields.private.json`. These private handoff files must never be staged.
