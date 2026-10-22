@@ -2,11 +2,13 @@ import type { Database } from "./db/index.js";
 import type { ChainAdapter } from "./adapters/tatum/index.js";
 import type { MemoryAdapter } from "./adapters/memwal/index.js";
 import { runJobs } from "./jobs.js";
+import type { InvoiceAgent } from "./services/invoice-agent.js";
 
 export function scheduledJobs(
   db: Database,
   chain: ChainAdapter,
   memory: MemoryAdapter,
+  tools?: InvoiceAgent,
 ) {
   let active: Promise<number> | undefined;
   return () => {
@@ -15,7 +17,7 @@ export function scheduledJobs(
       const deadline = Date.now() + 60000;
       let completed = 0;
       while (Date.now() < deadline && completed < 10) {
-        if (await runJobs(db, chain, memory)) completed++;
+        if (await runJobs(db, chain, memory, tools)) completed++;
         else {
           const pending = (
             await db.query(

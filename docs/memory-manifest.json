@@ -1,0 +1,402 @@
+{
+  "schemaVersion": 1,
+  "workspaceId": "runway-builder-evidence-v1",
+  "scope": "runway-a05f69083ffbe3aec697d7db",
+  "synthetic": true,
+  "records": [
+    {
+      "id": "runway-evidence-v1-cedar-outcome-1",
+      "type": "outcome",
+      "payload": {
+        "id": "cedar-outcome-1",
+        "invoiceId": "cedar-history-1",
+        "clientId": "cedar",
+        "dueDate": "2026-07-24",
+        "paidDate": "2026-07-27",
+        "amountAtomic": "1200000000",
+        "source": "synthetic_replay",
+        "recordedAt": "2026-10-29T10:00:00.000Z"
+      },
+      "eventAt": "2026-07-27",
+      "summary": "Synthetic resolved Cedar Studio payment; confirmed funds remain separate.",
+      "payloadHash": "ccb26a6c3c3789ab074f95d052a663ed13e8360a0d940f9a11ecde65b2f29abc",
+      "status": "verified",
+      "blob_id": "xcT4sqagMDjhAZQflsG96UfBVZ85T0TpLSbP_arLxW8",
+      "remote_job_id": "575b14ac-4017-44f6-9bce-5d019ef9002b",
+      "recordedAt": "2026-10-22T16:01:16.792Z",
+      "verifiedAt": "2026-10-22T16:01:45.643Z"
+    },
+    {
+      "id": "runway-evidence-v1-cedar-outcome-2",
+      "type": "outcome",
+      "payload": {
+        "id": "cedar-outcome-2",
+        "invoiceId": "cedar-history-2",
+        "clientId": "cedar",
+        "dueDate": "2026-08-21",
+        "paidDate": "2026-08-25",
+        "amountAtomic": "1200000000",
+        "source": "synthetic_replay",
+        "recordedAt": "2026-10-29T10:00:00.000Z"
+      },
+      "eventAt": "2026-08-25",
+      "summary": "Synthetic resolved Cedar Studio payment; confirmed funds remain separate.",
+      "payloadHash": "53008ab0713d25a74dbd482cb77c38f33492a0552c17713befe203a392ef73e9",
+      "status": "verified",
+      "blob_id": "BV2P0oIr37r69NMq0jkpbmG3P9AzgeP18kxjX5pLmbg",
+      "remote_job_id": "6bb3de58-f919-40c3-ae28-bacff4cd9f94",
+      "recordedAt": "2026-10-22T16:01:16.792Z",
+      "verifiedAt": "2026-10-22T16:02:07.735Z"
+    },
+    {
+      "id": "runway-evidence-v1-cedar-outcome-3",
+      "type": "outcome",
+      "payload": {
+        "id": "cedar-outcome-3",
+        "invoiceId": "cedar-history-3",
+        "clientId": "cedar",
+        "dueDate": "2026-09-18",
+        "paidDate": "2026-09-22",
+        "amountAtomic": "1200000000",
+        "source": "synthetic_replay",
+        "recordedAt": "2026-10-29T10:00:00.000Z"
+      },
+      "eventAt": "2026-09-22",
+      "summary": "Synthetic resolved Cedar Studio payment; confirmed funds remain separate.",
+      "payloadHash": "de660e8881ee453b35257253efbae0a023b82c25f0b328e2cf8a620632ae7b28",
+      "status": "verified",
+      "blob_id": "Sd2QRXS4_5kW8IWR2B5WUVMrIqyhdBIzlE8y0-V52W0",
+      "remote_job_id": "4bd66e32-b89c-4570-a1ec-5244fede42dc",
+      "recordedAt": "2026-10-22T16:01:16.792Z",
+      "verifiedAt": "2026-10-22T16:02:34.895Z"
+    },
+    {
+      "id": "runway-evidence-v1-cedar-outcome-4",
+      "type": "outcome",
+      "payload": {
+        "id": "cedar-outcome-4",
+        "invoiceId": "cedar-history-4",
+        "clientId": "cedar",
+        "dueDate": "2026-10-16",
+        "paidDate": "2026-10-21",
+        "amountAtomic": "1200000000",
+        "source": "synthetic_replay",
+        "recordedAt": "2026-10-29T10:00:00.000Z"
+      },
+      "eventAt": "2026-10-21",
+      "summary": "Synthetic resolved Cedar Studio payment; confirmed funds remain separate.",
+      "payloadHash": "7610d7a875efc51dd4ac379109e7548ccd03877b1fc3f15712f9f5e7c9e0b8b1",
+      "status": "verified",
+      "blob_id": "9To_qfgeGwcj_z4z6ufwZFkq_6GjkyfhcVjCWFZY7QM",
+      "remote_job_id": "83ed8471-49bc-46e5-8be2-5df936c011e8",
+      "recordedAt": "2026-10-22T16:01:16.792Z",
+      "verifiedAt": "2026-10-22T16:02:58.084Z"
+    },
+    {
+      "id": "runway-evidence-v1-hero-policy",
+      "type": "policy",
+      "payload": {
+        "reserveAtomic": "100000000",
+        "horizonDays": 14,
+        "timezone": "Africa/Lagos",
+        "version": 1
+      },
+      "eventAt": "2026-10-29",
+      "summary": "Synthetic reserve rule: preserve 100 USDC.",
+      "payloadHash": "572613e52d2337e2398f59afec0e193aebc35b049e189f2fac5fad3f6ff06158",
+      "status": "verified",
+      "blob_id": "1UtcgD-XuwgbbGtgdyku04qWV-3O0YQdj4znnSoVCM4",
+      "remote_job_id": "ddc797f6-69b7-471e-bd2d-68492829850d",
+      "recordedAt": "2026-10-22T16:01:16.792Z",
+      "verifiedAt": "2026-10-22T16:03:25.159Z"
+    },
+    {
+      "id": "runway-evidence-v1-hero-expense-purchase",
+      "type": "obligation",
+      "payload": {
+        "id": "purchase",
+        "label": "Saturday's purchase",
+        "amountAtomic": "250000000",
+        "dueDate": "2026-10-31",
+        "kind": "flexible",
+        "maxReductionAtomic": "250000000",
+        "status": "planned",
+        "version": 1
+      },
+      "eventAt": "2026-10-31",
+      "summary": "Synthetic spending rule: Saturday's purchase",
+      "payloadHash": "ecb7aaf92cf507fb3442ba492019412aec69dee816e9bf881df4fbef66ad7df9",
+      "status": "verified",
+      "blob_id": "HU-NnhfkjvFpQBQNTRuUpChJcQqfOxyQwdK7_YPbVDY",
+      "remote_job_id": "6c09a798-d52b-4bba-a3b5-6ddbaea03713",
+      "recordedAt": "2026-10-22T16:01:16.792Z",
+      "verifiedAt": "2026-10-22T16:03:51.141Z"
+    },
+    {
+      "id": "runway-evidence-v1-hero-expense-rent",
+      "type": "obligation",
+      "payload": {
+        "id": "rent",
+        "label": "Rent",
+        "amountAtomic": "600000000",
+        "dueDate": "2026-11-02",
+        "kind": "fixed",
+        "maxReductionAtomic": "0",
+        "status": "planned",
+        "version": 1
+      },
+      "eventAt": "2026-11-02",
+      "summary": "Synthetic spending rule: Rent",
+      "payloadHash": "96aff878c3ca10a5c51451a195da4dd528dffa21fc5929e0759a80928590fb07",
+      "status": "verified",
+      "blob_id": "ns0tEsZL9l6RHtkaw2TSexvf2o3cBYhHNVQAoYXBsQU",
+      "remote_job_id": "4ea9aa3d-2fe2-49d6-8b3d-e9b4388b84d6",
+      "recordedAt": "2026-10-22T16:01:16.792Z",
+      "verifiedAt": "2026-10-22T16:04:13.724Z"
+    },
+    {
+      "id": "runway-evidence-v1-hero-expectation",
+      "type": "expectation",
+      "payload": {
+        "id": "cedar-oct",
+        "clientId": "cedar",
+        "invoiceReference": "CED-2026-10",
+        "amountAtomic": "1200000000",
+        "paidAtomic": "0",
+        "dueDate": "2026-10-30",
+        "timezone": "Africa/Lagos",
+        "version": 1,
+        "status": "expected"
+      },
+      "eventAt": "2026-10-30",
+      "summary": "Synthetic client promise: 1200 USDC on Friday 30 October.",
+      "payloadHash": "48d3be0c5d48753f964d2058d82903a0670b5bc5c087f98a692c653c4538e45f",
+      "status": "verified",
+      "blob_id": "hdC-UFNecXOLoiQV1b2SeaPhn_kHLr1Mw1y7A9T0zwU",
+      "remote_job_id": "0f373235-649c-45e2-ace4-73024070aa27",
+      "recordedAt": "2026-10-22T16:01:16.792Z",
+      "verifiedAt": "2026-10-22T16:04:38.686Z"
+    },
+    {
+      "id": "runway-evidence-v1-hero-lesson",
+      "type": "lesson",
+      "payload": {
+        "clientId": "cedar",
+        "sampleCount": 4,
+        "medianDelay": 4,
+        "outcomeIds": [
+          "cedar-outcome-1",
+          "cedar-outcome-2",
+          "cedar-outcome-3",
+          "cedar-outcome-4"
+        ],
+        "synthetic": true
+      },
+      "eventAt": "2026-10-29",
+      "summary": "Four synthetic payments have a median delay of four days.",
+      "payloadHash": "b485b5e3651bd3e93f6893263a270e5222734ed6d71afedd6f0e4af93d6d7d51",
+      "status": "verified",
+      "blob_id": "tvUJfI4kAcDb-B_Gb3d9Rev9t9WEfPT06_Veu0wyMEs",
+      "remote_job_id": "e8095c81-8e25-48bd-9bba-ffc4f3dbc8bc",
+      "recordedAt": "2026-10-22T16:01:16.792Z",
+      "verifiedAt": "2026-10-22T16:04:59.721Z"
+    },
+    {
+      "id": "runway-evidence-v1-hero-proposal",
+      "type": "proposal",
+      "payload": {
+        "engineVersion": "runway-prefix-1.0.0",
+        "stateVersion": 1,
+        "scenario": "history_median",
+        "historyMode": "postgres",
+        "freshness": "fresh",
+        "confirmedFundsAtomic": "800000000",
+        "reserveFloorAtomic": "100000000",
+        "plannedSpendingAtomic": "850000000",
+        "availableNowAtomic": "0",
+        "commitmentShortageAtomic": "150000000",
+        "feasible": true,
+        "firstReserveBreach": {
+          "eventId": "rent",
+          "label": "Rent",
+          "date": "2026-11-02",
+          "gapAtomic": "150000000",
+          "uncoveredAtomic": "50000000"
+        },
+        "firstExposedFixedBill": {
+          "eventId": "rent",
+          "label": "Rent",
+          "date": "2026-11-02",
+          "gapAtomic": "150000000",
+          "uncoveredAtomic": "50000000"
+        },
+        "timeline": [
+          {
+            "id": "opening",
+            "date": "2026-10-29",
+            "type": "opening",
+            "label": "Confirmed opening funds",
+            "amountAtomic": "800000000",
+            "balanceBeforeAtomic": "800000000",
+            "balanceAfterAtomic": "800000000",
+            "belowFloorAtomic": "0",
+            "uncoveredAtomic": "0",
+            "uncertain": false,
+            "fixed": false,
+            "sourceIds": []
+          },
+          {
+            "id": "purchase",
+            "date": "2026-10-31",
+            "type": "expense",
+            "label": "Saturday's purchase",
+            "amountAtomic": "250000000",
+            "balanceBeforeAtomic": "800000000",
+            "balanceAfterAtomic": "550000000",
+            "belowFloorAtomic": "0",
+            "uncoveredAtomic": "0",
+            "uncertain": false,
+            "fixed": false,
+            "sourceIds": ["purchase"]
+          },
+          {
+            "id": "rent",
+            "date": "2026-11-02",
+            "type": "expense",
+            "label": "Rent",
+            "amountAtomic": "600000000",
+            "balanceBeforeAtomic": "550000000",
+            "balanceAfterAtomic": "-50000000",
+            "belowFloorAtomic": "150000000",
+            "uncoveredAtomic": "50000000",
+            "uncertain": false,
+            "fixed": true,
+            "sourceIds": ["rent"]
+          },
+          {
+            "id": "cedar-oct",
+            "date": "2026-11-03",
+            "type": "receipt",
+            "label": "CED-2026-10",
+            "amountAtomic": "1200000000",
+            "balanceBeforeAtomic": "-50000000",
+            "balanceAfterAtomic": "1150000000",
+            "belowFloorAtomic": "0",
+            "uncoveredAtomic": "0",
+            "uncertain": true,
+            "fixed": false,
+            "sourceIds": [
+              "cedar-oct",
+              "cedar-outcome-1",
+              "cedar-outcome-2",
+              "cedar-outcome-3",
+              "cedar-outcome-4"
+            ]
+          }
+        ],
+        "adjustedTimeline": [
+          {
+            "id": "opening",
+            "date": "2026-10-29",
+            "type": "opening",
+            "label": "Confirmed opening funds",
+            "amountAtomic": "800000000",
+            "balanceBeforeAtomic": "800000000",
+            "balanceAfterAtomic": "800000000",
+            "belowFloorAtomic": "0",
+            "uncoveredAtomic": "0",
+            "uncertain": false,
+            "fixed": false,
+            "sourceIds": []
+          },
+          {
+            "id": "purchase",
+            "date": "2026-10-31",
+            "type": "expense",
+            "label": "Saturday's purchase",
+            "amountAtomic": "100000000",
+            "balanceBeforeAtomic": "800000000",
+            "balanceAfterAtomic": "700000000",
+            "belowFloorAtomic": "0",
+            "uncoveredAtomic": "0",
+            "uncertain": false,
+            "fixed": false,
+            "sourceIds": ["purchase"]
+          },
+          {
+            "id": "rent",
+            "date": "2026-11-02",
+            "type": "expense",
+            "label": "Rent",
+            "amountAtomic": "600000000",
+            "balanceBeforeAtomic": "700000000",
+            "balanceAfterAtomic": "100000000",
+            "belowFloorAtomic": "0",
+            "uncoveredAtomic": "0",
+            "uncertain": false,
+            "fixed": true,
+            "sourceIds": ["rent"]
+          },
+          {
+            "id": "cedar-oct",
+            "date": "2026-11-03",
+            "type": "receipt",
+            "label": "CED-2026-10",
+            "amountAtomic": "1200000000",
+            "balanceBeforeAtomic": "100000000",
+            "balanceAfterAtomic": "1300000000",
+            "belowFloorAtomic": "0",
+            "uncoveredAtomic": "0",
+            "uncertain": true,
+            "fixed": false,
+            "sourceIds": [
+              "cedar-oct",
+              "cedar-outcome-1",
+              "cedar-outcome-2",
+              "cedar-outcome-3",
+              "cedar-outcome-4"
+            ]
+          }
+        ],
+        "adjustments": [
+          {
+            "expenseId": "purchase",
+            "label": "Saturday's purchase",
+            "dueDate": "2026-10-31",
+            "expectedExpenseVersion": 1,
+            "originalAmountAtomic": "250000000",
+            "newAmountAtomic": "100000000",
+            "reductionAtomic": "150000000",
+            "capAtomic": "250000000"
+          }
+        ],
+        "totalReductionAtomic": "150000000",
+        "residualGaps": [],
+        "dependsOnUnsettledReceipt": false,
+        "selectedHistoryRecordIds": [
+          "cedar-outcome-1",
+          "cedar-outcome-2",
+          "cedar-outcome-3",
+          "cedar-outcome-4"
+        ],
+        "uncertainty": {
+          "sampleCount": 4,
+          "observedDelayMin": 3,
+          "observedDelayMax": 5,
+          "medianDelay": 4
+        },
+        "forecastDates": {
+          "cedar-oct": "2026-11-03"
+        }
+      },
+      "eventAt": "2026-10-29",
+      "summary": "Synthetic proposal reduces Saturday purchase by 150 USDC to preserve reserve before rent.",
+      "payloadHash": "1bfa13b0d199956fa92af344c208ad52b95ad7ed222758158e86b09af5ef89ec",
+      "status": "verified",
+      "blob_id": "AFRjcgDxnPfnNxZh3ljZoAPbxGOH7a-NmTZOqhMgYIA",
+      "remote_job_id": "dc899116-9081-4143-8b8b-b52a5ae4e2e0",
+      "recordedAt": "2026-10-22T16:01:16.793Z",
+      "verifiedAt": "2026-10-22T16:05:22.038Z"
+    }
+  ]
+}

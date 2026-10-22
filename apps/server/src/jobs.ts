@@ -8,11 +8,13 @@ import {
 } from "./adapters/memwal/index.js";
 import { config } from "./config.js";
 import { load, save, audit, id, AppError } from "./services/state.js";
+import type { InvoiceAgent } from "./services/invoice-agent.js";
 const owner = randomUUID();
 export async function runJobs(
   db: Database,
   chain: ChainAdapter,
   memory: MemoryAdapter,
+  tools?: InvoiceAgent,
 ) {
   await db.query(
     "INSERT INTO worker_heartbeats(id) VALUES($1) ON CONFLICT(id) DO UPDATE SET seen_at=now()",
@@ -22,6 +24,12 @@ export async function runJobs(
     "DELETE FROM workspaces WHERE kind='sample' AND expires_at<now()",
   );
   await db.query("DELETE FROM sessions WHERE expires_at<now()");
+  await db.query(
+    "UPDATE tool_orders SET input_text=NULL WHERE input_text IS NOT NULL AND input_expires_at<now()",
+  );
+  await db.query(
+    "UPDATE tool_orders SET status='expired',input_text=NULL WHERE status='quoted' AND expires_at<now()",
+  );
   await db.query(
     "DELETE FROM challenges WHERE expires_at<now()-interval '1 hour'",
   );
@@ -217,14 +225,27 @@ export async function runJobs(
         "UPDATE memory_records SET status='verified',verified_at=now(),error=NULL WHERE workspace_id=$1 AND id=ANY($2::text[])",
         [w.id, manifest.map((r) => r.id)],
       );
+    } else if (job.kind === "invoice_parse") {
+      const agent =
+        tools ||
+        new (await import("./services/invoice-agent.js")).InvoiceAgent(
+          db,
+          chain,
+        );
+      const done = await agent.run(job.payload.orderId);
+      if (!done) status = "queued";
+      result = { orderId: job.payload.orderId };
     } else throw new Error("This job type is unsupported.");
   } catch (e) {
     status = "failed";
-    safeError = job.kind.startsWith("memory")
-      ? "Walrus Memory could not complete this operation. Open the record status and retry after the service is available."
-      : e instanceof AppError
-        ? e.message
-        : "Sui verification could not complete. Try again after the provider is available.";
+    safeError =
+      job.kind === "invoice_parse"
+        ? "The invoice assistant could not finish. Inspect the existing order before resuming it."
+        : job.kind.startsWith("memory")
+          ? "Walrus Memory could not complete this operation. Open the record status and retry after the service is available."
+          : e instanceof AppError
+            ? e.message
+            : "Sui verification could not complete. Try again after the provider is available.";
     if (job.kind === "memory_publish") {
       const record = (
         await db.query(

@@ -12,20 +12,20 @@ No package is finished because its files exist. Mark it complete only when the s
 
 ### Requirement trace
 
-| ID | Requirement | Package | Evidence |
-| --- | --- | --- | --- |
-| R01 | Original professional responsive frontend and motion. | P02, P03, P08. | Landing/app screenshots, browser motion checks and human craft review. |
-| R02 | Original logo throughout app including browser/shortcut assets. | P02, P08. | SVG/raster exports, actual tab/manifest screenshots and route branding. |
-| R03 | Human product copy, no em dashes/emoji, grammatical hyphens. | P02, P08. | Copy registry/lint plus human read-through and trial feedback. |
-| R04 | Wallet auth and private workspace isolation. | P03, P05. | Personal-message challenge, nonce replay/CSRF/cross-scope tests. |
-| R05 | Exact funds, dates, expense rules and minimal reduction. | P02, P03. | Hero fixture, domain/property tests and permitted/infeasible action cases. |
-| R06 | Meaningful authenticated Tatum Mainnet reads. | P01, P03. | Successful transport, actual balance/receipt data and routed adapter trace. |
-| R07 | Ten or more completed Mainnet Memory records. | P01, P04. | Saved job/blob IDs, metadata count and content-matching recall. |
-| R08 | Controlled A/B/C memory proof and fresh continuity. | P04, P05. | Equal current-input hashes, equivalent history/output and fresh process export. |
-| R09 | Current correction replaces obsolete rule/outcome. | P04, P05. | Corrected reserve/client fixture, supersession evidence and updated result. |
-| R10 | Real target-user evidence and usable action. | P02, P05, P07. | Anonymized episodes/histories, trial outcomes and retested feedback. |
-| R11 | Reliable priced Sui MPP service if submitted. | P06. | Actual protocol/payment/output and failure/concurrency verification. |
-| R12 | Reproducible hosted submission and presentation. | P08, P09. | Fresh clone/build, accessible demo/repo/blog/video and actual source evidence. |
+| ID  | Requirement                                                     | Package        | Evidence                                                                        |
+| --- | --------------------------------------------------------------- | -------------- | ------------------------------------------------------------------------------- |
+| R01 | Original professional responsive frontend and motion.           | P02, P03, P08. | Landing/app screenshots, browser motion checks and human craft review.          |
+| R02 | Original logo throughout app including browser/shortcut assets. | P02, P08.      | SVG/raster exports, actual tab/manifest screenshots and route branding.         |
+| R03 | Human product copy, no em dashes/emoji, grammatical hyphens.    | P02, P08.      | Copy registry/lint plus human read-through and trial feedback.                  |
+| R04 | Wallet auth and private workspace isolation.                    | P03, P05.      | Personal-message challenge, nonce replay/CSRF/cross-scope tests.                |
+| R05 | Exact funds, dates, expense rules and minimal reduction.        | P02, P03.      | Hero fixture, domain/property tests and permitted/infeasible action cases.      |
+| R06 | Meaningful authenticated Tatum Mainnet reads.                   | P01, P03.      | Successful transport, actual balance/receipt data and routed adapter trace.     |
+| R07 | Ten or more completed Mainnet Memory records.                   | P01, P04.      | Saved job/blob IDs, metadata count and content-matching recall.                 |
+| R08 | Controlled A/B/C memory proof and fresh continuity.             | P04, P05.      | Equal current-input hashes, equivalent history/output and fresh process export. |
+| R09 | Current correction replaces obsolete rule/outcome.              | P04, P05.      | Corrected reserve/client fixture, supersession evidence and updated result.     |
+| R10 | Real target-user evidence and usable action.                    | P02, P05, P07. | Anonymized episodes/histories, trial outcomes and retested feedback.            |
+| R11 | Reliable priced Sui MPP service if submitted.                   | P06.           | Actual protocol/payment/output and failure/concurrency verification.            |
+| R12 | Reproducible hosted submission and presentation.                | P08, P09.      | Fresh clone/build, accessible demo/repo/blog/video and actual source evidence.  |
 
 ## 2. P01: integration and compatibility gate
 
@@ -109,6 +109,8 @@ Outputs: fresh continuity evidence, correction reliability and trial notes/fixes
 
 ## 7. P06: conditional payments or core improvement
 
+Implementation update, 22 October: the user explicitly requested this optional package before the original dependency gates completed. The bounded invoice agent, actual Sui MPP exchange, separate-wallet budget reservations, durable paid-job recovery, text/PDF extraction and draft confirmation are implemented. Local tests use injected chain settlement and real reference-client credentials; live funded acceptance remains open. See [configuration and recovery](docs/INVOICE_AGENT.md). The original conditional schedule below remains historical planning context.
+
 Dates **3–4 November**, **8h**. Depends on P05 passing and P02 payment feasibility. If those gates fail, spend the full block on evidence/UI/reliability rather than adding payments.
 
 Payment sequence:
@@ -180,17 +182,17 @@ flowchart LR
     P08 --> P09[P09 freeze and rehearsal]
 ```
 
-| Package | Hours |
-| --- | ---: |
-| P01 | 8 |
-| P02 | 14 |
-| P03 | 20 |
-| P04 | 20 |
-| P05 | 14 |
-| P06 | 8 |
-| P07 | 12 |
-| P08 | 16 |
-| P09 | 8 |
+| Package   |   Hours |
+| --------- | ------: |
+| P01       |       8 |
+| P02       |      14 |
+| P03       |      20 |
+| P04       |      20 |
+| P05       |      14 |
+| P06       |       8 |
+| P07       |      12 |
+| P08       |      16 |
+| P09       |       8 |
 | **Total** | **120** |
 
 Cuts in order: P06 payments, full recovery/user-owned registration, scheduled briefs, automatic discovery beyond verified digests, CSV/PDF import, unrestricted assistant chat and dark theme. Keep professional responsive screens, original circle motion/static fallback, logo assets, exact planner, scoped auth, meaningful sponsor reads, ten completed memories, correction/continuity, user trials and clear presentation.

@@ -1,0 +1,520 @@
+{
+  "state": "verified",
+  "freshProcess": true,
+  "pid": 247508,
+  "inputHash": "2f93328fd8a69facc022ca11ff268a1dd69edee50c90b90bbef0b0ed65e14775",
+  "historyHash": "d5a30fb098e6ffa5a4a50be5a3c03bcbcc6184a557f49b44de226a20ac81682e",
+  "verifiedAt": "2026-10-22T16:06:56.248Z",
+  "withoutHistory": {
+    "engineVersion": "runway-prefix-1.0.0",
+    "stateVersion": 1,
+    "scenario": "promised",
+    "historyMode": "none",
+    "freshness": "fresh",
+    "confirmedFundsAtomic": "800000000",
+    "reserveFloorAtomic": "100000000",
+    "plannedSpendingAtomic": "850000000",
+    "availableNowAtomic": "0",
+    "commitmentShortageAtomic": "150000000",
+    "feasible": true,
+    "firstReserveBreach": null,
+    "firstExposedFixedBill": null,
+    "timeline": [
+      {
+        "id": "opening",
+        "date": "2026-10-29",
+        "type": "opening",
+        "label": "Confirmed opening funds",
+        "amountAtomic": "800000000",
+        "balanceBeforeAtomic": "800000000",
+        "balanceAfterAtomic": "800000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": false,
+        "fixed": false,
+        "sourceIds": []
+      },
+      {
+        "id": "cedar-oct",
+        "date": "2026-10-30",
+        "type": "receipt",
+        "label": "CED-2026-10",
+        "amountAtomic": "1200000000",
+        "balanceBeforeAtomic": "800000000",
+        "balanceAfterAtomic": "2000000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": true,
+        "fixed": false,
+        "sourceIds": ["cedar-oct"]
+      },
+      {
+        "id": "purchase",
+        "date": "2026-10-31",
+        "type": "expense",
+        "label": "Saturday's purchase",
+        "amountAtomic": "250000000",
+        "balanceBeforeAtomic": "2000000000",
+        "balanceAfterAtomic": "1750000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": false,
+        "fixed": false,
+        "sourceIds": ["purchase"]
+      },
+      {
+        "id": "rent",
+        "date": "2026-11-02",
+        "type": "expense",
+        "label": "Rent",
+        "amountAtomic": "600000000",
+        "balanceBeforeAtomic": "1750000000",
+        "balanceAfterAtomic": "1150000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": false,
+        "fixed": true,
+        "sourceIds": ["rent"]
+      }
+    ],
+    "adjustedTimeline": [
+      {
+        "id": "opening",
+        "date": "2026-10-29",
+        "type": "opening",
+        "label": "Confirmed opening funds",
+        "amountAtomic": "800000000",
+        "balanceBeforeAtomic": "800000000",
+        "balanceAfterAtomic": "800000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": false,
+        "fixed": false,
+        "sourceIds": []
+      },
+      {
+        "id": "cedar-oct",
+        "date": "2026-10-30",
+        "type": "receipt",
+        "label": "CED-2026-10",
+        "amountAtomic": "1200000000",
+        "balanceBeforeAtomic": "800000000",
+        "balanceAfterAtomic": "2000000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": true,
+        "fixed": false,
+        "sourceIds": ["cedar-oct"]
+      },
+      {
+        "id": "purchase",
+        "date": "2026-10-31",
+        "type": "expense",
+        "label": "Saturday's purchase",
+        "amountAtomic": "250000000",
+        "balanceBeforeAtomic": "2000000000",
+        "balanceAfterAtomic": "1750000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": false,
+        "fixed": false,
+        "sourceIds": ["purchase"]
+      },
+      {
+        "id": "rent",
+        "date": "2026-11-02",
+        "type": "expense",
+        "label": "Rent",
+        "amountAtomic": "600000000",
+        "balanceBeforeAtomic": "1750000000",
+        "balanceAfterAtomic": "1150000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": false,
+        "fixed": true,
+        "sourceIds": ["rent"]
+      }
+    ],
+    "adjustments": [],
+    "totalReductionAtomic": "0",
+    "residualGaps": [],
+    "dependsOnUnsettledReceipt": true,
+    "selectedHistoryRecordIds": [],
+    "uncertainty": {
+      "sampleCount": 0
+    },
+    "forecastDates": {
+      "cedar-oct": "2026-10-30"
+    }
+  },
+  "walrusHistory": {
+    "engineVersion": "runway-prefix-1.0.0",
+    "stateVersion": 1,
+    "scenario": "history_median",
+    "historyMode": "walrus",
+    "freshness": "fresh",
+    "confirmedFundsAtomic": "800000000",
+    "reserveFloorAtomic": "100000000",
+    "plannedSpendingAtomic": "850000000",
+    "availableNowAtomic": "0",
+    "commitmentShortageAtomic": "150000000",
+    "feasible": true,
+    "firstReserveBreach": {
+      "eventId": "rent",
+      "label": "Rent",
+      "date": "2026-11-02",
+      "gapAtomic": "150000000",
+      "uncoveredAtomic": "50000000"
+    },
+    "firstExposedFixedBill": {
+      "eventId": "rent",
+      "label": "Rent",
+      "date": "2026-11-02",
+      "gapAtomic": "150000000",
+      "uncoveredAtomic": "50000000"
+    },
+    "timeline": [
+      {
+        "id": "opening",
+        "date": "2026-10-29",
+        "type": "opening",
+        "label": "Confirmed opening funds",
+        "amountAtomic": "800000000",
+        "balanceBeforeAtomic": "800000000",
+        "balanceAfterAtomic": "800000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": false,
+        "fixed": false,
+        "sourceIds": []
+      },
+      {
+        "id": "purchase",
+        "date": "2026-10-31",
+        "type": "expense",
+        "label": "Saturday's purchase",
+        "amountAtomic": "250000000",
+        "balanceBeforeAtomic": "800000000",
+        "balanceAfterAtomic": "550000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": false,
+        "fixed": false,
+        "sourceIds": ["purchase"]
+      },
+      {
+        "id": "rent",
+        "date": "2026-11-02",
+        "type": "expense",
+        "label": "Rent",
+        "amountAtomic": "600000000",
+        "balanceBeforeAtomic": "550000000",
+        "balanceAfterAtomic": "-50000000",
+        "belowFloorAtomic": "150000000",
+        "uncoveredAtomic": "50000000",
+        "uncertain": false,
+        "fixed": true,
+        "sourceIds": ["rent"]
+      },
+      {
+        "id": "cedar-oct",
+        "date": "2026-11-03",
+        "type": "receipt",
+        "label": "CED-2026-10",
+        "amountAtomic": "1200000000",
+        "balanceBeforeAtomic": "-50000000",
+        "balanceAfterAtomic": "1150000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": true,
+        "fixed": false,
+        "sourceIds": [
+          "cedar-oct",
+          "cedar-outcome-1",
+          "cedar-outcome-2",
+          "cedar-outcome-3",
+          "cedar-outcome-4"
+        ]
+      }
+    ],
+    "adjustedTimeline": [
+      {
+        "id": "opening",
+        "date": "2026-10-29",
+        "type": "opening",
+        "label": "Confirmed opening funds",
+        "amountAtomic": "800000000",
+        "balanceBeforeAtomic": "800000000",
+        "balanceAfterAtomic": "800000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": false,
+        "fixed": false,
+        "sourceIds": []
+      },
+      {
+        "id": "purchase",
+        "date": "2026-10-31",
+        "type": "expense",
+        "label": "Saturday's purchase",
+        "amountAtomic": "100000000",
+        "balanceBeforeAtomic": "800000000",
+        "balanceAfterAtomic": "700000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": false,
+        "fixed": false,
+        "sourceIds": ["purchase"]
+      },
+      {
+        "id": "rent",
+        "date": "2026-11-02",
+        "type": "expense",
+        "label": "Rent",
+        "amountAtomic": "600000000",
+        "balanceBeforeAtomic": "700000000",
+        "balanceAfterAtomic": "100000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": false,
+        "fixed": true,
+        "sourceIds": ["rent"]
+      },
+      {
+        "id": "cedar-oct",
+        "date": "2026-11-03",
+        "type": "receipt",
+        "label": "CED-2026-10",
+        "amountAtomic": "1200000000",
+        "balanceBeforeAtomic": "100000000",
+        "balanceAfterAtomic": "1300000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": true,
+        "fixed": false,
+        "sourceIds": [
+          "cedar-oct",
+          "cedar-outcome-1",
+          "cedar-outcome-2",
+          "cedar-outcome-3",
+          "cedar-outcome-4"
+        ]
+      }
+    ],
+    "adjustments": [
+      {
+        "expenseId": "purchase",
+        "label": "Saturday's purchase",
+        "dueDate": "2026-10-31",
+        "expectedExpenseVersion": 1,
+        "originalAmountAtomic": "250000000",
+        "newAmountAtomic": "100000000",
+        "reductionAtomic": "150000000",
+        "capAtomic": "250000000"
+      }
+    ],
+    "totalReductionAtomic": "150000000",
+    "residualGaps": [],
+    "dependsOnUnsettledReceipt": false,
+    "selectedHistoryRecordIds": [
+      "cedar-outcome-1",
+      "cedar-outcome-2",
+      "cedar-outcome-3",
+      "cedar-outcome-4"
+    ],
+    "uncertainty": {
+      "sampleCount": 4,
+      "observedDelayMin": 3,
+      "observedDelayMax": 5,
+      "medianDelay": 4
+    },
+    "forecastDates": {
+      "cedar-oct": "2026-11-03"
+    }
+  },
+  "databaseHistory": {
+    "engineVersion": "runway-prefix-1.0.0",
+    "stateVersion": 1,
+    "scenario": "history_median",
+    "historyMode": "postgres",
+    "freshness": "fresh",
+    "confirmedFundsAtomic": "800000000",
+    "reserveFloorAtomic": "100000000",
+    "plannedSpendingAtomic": "850000000",
+    "availableNowAtomic": "0",
+    "commitmentShortageAtomic": "150000000",
+    "feasible": true,
+    "firstReserveBreach": {
+      "eventId": "rent",
+      "label": "Rent",
+      "date": "2026-11-02",
+      "gapAtomic": "150000000",
+      "uncoveredAtomic": "50000000"
+    },
+    "firstExposedFixedBill": {
+      "eventId": "rent",
+      "label": "Rent",
+      "date": "2026-11-02",
+      "gapAtomic": "150000000",
+      "uncoveredAtomic": "50000000"
+    },
+    "timeline": [
+      {
+        "id": "opening",
+        "date": "2026-10-29",
+        "type": "opening",
+        "label": "Confirmed opening funds",
+        "amountAtomic": "800000000",
+        "balanceBeforeAtomic": "800000000",
+        "balanceAfterAtomic": "800000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": false,
+        "fixed": false,
+        "sourceIds": []
+      },
+      {
+        "id": "purchase",
+        "date": "2026-10-31",
+        "type": "expense",
+        "label": "Saturday's purchase",
+        "amountAtomic": "250000000",
+        "balanceBeforeAtomic": "800000000",
+        "balanceAfterAtomic": "550000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": false,
+        "fixed": false,
+        "sourceIds": ["purchase"]
+      },
+      {
+        "id": "rent",
+        "date": "2026-11-02",
+        "type": "expense",
+        "label": "Rent",
+        "amountAtomic": "600000000",
+        "balanceBeforeAtomic": "550000000",
+        "balanceAfterAtomic": "-50000000",
+        "belowFloorAtomic": "150000000",
+        "uncoveredAtomic": "50000000",
+        "uncertain": false,
+        "fixed": true,
+        "sourceIds": ["rent"]
+      },
+      {
+        "id": "cedar-oct",
+        "date": "2026-11-03",
+        "type": "receipt",
+        "label": "CED-2026-10",
+        "amountAtomic": "1200000000",
+        "balanceBeforeAtomic": "-50000000",
+        "balanceAfterAtomic": "1150000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": true,
+        "fixed": false,
+        "sourceIds": [
+          "cedar-oct",
+          "cedar-outcome-1",
+          "cedar-outcome-2",
+          "cedar-outcome-3",
+          "cedar-outcome-4"
+        ]
+      }
+    ],
+    "adjustedTimeline": [
+      {
+        "id": "opening",
+        "date": "2026-10-29",
+        "type": "opening",
+        "label": "Confirmed opening funds",
+        "amountAtomic": "800000000",
+        "balanceBeforeAtomic": "800000000",
+        "balanceAfterAtomic": "800000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": false,
+        "fixed": false,
+        "sourceIds": []
+      },
+      {
+        "id": "purchase",
+        "date": "2026-10-31",
+        "type": "expense",
+        "label": "Saturday's purchase",
+        "amountAtomic": "100000000",
+        "balanceBeforeAtomic": "800000000",
+        "balanceAfterAtomic": "700000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": false,
+        "fixed": false,
+        "sourceIds": ["purchase"]
+      },
+      {
+        "id": "rent",
+        "date": "2026-11-02",
+        "type": "expense",
+        "label": "Rent",
+        "amountAtomic": "600000000",
+        "balanceBeforeAtomic": "700000000",
+        "balanceAfterAtomic": "100000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": false,
+        "fixed": true,
+        "sourceIds": ["rent"]
+      },
+      {
+        "id": "cedar-oct",
+        "date": "2026-11-03",
+        "type": "receipt",
+        "label": "CED-2026-10",
+        "amountAtomic": "1200000000",
+        "balanceBeforeAtomic": "100000000",
+        "balanceAfterAtomic": "1300000000",
+        "belowFloorAtomic": "0",
+        "uncoveredAtomic": "0",
+        "uncertain": true,
+        "fixed": false,
+        "sourceIds": [
+          "cedar-oct",
+          "cedar-outcome-1",
+          "cedar-outcome-2",
+          "cedar-outcome-3",
+          "cedar-outcome-4"
+        ]
+      }
+    ],
+    "adjustments": [
+      {
+        "expenseId": "purchase",
+        "label": "Saturday's purchase",
+        "dueDate": "2026-10-31",
+        "expectedExpenseVersion": 1,
+        "originalAmountAtomic": "250000000",
+        "newAmountAtomic": "100000000",
+        "reductionAtomic": "150000000",
+        "capAtomic": "250000000"
+      }
+    ],
+    "totalReductionAtomic": "150000000",
+    "residualGaps": [],
+    "dependsOnUnsettledReceipt": false,
+    "selectedHistoryRecordIds": [
+      "cedar-outcome-1",
+      "cedar-outcome-2",
+      "cedar-outcome-3",
+      "cedar-outcome-4"
+    ],
+    "uncertainty": {
+      "sampleCount": 4,
+      "observedDelayMin": 3,
+      "observedDelayMax": 5,
+      "medianDelay": 4
+    },
+    "forecastDates": {
+      "cedar-oct": "2026-11-03"
+    }
+  }
+}

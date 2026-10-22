@@ -55,6 +55,7 @@ export class MemoryAdapter {
       namespace: scope,
       requestTimeoutMs: 20000,
       recallTimeoutMs: 20000,
+      preflightTimeoutMs: 15000,
     });
   }
   async recall(

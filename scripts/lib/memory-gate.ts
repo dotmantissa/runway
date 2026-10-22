@@ -109,6 +109,8 @@ export async function checkMemoryGate(
     if (!done.blob_id)
       throw new Error("The completed memory job did not return a blob ID.");
     evidence.state = "uploaded";
+    evidence.remoteStatus = "done";
+    evidence.lastStatusCheck = new Date().toISOString();
     evidence.blobId = done.blob_id;
     await persist();
     const recalled = await client.recall({

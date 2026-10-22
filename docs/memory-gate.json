@@ -1,10 +1,52 @@
 {
   "provider": "https://relayer.memory.walrus.xyz",
   "namespace": "runway-a05f69083ffbe3aec697d7db",
-  "acceptedJobId": "1b65bee7-4539-46de-8bfe-d1e9e7518473",
-  "state": "failed",
-  "checkedAt": "2026-10-22T14:39:01.454Z",
-  "error": "Internal Error: Embedding API error (401 Unauthorized): {\"error\":{\"message\":\"User not found.\",\"code\":401}}",
+  "recordId": "runway-synthetic-compatibility-v2",
+  "recordedAt": "2026-10-22T15:58:22.752Z",
+  "state": "stored_and_retrieved",
+  "completedRecords": 1,
+  "previousAttempts": [
+    {
+      "provider": "https://relayer.memory.walrus.xyz",
+      "namespace": "runway-a05f69083ffbe3aec697d7db",
+      "acceptedJobId": "1b65bee7-4539-46de-8bfe-d1e9e7518473",
+      "state": "failed",
+      "checkedAt": "2026-10-22T15:56:59.206Z",
+      "error": "Internal Error: Embedding API error (401 Unauthorized): {\"error\":{\"message\":\"User not found.\",\"code\":401}}",
+      "compatibility": {
+        "status": "ok",
+        "version": "0.1.0",
+        "write_ready": true,
+        "writes": "ok"
+      },
+      "signedAccessVerified": true,
+      "priorMemoryCount": 0,
+      "lastStatusCheck": "2026-10-22T15:56:58.829Z",
+      "remoteStatus": "failed",
+      "completedRecords": 0,
+      "lastEmbeddingProbe": {
+        "checkedAt": "2026-10-22T14:42:42.367Z",
+        "operation": "embed-only-no-storage",
+        "state": "timed_out",
+        "errorType": "MemWalRequestTimeout",
+        "requestTimeoutMs": 20000,
+        "httpResponseStatus": null
+      }
+    }
+  ],
+  "reconciliation": {
+    "failedJobId": "1b65bee7-4539-46de-8bfe-d1e9e7518473",
+    "checkedAt": "2026-10-22T15:58:22.752Z",
+    "remoteStatus": "failed",
+    "blobAbsent": true,
+    "namespaceEmpty": true
+  },
+  "lastEmbeddingProbe": {
+    "checkedAt": "2026-10-22T15:53:21.832Z",
+    "operation": "embed-only-no-storage",
+    "state": "succeeded",
+    "dimensions": 1536
+  },
   "compatibility": {
     "status": "ok",
     "version": "0.1.0",
@@ -12,16 +54,14 @@
     "writes": "ok"
   },
   "signedAccessVerified": true,
-  "priorMemoryCount": 0,
-  "lastStatusCheck": "2026-10-22T14:39:00.595Z",
-  "remoteStatus": "failed",
-  "completedRecords": 0,
-  "lastEmbeddingProbe": {
-    "checkedAt": "2026-10-22T14:42:42.367Z",
-    "operation": "embed-only-no-storage",
-    "state": "timed_out",
-    "errorType": "MemWalRequestTimeout",
-    "requestTimeoutMs": 20000,
-    "httpResponseStatus": null
-  }
+  "priorMemoryCount": 5,
+  "lastStatusCheck": "2026-10-22T16:02:55.666Z",
+  "payloadHash": "7d31bcfb624a456179e41e42c7239f7f325e1888241b7fcf34fe82944358cea0",
+  "submittedAt": "2026-10-22T15:59:30.523Z",
+  "acceptedJobId": "42eb8dfb-47b2-48c3-8f98-e589bb7ffc69",
+  "remoteStatus": "done",
+  "blobId": "e_EDBSdcUzk13FDoqIzE0GI0kZatwe15XW09WqpODxk",
+  "sdk": "0.1.9",
+  "jobId": "42eb8dfb-47b2-48c3-8f98-e589bb7ffc69",
+  "verifiedAt": "2026-10-22T16:03:01.036Z"
 }

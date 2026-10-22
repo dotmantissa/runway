@@ -32,7 +32,7 @@ The server requires outbound native HTTP/2 to Tatum gRPC and HTTPS to MemWal. Ve
 
 ## Sponsor gates and memory recovery
 
-`docs/tatum-gate.json` records successful authenticated metadata/balance reads and a funded native-USDC receipt verified by the actual Mainnet adapter. Full smoke evidence stays in ignored `research/tatum-smoke.json`; the public artifact omits wallet identifiers and financial details. Hosted verification in the receiving wallet’s signed workspace and invoice allocation remain pending. `docs/memory-gate.json` records a signed remember accepted then failed by the relayer's embedding service. Never count accepted/failed jobs as completed Mainnet records.
+`docs/tatum-gate.json` records successful authenticated metadata/balance reads and a funded native-USDC receipt verified by the actual Mainnet adapter. Full smoke evidence stays in ignored `research/tatum-smoke.json`; the public artifact omits wallet identifiers and financial details. Hosted verification in the receiving wallet’s signed workspace and invoice allocation remain pending. `docs/memory-gate.json` preserves the original embedding failure and the explicitly reconciled v2 compatibility record now stored/retrieved on Mainnet. `docs/memory-manifest.json` contains ten completed useful synthetic records with job/blob IDs and matched content; `docs/comparison.json` records fresh-process remote/database parity. Never count accepted/failed jobs as completed Mainnet records.
 
 ```sh
 pnpm evidence compare-local
@@ -40,7 +40,7 @@ MEMORY_WRITES_ENABLED=true pnpm evidence publish
 pnpm evidence compare-walrus
 ```
 
-The publication command writes ten useful synthetic records to a dedicated builder namespace, with persisted job IDs, content hashes and blob IDs. Enable it only when the relayer is healthy. It stops on the first failure and resumes known jobs. The fresh-process comparison reads current fixture state and a bounded manifest, then retrieves actual outcomes remotely. It fails rather than substitutes local history. It is implemented, but its Mainnet acceptance remains open until those operations succeed.
+The publication command writes ten useful synthetic records to a dedicated builder namespace, with persisted job IDs, content hashes and blob IDs. Enable it only when the relayer is healthy. It stops on the first failure and resumes known jobs. The fresh-process comparison reads current fixture state and a bounded manifest, then retrieves actual outcomes remotely. It fails rather than substitutes local history. These commands have now passed on Mainnet with labelled synthetic fixtures: ten records completed and a fresh process reproduced the same history hash and plan. Retention and availability must still be checked through judging.
 
 If a process loses a submission response, the record stays `submitting`/`needs_review`. Do not clear this state and resubmit. Obtain the existing job ID from the relayer using the original logical record ID as the idempotency key. Known `running` jobs resume polling after lease expiry. Uploaded content becomes `verified` only after matching logical ID, record type, scope, blob ID, schema and payload hash are retrieved. An upstream permanent failed job requires service resolution and an explicitly reconciled replacement, not blind automatic retries.
 
@@ -59,7 +59,7 @@ Stopping consent prevents new publication; it does not erase remote history. Cur
 
 ## Scope still requiring evidence
 
-Target-user interviews and observed trials, authenticated receipt allocation, ten completed Mainnet memories, live Walrus/database parity, fresh remote recall, video, blog and submission remain unfinished. The Vercel production URL is https://runway-ten-xi.vercel.app; see `docs/deployment-gate.json` for hosted checks. Optional paid invoice parsing was omitted because core memory acceptance has not passed. No award eligibility or completed user validation is inferred from local tests.
+Target-user interviews and observed trials, authenticated receipt allocation, a funded agent purchase, remote correction/retention evidence through judging, video, blog and submission remain unfinished. Ten synthetic Mainnet memories plus a compatibility record and fresh-process Walrus/database parity are now verified. The Vercel production URL is https://runway-ten-xi.vercel.app; see `docs/deployment-gate.json` for hosted checks. The optional invoice agent and priced parser are now implemented at the user's request; their funded Mainnet acceptance remains unperformed. See the [invoice agent guide](INVOICE_AGENT.md) for feature flags, isolated-wallet setup, exact price/limits and recovery. No award eligibility or completed user validation is inferred from local tests.
 
 Existing local records can be explicitly published from their Activity inspector after consent and server writes are enabled. This does not silently backfill old records. Nonlocal jobs keep their existing lifecycle and require reconciliation before retry.
 
@@ -67,7 +67,7 @@ Existing local records can be explicitly published from their Activity inspector
 
 `vercel.json` builds the original Vite frontend and routes `/api/*` to `api/index.js`. The function retains a connection pool between warm requests and uses persistent PostgreSQL for finance state, sessions and durable jobs. Migrations run transactionally under an advisory lock, so simultaneous function startups do not race on schema creation.
 
-Set Node 22, `NODE_ENV=production`, `DATABASE_URL` (a pooled PostgreSQL URL), `APP_ORIGIN` (the exact production HTTPS origin), `INLINE_WORKER=false`, `JOB_MODE=scheduled`, and a generated `CRON_SECRET` of at least 32 characters. Configure sponsor secrets through Vercel encrypted environment variables. Leave `MEMORY_WRITES_ENABLED=false` until the live relayer issue is resolved. No secrets belong in `vercel.json` or frontend variables.
+Set Node 22, `NODE_ENV=production`, `DATABASE_URL` (a pooled PostgreSQL URL), `APP_ORIGIN` (the exact production HTTPS origin), `INLINE_WORKER=false`, `JOB_MODE=scheduled`, and a generated `CRON_SECRET` of at least 32 characters. Configure sponsor secrets through Vercel encrypted environment variables. The recovered synthetic memory gates are verified. Production keeps `MEMORY_WRITES_ENABLED=false` until publication is intentionally enabled for consenting personal workspaces; no historical backfill is automatic. No secrets belong in `vercel.json` or frontend variables.
 
 Authorized API activity schedules a bounded job drain through Vercel `waitUntil`; job polling resumes known remote jobs. The protected `/api/v1/internal/jobs` route provides a daily recovery sweep, compatible with Vercel Hobby cron limits. Background work has a 60-second drain budget; one in-flight operation can run longer within the 300-second function limit. Bounded remote recall also has a 60-second overall budget. Backlogs continue on subsequent API activity or the daily sweep. This is not a continuously running worker; use the native worker deployment for continuous high-volume processing.
 

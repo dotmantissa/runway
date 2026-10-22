@@ -19,6 +19,25 @@ const schema = z.object({
   INLINE_WORKER: z.enum(["true", "false"]).default("true"),
   JOB_MODE: z.enum(["inline", "scheduled"]).default("inline"),
   CRON_SECRET: z.string().default(""),
+  ENABLE_AGENT_PAYMENTS: z.enum(["true", "false"]).default("false"),
+  TOOL_WALLET_KEY: z.string().default(""),
+  TOOL_ALLOWED_WALLETS: z.string().default(""),
+  TOOL_MAX_GAS_MIST: z.coerce
+    .number()
+    .int()
+    .min(1000000)
+    .max(10000000)
+    .default(5000000),
+  TOOL_DAILY_GAS_MIST: z.coerce
+    .number()
+    .int()
+    .min(1000000)
+    .max(50000000)
+    .default(20000000),
+  PARSER_SERVICE_ENABLED: z.enum(["true", "false"]).default("false"),
+  PARSER_SERVICE_URL: z.url().optional(),
+  PARSER_RECIPIENT: z.string().default(""),
+  PARSER_PAYMENT_SECRET: z.string().default(""),
 });
 const parsed = schema.safeParse(process.env);
 if (!parsed.success)
@@ -53,7 +72,64 @@ export const config = {
   inlineWorker: env.INLINE_WORKER === "true",
   jobMode: env.JOB_MODE,
   cronSecret: env.CRON_SECRET,
+  agentPayments: env.ENABLE_AGENT_PAYMENTS === "true",
+  toolWalletKey: env.TOOL_WALLET_KEY,
+  toolAllowedWallets: env.TOOL_ALLOWED_WALLETS.split(",")
+    .map((a) => a.trim().toLowerCase())
+    .filter(Boolean),
+  toolMaxGas: env.TOOL_MAX_GAS_MIST,
+  toolDailyGas: env.TOOL_DAILY_GAS_MIST,
+  parserEnabled: env.PARSER_SERVICE_ENABLED === "true",
+  parserUrl:
+    env.PARSER_SERVICE_URL || env.APP_ORIGIN + "/api/v1/paid/invoice-parse",
+  parserRecipient: env.PARSER_RECIPIENT.toLowerCase(),
+  parserSecret: env.PARSER_PAYMENT_SECRET,
 };
+if (
+  config.toolAllowedWallets.some((address) => !/^0x[0-9a-f]{64}$/.test(address))
+)
+  throw new Error(
+    "TOOL_ALLOWED_WALLETS requires comma-separated full Sui addresses.",
+  );
+if (config.parserRecipient && !/^0x[0-9a-f]{64}$/.test(config.parserRecipient))
+  throw new Error("PARSER_RECIPIENT requires a full Sui address.");
+if ((config.parserEnabled || config.agentPayments) && !config.tatumKey)
+  throw new Error(
+    "Invoice agent payments and the paid parser require TATUM_API_KEY for settlement verification.",
+  );
+if (
+  new URL(config.parserUrl).username ||
+  new URL(config.parserUrl).password ||
+  new URL(config.parserUrl).search ||
+  new URL(config.parserUrl).hash
+)
+  throw new Error(
+    "PARSER_SERVICE_URL cannot contain credentials, query parameters or fragments.",
+  );
+if (
+  config.parserEnabled &&
+  (!/^0x[0-9a-f]{64}$/.test(config.parserRecipient) ||
+    config.parserSecret.length < 32)
+)
+  throw new Error(
+    "The paid parser requires PARSER_RECIPIENT and a PARSER_PAYMENT_SECRET of at least 32 characters.",
+  );
+if (
+  config.agentPayments &&
+  (!config.toolWalletKey ||
+    !config.toolAllowedWallets.length ||
+    !config.parserRecipient)
+)
+  throw new Error(
+    "Agent payments require a separate TOOL_WALLET_KEY, TOOL_ALLOWED_WALLETS and PARSER_RECIPIENT.",
+  );
+if (
+  new URL(config.parserUrl).protocol !== "https:" &&
+  (config.production || new URL(config.parserUrl).origin !== config.origin)
+)
+  throw new Error(
+    "PARSER_SERVICE_URL requires HTTPS or the exact local development origin.",
+  );
 if (
   config.production &&
   (!config.databaseUrl ||

@@ -68,6 +68,7 @@ import { hero, FIXTURE_CLOCK } from "../../../packages/fixtures/src/index.js";
 import type { State } from "../../server/src/services/state.js";
 
 const WalletSignIn = lazy(() => import("./wallet.js"));
+const InvoiceAssistant = lazy(() => import("./invoice-assistant.js"));
 const WalletGuard = lazy(() =>
   import("./wallet.js").then((m) => ({ default: m.WalletGuard })),
 );
@@ -818,19 +819,48 @@ function Empty({
 function InvoiceForm({
   invoice,
   onClose,
+  draft,
+  toolOrderId,
 }: {
   invoice?: Invoice;
   onClose: () => void;
+  draft?: {
+    clientAlias: string;
+    invoiceReference: string;
+    amountAtomic: string;
+    dueDate: string;
+  };
+  toolOrderId?: string;
 }) {
   const { b, reload } = useWorkspace(),
     action = useAction(),
     [clientId, setClientId] = useState(
-      invoice?.clientId || b.state.clients[0]?.id || "",
+      invoice?.clientId ||
+        (draft
+          ? b.state.clients.find(
+              (c) => c.alias.toLowerCase() === draft.clientAlias.toLowerCase(),
+            )?.id || ""
+          : b.state.clients[0]?.id || ""),
     );
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
     void action.run(async () => {
+      if (toolOrderId) {
+        await api("/tools/orders/" + toolOrderId + "/confirm", "POST", {
+          clientAlias: clientId
+            ? b.state.clients.find((c) => c.id === clientId)!.alias
+            : String(f.get("newClient")),
+          invoiceReference: f.get("reference"),
+          amountAtomic: parseMoney(String(f.get("amount"))),
+          dueDate: f.get("date"),
+          timezone: b.state.policy.timezone,
+          expectedStateVersion: b.stateVersion,
+        });
+        await reload();
+        onClose();
+        return;
+      }
       let selected = clientId;
       if (!selected) {
         const created = await api("/clients", "POST", {
@@ -887,13 +917,14 @@ function InvoiceForm({
           name="newClient"
           required
           maxLength={80}
+          defaultValue={draft?.clientAlias}
         />
       ) : null}
       <Field
         label="Invoice reference"
         name="reference"
         required
-        defaultValue={invoice?.invoiceReference}
+        defaultValue={invoice?.invoiceReference || draft?.invoiceReference}
         maxLength={80}
       />
       <Field
@@ -901,14 +932,20 @@ function InvoiceForm({
         name="amount"
         inputMode="decimal"
         required
-        defaultValue={invoice ? moneyInput(invoice.amountAtomic) : ""}
+        defaultValue={
+          invoice
+            ? moneyInput(invoice.amountAtomic)
+            : draft
+              ? moneyInput(draft.amountAtomic)
+              : ""
+        }
       />
       <Field
         label="Client's payment date"
         name="date"
         type="date"
         required
-        defaultValue={invoice?.dueDate}
+        defaultValue={invoice?.dueDate || draft?.dueDate}
       />
       <p className="helper">
         Dates use {b.state.policy.timezone}. This amount stays separate from
@@ -924,6 +961,16 @@ function InvoiceForm({
 function Invoices() {
   const { b } = useWorkspace(),
     [open, setOpen] = useState(false),
+    [assisting, setAssisting] = useState(false),
+    [parsed, setParsed] = useState<{
+      draft: {
+        clientAlias: string;
+        invoiceReference: string;
+        amountAtomic: string;
+        dueDate: string;
+      };
+      orderId?: string;
+    } | null>(null),
     [importing, setImporting] = useState(false),
     [filter, setFilter] = useState("all");
   const rows = b.state.invoices.filter(
@@ -939,7 +986,12 @@ function Invoices() {
         title="Payments you expect."
         description="A promise is useful. A confirmed receipt tells you what happened."
         action={
-          <Button onClick={() => setOpen(true)}>
+          <Button
+            onClick={() => {
+              setParsed(null);
+              setOpen(true);
+            }}
+          >
             <Plus size={17} />
             Add invoice
           </Button>
@@ -961,6 +1013,9 @@ function Invoices() {
             </button>
           ))}
         </div>
+        <button className="text-link" onClick={() => setAssisting(true)}>
+          Invoice assistant <ArrowUpRight size={15} />
+        </button>
         <button className="text-link" onClick={() => setImporting(true)}>
           Import CSV <ArrowUpRight size={15} />
         </button>
@@ -1035,10 +1090,37 @@ function Invoices() {
       <Drawer
         open={open}
         onClose={() => setOpen(false)}
-        title="Add the next payment"
+        title={parsed ? "Review the extracted invoice" : "Add the next payment"}
         description="Record the promise. Confirm what arrived separately."
       >
-        <InvoiceForm onClose={() => setOpen(false)} />
+        <InvoiceForm
+          key={parsed?.orderId || (parsed ? "sample" : "manual")}
+          draft={parsed?.draft}
+          toolOrderId={parsed?.orderId}
+          onClose={() => {
+            setOpen(false);
+            setParsed(null);
+          }}
+        />
+      </Drawer>
+      <Drawer
+        open={assisting}
+        onClose={() => setAssisting(false)}
+        title="Invoice assistant"
+        description="Read the invoice, review the purchase, then confirm the draft."
+      >
+        <Suspense fallback={<Loading />}>
+          <InvoiceAssistant
+            key={b.workspace.id}
+            workspaceId={b.workspace.id}
+            stateVersion={b.stateVersion}
+            onDraft={(draft, orderId) => {
+              setAssisting(false);
+              setParsed({ draft, orderId });
+              setOpen(true);
+            }}
+          />
+        </Suspense>
       </Drawer>
       <Drawer
         open={importing}

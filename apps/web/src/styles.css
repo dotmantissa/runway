@@ -2358,3 +2358,51 @@ details summary {
   color: var(--ink);
   margin: 24px 24px 8px;
 }
+/* Invoice assistant uses the existing drawer, form and status primitives. */
+.assistant-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.assistant-note svg {
+  flex-shrink: 0;
+  margin-top: 4px;
+  color: var(--action);
+}
+.assistant-note p {
+  margin-top: 0;
+}
+.parser-panel {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  display: grid;
+  gap: 14px;
+}
+.parser-panel h3,
+.parser-panel p {
+  margin: 0;
+}
+.parser-panel pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.85rem;
+}
+.invoice-assistant textarea {
+  width: 100%;
+  min-height: 160px;
+  resize: vertical;
+}
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+.check-row input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}

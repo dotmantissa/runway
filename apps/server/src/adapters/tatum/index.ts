@@ -47,6 +47,9 @@ export class TatumAdapter implements ChainAdapter {
       });
     return this.client;
   }
+  coreClient() {
+    return this.getClient();
+  }
   async metadata() {
     const result = await this.getClient().getCoinMetadata({ coinType: USDC });
     if (result.coinMetadata?.decimals !== 6)

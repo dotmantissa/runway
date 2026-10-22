@@ -3,7 +3,10 @@ import { mkdtemp, readFile, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { checkMemoryGate } from "../../scripts/lib/memory-gate.js";
-import { namespace } from "../../apps/server/src/adapters/memwal/index.js";
+import {
+  namespace,
+  encodeMemory,
+} from "../../apps/server/src/adapters/memwal/index.js";
 import { hash } from "../../apps/server/src/services/state.js";
 
 const envelope = {
@@ -17,6 +20,63 @@ const envelope = {
   payload: { synthetic: true },
 };
 describe("crash-safe memory compatibility evidence", () => {
+  it("records the final remote state after polling without losing prior failure history", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "runway-gate-")),
+      file = join(directory, "gate.json");
+    const remember = vi.fn();
+    const previousAttempts = [
+      {
+        acceptedJobId: "old-failed-job",
+        state: "failed",
+        error: "Preserved upstream failure",
+      },
+    ];
+    const client = {
+      health: async () => ({}),
+      listMemories: async () => ({ memories: [] }),
+      remember,
+      getRememberStatus: async () => ({ status: "pending" }),
+      waitForRememberJob: async () => ({ blob_id: "verified-blob" }),
+      recall: async () => ({
+        results: [
+          {
+            blob_id: "verified-blob",
+            text: encodeMemory("Synthetic compatibility", envelope),
+          },
+        ],
+      }),
+    } as any;
+    try {
+      await writeFile(
+        file,
+        JSON.stringify({
+          acceptedJobId: "existing-replacement-job",
+          state: "running",
+          previousAttempts,
+        }),
+      );
+      const result = await checkMemoryGate(
+        client,
+        file,
+        "https://test.invalid",
+        envelope,
+        false,
+      );
+      expect(result).toMatchObject({
+        state: "stored_and_retrieved",
+        remoteStatus: "done",
+        completedRecords: 1,
+        previousAttempts,
+      });
+      expect(remember).not.toHaveBeenCalled();
+      expect(JSON.parse(await readFile(file, "utf8"))).toMatchObject({
+        remoteStatus: "done",
+        previousAttempts,
+      });
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  });
   it("never resubmits an unknown response, even after repeated restarts", async () => {
     const directory = await mkdtemp(join(tmpdir(), "runway-gate-"));
     const file = join(directory, "gate.json");

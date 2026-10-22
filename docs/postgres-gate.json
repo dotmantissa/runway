@@ -2,15 +2,16 @@
   "state": "verified",
   "database": "native-postgresql",
   "serverVersion": "18.6 (Ubuntu 18.6-0ubuntu0.26.04.1)",
-  "checkedAt": "2026-10-22T14:46:53.301Z",
+  "checkedAt": "2026-10-22T15:42:48.857Z",
   "isolatedSchema": true,
   "providerCalls": "injected test only; no live receipt or memory claim",
   "checks": [
-    "Concurrent server/worker migrations serialize and apply versions 1–3",
+    "Concurrent server/worker migrations serialize and apply versions 1–4",
     "Failed transactions roll back",
     "Concurrent identical finance commands update state exactly once",
     "Concurrent worker connections claim and complete a leased job once",
     "Concurrent memory recovery verifies existing content once and preserves interrupted-job evidence without resubmission",
+    "Concurrent workspaces share one tool-wallet daily budget and reserve the last allowance exactly once without signing or spending",
     "New server connection restores the saved session and finance state"
   ]
 }

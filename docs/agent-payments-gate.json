@@ -1,0 +1,11 @@
+{
+  "state": "implemented_live_unverified",
+  "network": "sui:mainnet",
+  "amountAtomic": "10000",
+  "currency": "native-USDC",
+  "protocol": "Sui MPP with @suimpp/mpp 0.9.0 and mppx 0.4.12",
+  "parser": "structured_text",
+  "fundedSettlementVerified": false,
+  "evidence": "Reference-client credentials and proof verification with injected chain settlement; real PostgreSQL budget concurrency and browser draft-review checks. No live agent transfer or paid service adoption claim.",
+  "activation": "Disabled by default; requires isolated wallet, allowlisted owner, service configuration, spending limits and per-purchase approval."
+}

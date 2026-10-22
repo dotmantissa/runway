@@ -44,6 +44,9 @@ import { TatumAdapter, type ChainAdapter } from "./adapters/tatum/index.js";
 import { explain } from "./adapters/llm/index.js";
 import { runJobs } from "./jobs.js";
 import { scheduledJobs } from "./scheduled-jobs.js";
+import { InvoiceAgent } from "./services/invoice-agent.js";
+import { PaidParser } from "./services/paid-parser.js";
+import { registerInvoiceTools } from "./invoice-tools.js";
 
 type Session = { workspace_id: string; csrf: string; token_hash: string };
 const API = "/api/v1";
@@ -76,13 +79,15 @@ export async function createApp(
     worker?: boolean;
     serveStatic?: boolean;
     background?: (operation: Promise<unknown>) => void;
+    tools?: InvoiceAgent;
   } = {},
 ) {
   const db = options.db || new Database();
   await db.initialize();
   const chain = options.chain || new TatumAdapter(),
-    mem = new MemoryAdapter();
-  const drainJobs = scheduledJobs(db, chain, mem);
+    mem = new MemoryAdapter(),
+    tools = options.tools || new InvoiceAgent(db, chain);
+  const drainJobs = scheduledJobs(db, chain, mem, tools);
   const app = Fastify({
     logger: false,
     bodyLimit: 300000,
@@ -144,6 +149,8 @@ export async function createApp(
   app.addHook("preHandler", async (req) => {
     if (!req.url.startsWith(API)) return;
     const path = req.url.split("?")[0];
+    // This endpoint uses a request-bound MPP credential, never ambient cookies.
+    if (path === API + "/paid/invoice-parse") return;
     if (path === API + "/internal/jobs") {
       const supplied = Buffer.from(req.headers.authorization || "");
       const expected = Buffer.from("Bearer " + config.cronSecret);
@@ -297,6 +304,13 @@ export async function createApp(
       "2026-10-29",
     );
   }
+  registerInvoiceTools(app, {
+    db,
+    agent: tools,
+    paidParser: new PaidParser(db, chain),
+    workspace,
+    command,
+  });
   app.get(API + "/health/live", async () => ({ status: "alive" }));
   app.get(API + "/health/ready", async () => {
     await db.query("SELECT 1");
@@ -344,6 +358,7 @@ export async function createApp(
       tatum: read("tatum-gate.json"),
       memory: read("memory-gate.json"),
       comparison: read("comparison.json"),
+      agentPayments: read("agent-payments-gate.json"),
       completedMainnetRecords:
         read("memory-manifest.json").records?.filter(
           (r: any) => r.status === "verified",
@@ -1654,7 +1669,7 @@ export async function createApp(
           if (running) return;
           running = true;
           try {
-            await runJobs(db, chain, mem);
+            await runJobs(db, chain, mem, tools);
           } catch {
           } finally {
             running = false;

@@ -13,7 +13,7 @@
     "amountAtomic": "0"
   },
   "receipt": "Funded native-USDC receipt verified through the local authenticated Tatum adapter on 2026-10-22; hosted user receipt verification and invoice allocation pending",
-  "memory": "Existing remote job remains failed; no completed memory",
+  "memory": "Recovered after initial deployment checks: reconciled Mainnet compatibility record and ten useful synthetic records stored/retrieved, with fresh-process remote/database parity; production personal-record publication remains disabled.",
   "browser": {
     "state": "verified",
     "checks": [

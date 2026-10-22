@@ -2,6 +2,15 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { writeFile, rename } from "node:fs/promises";
 import pg from "pg";
+import { Challenge } from "mppx";
+import {
+  InvoiceAgent,
+  SAMPLE_INVOICE,
+} from "../apps/server/src/services/invoice-agent.js";
+import {
+  makeChallenge,
+  type ToolWallet,
+} from "../apps/server/src/adapters/parser/payment.js";
 import { Database } from "../apps/server/src/db/index.js";
 import { createApp } from "../apps/server/src/app.js";
 import { config } from "../apps/server/src/config.js";
@@ -48,10 +57,10 @@ try {
     (
       await first.query("SELECT version FROM migrations ORDER BY version")
     ).rows.map((r) => r.version),
-    [1, 2, 3],
+    [1, 2, 3, 4],
   );
   checks.push(
-    "Concurrent server/worker migrations serialize and apply versions 1–3",
+    "Concurrent server/worker migrations serialize and apply versions 1–4",
   );
   await assert.rejects(
     first.transaction(async (tx) => {
@@ -123,11 +132,10 @@ try {
   };
   w.data.accounts[0].kind = "sui";
   w.data.accounts[0].address = w.wallet_address!;
-  await first.query("INSERT INTO workspaces(id,kind,data) VALUES($1,$2,$3)", [
-    w.id,
-    w.kind,
-    JSON.stringify(w.data),
-  ]);
+  await first.query(
+    "INSERT INTO workspaces(id,kind,data,wallet_address) VALUES($1,$2,$3,$4)",
+    [w.id, w.kind, JSON.stringify(w.data), w.wallet_address],
+  );
   const jobId = await first.transaction((tx) =>
     queueJob(tx, w, "balance", { accountId: w.data.accounts[0].id }),
   );
@@ -262,6 +270,100 @@ try {
   checks.push(
     "Concurrent memory recovery verifies existing content once and preserves interrupted-job evidence without resubmission",
   );
+  const priorTools = { ...config };
+  try {
+    const other: Workspace = {
+      ...w,
+      id: id(),
+      wallet_address: "0x" + "3".repeat(64),
+      data: sampleState(),
+    };
+    await first.query(
+      "INSERT INTO workspaces(id,kind,data,wallet_address) VALUES($1,'personal',$2,$3)",
+      [other.id, JSON.stringify(other.data), other.wallet_address],
+    );
+    Object.assign(config, {
+      agentPayments: true,
+      parserRecipient: "0x" + "9".repeat(64),
+      parserSecret: "synthetic-postgres-proof-" + "x".repeat(32),
+      toolAllowedWallets: [w.wallet_address!, other.wallet_address!],
+      toolDailyGas: 50000000,
+    });
+    let signingCalls = 0;
+    const wallet: ToolWallet = {
+      address: "0x" + "2".repeat(64),
+      prepare: async () => {
+        signingCalls++;
+        throw new Error("Signing is not part of this reservation check");
+      },
+      broadcast: async () => {
+        throw new Error("No broadcast permitted in reservation check");
+      },
+      state: async () => "unknown",
+    };
+    const transport = {
+      quote: async (requestId: string, requestHash: string) =>
+        Challenge.serialize(makeChallenge(requestId, requestHash)),
+      parse: async () => {
+        throw new Error("No paid parser call permitted");
+      },
+    };
+    const agentA = new InvoiceAgent(first, chain, { wallet, transport }),
+      agentB = new InvoiceAgent(second, chain, { wallet, transport });
+    await first.transaction((tx) =>
+      agentA.setPolicy(tx, w, {
+        enabled: true,
+        perCallAtomic: "10000",
+        dailyAtomic: "200000",
+      }),
+    );
+    await second.transaction((tx) =>
+      agentB.setPolicy(tx, other, {
+        enabled: true,
+        perCallAtomic: "10000",
+        dailyAtomic: "200000",
+      }),
+    );
+    const a = (await agentA.quote(w, { kind: "text", text: SAMPLE_INVOICE }))
+        .order,
+      b = (await agentB.quote(other, { kind: "text", text: SAMPLE_INVOICE }))
+        .order;
+    const day = new Date().toISOString().slice(0, 10);
+    await first.query(
+      "INSERT INTO tool_budget_days(wallet_address,day,spent_atomic) VALUES($1,$2,190000)",
+      [wallet.address, day],
+    );
+    const approvals = await Promise.allSettled([
+      first.transaction(async (tx) =>
+        agentA.approve(tx, await load(tx, w.id, true), a.id),
+      ),
+      second.transaction(async (tx) =>
+        agentB.approve(tx, await load(tx, other.id, true), b.id),
+      ),
+    ]);
+    assert.equal(approvals.filter((r) => r.status === "fulfilled").length, 1);
+    assert.equal(
+      (approvals.find((r) => r.status === "rejected") as PromiseRejectedResult)
+        .reason.code,
+      "TOOL_BUDGET",
+    );
+    const budget = (
+      await first.query(
+        "SELECT spent_atomic::text,reserved_atomic::text FROM tool_budget_days WHERE wallet_address=$1 AND day=$2",
+        [wallet.address, day],
+      )
+    ).rows[0];
+    assert.deepEqual(budget, {
+      spent_atomic: "190000",
+      reserved_atomic: "10000",
+    });
+    assert.equal(signingCalls, 0);
+    checks.push(
+      "Concurrent workspaces share one tool-wallet daily budget and reserve the last allowance exactly once without signing or spending",
+    );
+  } finally {
+    Object.assign(config, priorTools);
+  }
   await app.close();
   app = undefined;
   app = await createApp({ db: second, worker: false, serveStatic: false });
