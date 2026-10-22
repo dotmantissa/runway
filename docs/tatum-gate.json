@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-10-22T08:06:49.623Z",
+  "provider": "https://sui-mainnet-grpc.gateway.tatum.io",
+  "network": "mainnet",
+  "transport": "native-grpc-http2",
+  "authenticated": true,
+  "metadata": {
+    "id": "0x75cfbbf8c962d542e99a1d15731e6069f60a00db895407785b15d14f606f2b4a",
+    "decimals": 6,
+    "name": "USDC",
+    "symbol": "USDC",
+    "description": "USDC is a US dollar-backed stablecoin issued by Circle. USDC is designed to provide a faster, safer, and more efficient way to send, spend, and exchange money around the world.",
+    "iconUrl": "https://circle.com/usdc-icon"
+  },
+  "balance": {
+    "amountAtomic": "1000000",
+    "checkedAt": "2026-10-22T08:06:49.622Z",
+    "source": "tatum_verified",
+    "provider": "https://sui-mainnet-grpc.gateway.tatum.io"
+  },
+  "receipt": null,
+  "discovery": "known-digest only; automatic discovery disabled"
+}

@@ -1,0 +1,11 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: runway
+      POSTGRES_USER: runway
+      POSTGRES_PASSWORD: runway
+    ports: ["5432:5432"]
+    volumes: ["runway-db:/var/lib/postgresql/data"]
+volumes:
+  runway-db:

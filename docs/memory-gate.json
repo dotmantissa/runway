@@ -1,0 +1,8 @@
+{
+  "provider": "https://relayer.memory.walrus.xyz",
+  "namespace": "runway-a05f69083ffbe3aec697d7db",
+  "acceptedJobId": "1b65bee7-4539-46de-8bfe-d1e9e7518473",
+  "state": "failed",
+  "checkedAt": "2026-10-22",
+  "error": "Embedding API returned 401 Unauthorized: User not found."
+}
