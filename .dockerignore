@@ -1,0 +1,13 @@
+.git
+.env
+.env.*
+node_modules
+dist
+.data
+research
+TASKS.md
+AGENT.md
+AGENTS.md
+test-results
+playwright-report
+coverage

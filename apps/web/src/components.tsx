@@ -1,39 +1,529 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Link } from 'react-router-dom';
-import * as Dialog from '@radix-ui/react-dialog';
-import { ArrowRight, X, Pause, Play, AlertCircle, LoaderCircle, Check } from 'lucide-react';
-import { ApiError } from './api.js';
-import { formatMoney, type PlanResult } from '../../../packages/domain/src/index.js';
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Link } from "react-router-dom";
+import * as Dialog from "@radix-ui/react-dialog";
+import {
+  ArrowRight,
+  X,
+  Pause,
+  Play,
+  AlertCircle,
+  LoaderCircle,
+  Check,
+} from "lucide-react";
+import { ApiError } from "./api.js";
+import {
+  formatMoney,
+  type PlanResult,
+} from "../../../packages/domain/src/index.js";
 
-export function Brand({inverse=false}:{inverse?:boolean}){return <Link to="/" className={'brand'+(inverse?' inverse':'')} aria-label="Runway home"><svg viewBox="0 0 32 32" aria-hidden="true"><g fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round"><path d="M7 27 13 8M25 27 19 8M10 21h12M12 15h8"/></g><circle cx="16" cy="4" r="1.75" fill="currentColor"/></svg><span>Runway</span></Link>;}
-export function Button({children,busy=false,secondary=false,...props}:React.ButtonHTMLAttributes<HTMLButtonElement>&{busy?:boolean;secondary?:boolean}){return <button {...props} disabled={busy||props.disabled} className={`${secondary?'button secondary':'button'} ${props.className||''}`} aria-busy={busy}>{busy?<LoaderCircle size={17} className="spin" aria-hidden="true"/>:null}{children}</button>;}
-export function CTA({to,children,secondary=false}:{to:string;children:ReactNode;secondary?:boolean}){return <Link to={to} className={'button'+(secondary?' secondary':'')}>{children}<ArrowRight size={17} aria-hidden="true"/></Link>;}
-export function ErrorNote({error}:{error:unknown}){return error?<div className="error-note" role="alert"><AlertCircle size={18} aria-hidden="true"/><div><p>{error instanceof Error?error.message:'We could not complete this request.'}</p>{error instanceof ApiError&&error.fields.length>0?<ul>{error.fields.map((e,i)=><li key={i}>{e.field?e.field+': ':''}{e.message}</li>)}</ul>:null}</div></div>:null;}
-export function Drawer({open,onClose,title,description,children}:{open:boolean;onClose:()=>void;title:string;description:string;children:ReactNode}){return <Dialog.Root open={open} onOpenChange={v=>{if(!v)onClose();}}><Dialog.Portal><Dialog.Overlay className="drawer-overlay"/><Dialog.Content className="drawer"><div className="drawer-head"><Dialog.Title>{title}</Dialog.Title><Dialog.Close className="icon-button" aria-label="Close drawer"><X size={20}/></Dialog.Close></div><Dialog.Description className="muted">{description}</Dialog.Description>{children}</Dialog.Content></Dialog.Portal></Dialog.Root>;}
-export function Field({label,name,children,hint,...props}:React.InputHTMLAttributes<HTMLInputElement>&{label:string;children?:ReactNode;hint?:string}){return <div className="field"><label htmlFor={name}>{label}</label>{children||<input {...props} id={name} name={name}/>} {hint?<small id={name+'-hint'}>{hint}</small>:null}</div>;}
-export function Money({value,exact=false}:{value:string;exact?:boolean}){return <span className="money">{formatMoney(value,exact)} <span className="unit">USDC</span></span>;}
-export function dateLabel(value:string,long=false){return new Intl.DateTimeFormat('en-GB',{timeZone:'UTC',weekday:long?'long':'short',day:'numeric',month:'short'}).format(new Date(value.slice(0,10)+'T12:00:00Z'));}
-export function SourceLabel({source}:{source:string}){const labels:Record<string,string>={synthetic_replay:'Example data',user_confirmed:'User confirmed',tatum_verified:'Tatum verified',local:'Local record',queued:'Waiting to save',submitting:'Checking submission',running:'Saving to Walrus',uploaded:'Checking retrieval',verified:'Stored and retrieved on Mainnet',failed:'Memory could not be saved',needs_review:'Submission needs review'};return <span className={'tag '+(source==='verified'||source==='tatum_verified'?'green':'')}>{source==='verified'?<Check size={12} aria-hidden="true"/>:null}{labels[source]||source}</span>;}
-export function Timeline({result,adjusted=false}:{result:PlanResult;adjusted?:boolean}){
- const rows=adjusted?result.adjustedTimeline:result.timeline,min=Math.min(0,...rows.map(r=>Number(r.balanceAfterAtomic)/1e6)),max=Math.max(100,...rows.map(r=>Number(r.balanceAfterAtomic)/1e6));
- const y=(v:string)=>170-(Number(v)/1e6-min)/(max-min)*130;
- const start=Date.parse(rows[0].date),end=Math.max(start+86400000,...rows.map(r=>Date.parse(r.date)));const x=(d:string)=>48+(Date.parse(d)-start)/(end-start)*680;
- const floor=y(result.reserveFloorAtomic);
- return <div className="timeline"><svg role="img" aria-label={adjusted?'Projected balance after proposed changes. Exact values in the table below.':'Projected balance before changes. Exact values in the table below.'} viewBox="0 0 780 218"><line x1="48" y1={y('0')} x2="750" y2={y('0')} stroke="var(--line)"/><line x1="48" y1={floor} x2="750" y2={floor} stroke="var(--warning)" strokeDasharray="4 5"/><text x="48" y={floor-9} fill="var(--warning)" fontSize="12">Reserve {formatMoney(result.reserveFloorAtomic)}</text>{rows.slice(1).map((r,i)=><line key={'l'+r.id} x1={x(rows[i].date)} y1={y(rows[i].balanceAfterAtomic)} x2={x(r.date)} y2={y(r.balanceAfterAtomic)} stroke={BigInt(r.balanceAfterAtomic)<BigInt(result.reserveFloorAtomic)?'var(--warning)':'var(--action)'} strokeWidth="2.5" strokeDasharray={r.uncertain?'5 5':undefined}/>)}{rows.map((r,i)=><g key={r.id}><circle cx={x(r.date)} cy={y(r.balanceAfterAtomic)} r="5" fill={BigInt(r.balanceAfterAtomic)<BigInt(result.reserveFloorAtomic)?'var(--warning)':'var(--action)'} stroke="var(--surface)" strokeWidth="2"/><text x={x(r.date)} y={203-i%2*15} textAnchor="middle" fontSize="12" fill="var(--ink-secondary)">{dateLabel(r.date)}</text></g>)}</svg><div className="table-wrap"><table><caption className="sr-only">Exact dated projected balances. Future receipts are uncertain.</caption><thead><tr><th>Date</th><th>Event</th><th>Change</th><th>Projected balance</th></tr></thead><tbody>{rows.map(r=><tr key={r.id} className={BigInt(r.balanceAfterAtomic)<BigInt(result.reserveFloorAtomic)?'risk-row':''}><td>{dateLabel(r.date)}</td><td><span>{r.label}</span>{r.uncertain?<small>Expected, unconfirmed</small>:r.fixed?<small>Fixed bill</small>:null}</td><td>{r.type==='opening'?'':r.type==='receipt'?'+':'−'}{r.type==='opening'?'':<Money value={r.amountAtomic}/>}</td><td><Money value={r.balanceAfterAtomic}/>{BigInt(r.belowFloorAtomic)>0n?<small>Below reserve by {formatMoney(r.belowFloorAtomic)} USDC</small>:null}</td></tr>)}</tbody></table></div></div>;
+export function Brand({ inverse = false }: { inverse?: boolean }) {
+  return (
+    <Link
+      to="/"
+      className={"brand" + (inverse ? " inverse" : "")}
+      aria-label="Runway home"
+    >
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <g
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.25"
+          strokeLinecap="round"
+        >
+          <path d="M7 27 13 8M25 27 19 8M10 21h12M12 15h8" />
+        </g>
+        <circle cx="16" cy="4" r="1.75" fill="currentColor" />
+      </svg>
+      <span>Runway</span>
+    </Link>
+  );
 }
-export function PaymentOrbit(){
- const canvas=useRef<HTMLCanvasElement>(null),container=useRef<HTMLDivElement>(null);
- const [paused,setPaused]=useState(()=>localStorage.getItem('runway-orbit-paused')==='true'),[reduced,setReduced]=useState(()=>matchMedia('(prefers-reduced-motion: reduce)').matches);
- useEffect(()=>{const media=matchMedia('(prefers-reduced-motion: reduce)'),update=()=>setReduced(media.matches);media.addEventListener('change',update);return()=>media.removeEventListener('change',update);},[]);
- useEffect(()=>{
-  const el=canvas.current!,box=container.current!,ctx=el.getContext('2d');if(!ctx)return;
-  let frame=0,visible=true,last=0,elapsed=0,previous=0,w=0;const staticMode=paused||reduced||(navigator as any).connection?.saveData;
-  function draw(t:number){if(!ctx)return;ctx.clearRect(0,0,w,w);const b=-Math.PI/10;ctx.save();ctx.translate(w/2,w/2);ctx.rotate(b);for(const radius of [.24,.33,.42]){ctx.beginPath();ctx.ellipse(0,0,w*radius,w*radius*.62,0,0,Math.PI*2);ctx.strokeStyle='rgba(32,38,31,0.18)';ctx.lineWidth=1;ctx.stroke();}for(let i=0;i<24;i++){const a=i*Math.PI/12;ctx.beginPath();ctx.moveTo(Math.cos(a)*w*.42,Math.sin(a)*w*.42*.62);ctx.lineTo(Math.cos(a)*w*.435,Math.sin(a)*w*.435*.62);ctx.stroke();}for(const [a,color] of [[-.8,'#245b43'],[.7,'#8f4b12'],[2.35,'#245b43'],[3.8,'#596356']] as const){ctx.beginPath();ctx.arc(Math.cos(a)*w*.33,Math.sin(a)*w*.33*.62,5,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();}ctx.beginPath();ctx.arc(Math.cos(t/28000*Math.PI*2)*w*.42,Math.sin(t/28000*Math.PI*2)*w*.42*.62,3,0,Math.PI*2);ctx.fillStyle='#245b43';ctx.fill();ctx.restore();}
-  function tick(now:number){if(!visible||document.hidden||staticMode){previous=0;return;}if(previous)elapsed+=Math.min(now-previous,100);previous=now;if(now-last>=33){draw(elapsed);last=now;}frame=requestAnimationFrame(tick);}
-  function start(){cancelAnimationFrame(frame);previous=0;draw(elapsed);if(!staticMode&&visible&&!document.hidden)frame=requestAnimationFrame(tick);}
-  const resize=new ResizeObserver(()=>{w=box.clientWidth;const dpr=Math.min(devicePixelRatio,2);el.width=w*dpr;el.height=w*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);draw(elapsed);});resize.observe(box);
-  const observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;start();});observer.observe(box);document.addEventListener('visibilitychange',start);start();
-  return()=>{cancelAnimationFrame(frame);resize.disconnect();observer.disconnect();document.removeEventListener('visibilitychange',start);};
- },[paused,reduced]);
- return <figure className="orbit-figure"><div className="orbit" ref={container}><svg className="orbit-fallback" viewBox="0 0 480 480" aria-hidden="true"><g fill="none" stroke="#d8ded3" transform="rotate(-18 240 240)">{[115,158,202].map(r=><ellipse key={r} cx="240" cy="240" rx={r} ry={r*.62}/>)}</g></svg><canvas ref={canvas} aria-hidden="true"/><div className="orbit-center"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 27 13 8M25 27 19 8M10 21h12M12 15h8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><circle cx="16" cy="4" r="1.75" fill="currentColor"/></svg></div><div className="orbit-label promised"><span className="dot"/>Client's date<strong>Fri 30 Oct</strong></div><div className="orbit-label bill"><span className="dot amber"/>Rent is due<strong>Mon 2 Nov</strong></div><div className="orbit-label remembered"><span className="dot"/>From past payments<strong>Tue 3 Nov</strong></div><span className="orbit-stamp">THE SPACE BETWEEN PROMISE AND PAYMENT</span></div><figcaption>Four past payments. Median delay: four days.<span className="muted">Synthetic example</span></figcaption><button className="quiet-button orbit-pause" onClick={()=>setPaused(v=>{localStorage.setItem('runway-orbit-paused',String(!v));return !v;})} disabled={reduced}>{paused||reduced?<Play size={14}/>:<Pause size={14}/>} {reduced?'Reduced motion enabled':paused?'Resume animation':'Pause animation'}</button></figure>;
+export function Button({
+  children,
+  busy = false,
+  secondary = false,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  busy?: boolean;
+  secondary?: boolean;
+}) {
+  return (
+    <button
+      {...props}
+      disabled={busy || props.disabled}
+      className={`${secondary ? "button secondary" : "button"} ${props.className || ""}`}
+      aria-busy={busy}
+    >
+      {busy ? (
+        <LoaderCircle size={17} className="spin" aria-hidden="true" />
+      ) : null}
+      {children}
+    </button>
+  );
+}
+export function CTA({
+  to,
+  children,
+  secondary = false,
+}: {
+  to: string;
+  children: ReactNode;
+  secondary?: boolean;
+}) {
+  return (
+    <Link to={to} className={"button" + (secondary ? " secondary" : "")}>
+      {children}
+      <ArrowRight size={17} aria-hidden="true" />
+    </Link>
+  );
+}
+export function ErrorNote({ error }: { error: unknown }) {
+  return error ? (
+    <div className="error-note" role="alert">
+      <AlertCircle size={18} aria-hidden="true" />
+      <div>
+        <p>
+          {error instanceof Error
+            ? error.message
+            : "We could not complete this request."}
+        </p>
+        {error instanceof ApiError && error.fields.length > 0 ? (
+          <ul>
+            {error.fields.map((e, i) => (
+              <li key={i}>
+                {e.field ? e.field + ": " : ""}
+                {e.message}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
+    </div>
+  ) : null;
+}
+export function Drawer({
+  open,
+  onClose,
+  title,
+  description,
+  children,
+}: {
+  open: boolean;
+  onClose: () => void;
+  title: string;
+  description: string;
+  children: ReactNode;
+}) {
+  return (
+    <Dialog.Root
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) onClose();
+      }}
+    >
+      <Dialog.Portal>
+        <Dialog.Overlay className="drawer-overlay" />
+        <Dialog.Content className="drawer">
+          <div className="drawer-head">
+            <Dialog.Title>{title}</Dialog.Title>
+            <Dialog.Close className="icon-button" aria-label="Close drawer">
+              <X size={20} />
+            </Dialog.Close>
+          </div>
+          <Dialog.Description className="muted">
+            {description}
+          </Dialog.Description>
+          {children}
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}
+export function Field({
+  label,
+  name,
+  children,
+  hint,
+  ...props
+}: React.InputHTMLAttributes<HTMLInputElement> & {
+  label: string;
+  children?: ReactNode;
+  hint?: string;
+}) {
+  return (
+    <div className="field">
+      <label htmlFor={name}>{label}</label>
+      {children || <input {...props} id={name} name={name} />}{" "}
+      {hint ? <small id={name + "-hint"}>{hint}</small> : null}
+    </div>
+  );
+}
+export function Money({
+  value,
+  exact = false,
+}: {
+  value: string;
+  exact?: boolean;
+}) {
+  return (
+    <span className="money">
+      {formatMoney(value, exact)} <span className="unit">USDC</span>
+    </span>
+  );
+}
+export function dateLabel(value: string, long = false) {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "UTC",
+    weekday: long ? "long" : "short",
+    day: "numeric",
+    month: "short",
+  }).format(new Date(value.slice(0, 10) + "T12:00:00Z"));
+}
+export function SourceLabel({ source }: { source: string }) {
+  const labels: Record<string, string> = {
+    synthetic_replay: "Example data",
+    user_confirmed: "User confirmed",
+    tatum_verified: "Tatum verified",
+    unverified: "Not verified yet",
+    local: "Local record",
+    queued: "Waiting to save",
+    submitting: "Checking submission",
+    running: "Saving to Walrus",
+    uploaded: "Checking retrieval",
+    verified: "Stored and retrieved on Mainnet",
+    failed: "Memory could not be saved",
+    needs_review: "Submission needs review",
+  };
+  return (
+    <span
+      className={
+        "tag " +
+        (source === "verified" || source === "tatum_verified" ? "green" : "")
+      }
+    >
+      {source === "verified" ? <Check size={12} aria-hidden="true" /> : null}
+      {labels[source] || source}
+    </span>
+  );
+}
+export function Timeline({
+  result,
+  adjusted = false,
+}: {
+  result: PlanResult;
+  adjusted?: boolean;
+}) {
+  const rows = adjusted ? result.adjustedTimeline : result.timeline,
+    min = Math.min(0, ...rows.map((r) => Number(r.balanceAfterAtomic) / 1e6)),
+    max = Math.max(100, ...rows.map((r) => Number(r.balanceAfterAtomic) / 1e6));
+  const y = (v: string) => 170 - ((Number(v) / 1e6 - min) / (max - min)) * 130;
+  const start = Date.parse(rows[0].date),
+    end = Math.max(start + 86400000, ...rows.map((r) => Date.parse(r.date)));
+  const x = (d: string) => 48 + ((Date.parse(d) - start) / (end - start)) * 680;
+  const floor = y(result.reserveFloorAtomic);
+  return (
+    <div className="timeline">
+      <svg
+        role="img"
+        aria-label={
+          adjusted
+            ? "Projected balance after proposed changes. Exact values in the table below."
+            : "Projected balance before changes. Exact values in the table below."
+        }
+        viewBox="0 0 780 218"
+      >
+        <line x1="48" y1={y("0")} x2="750" y2={y("0")} stroke="var(--line)" />
+        <line
+          x1="48"
+          y1={floor}
+          x2="750"
+          y2={floor}
+          stroke="var(--warning)"
+          strokeDasharray="4 5"
+        />
+        <text x="48" y={floor - 9} fill="var(--warning)" fontSize="12">
+          Reserve {formatMoney(result.reserveFloorAtomic)}
+        </text>
+        {rows.slice(1).map((r, i) => (
+          <line
+            key={"l" + r.id}
+            x1={x(rows[i].date)}
+            y1={y(rows[i].balanceAfterAtomic)}
+            x2={x(r.date)}
+            y2={y(r.balanceAfterAtomic)}
+            stroke={
+              BigInt(r.balanceAfterAtomic) < BigInt(result.reserveFloorAtomic)
+                ? "var(--warning)"
+                : "var(--action)"
+            }
+            strokeWidth="2.5"
+            strokeDasharray={r.uncertain ? "5 5" : undefined}
+          />
+        ))}
+        {rows.map((r, i) => (
+          <g key={r.id}>
+            <circle
+              cx={x(r.date)}
+              cy={y(r.balanceAfterAtomic)}
+              r="5"
+              fill={
+                BigInt(r.balanceAfterAtomic) < BigInt(result.reserveFloorAtomic)
+                  ? "var(--warning)"
+                  : "var(--action)"
+              }
+              stroke="var(--surface)"
+              strokeWidth="2"
+            />
+            <text
+              x={x(r.date)}
+              y={203 - (i % 2) * 15}
+              textAnchor="middle"
+              fontSize="12"
+              fill="var(--ink-secondary)"
+            >
+              {dateLabel(r.date)}
+            </text>
+          </g>
+        ))}
+      </svg>
+      <div className="table-wrap">
+        <table>
+          <caption className="sr-only">
+            Exact dated projected balances. Future receipts are uncertain.
+          </caption>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Event</th>
+              <th>Change</th>
+              <th>Projected balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr
+                key={r.id}
+                className={
+                  BigInt(r.balanceAfterAtomic) <
+                  BigInt(result.reserveFloorAtomic)
+                    ? "risk-row"
+                    : ""
+                }
+              >
+                <td>{dateLabel(r.date)}</td>
+                <td>
+                  <span>{r.label}</span>
+                  {r.uncertain ? (
+                    <small>Expected, unconfirmed</small>
+                  ) : r.fixed ? (
+                    <small>Fixed bill</small>
+                  ) : null}
+                </td>
+                <td>
+                  {r.type === "opening" ? "" : r.type === "receipt" ? "+" : "−"}
+                  {r.type === "opening" ? "" : <Money value={r.amountAtomic} />}
+                </td>
+                <td>
+                  <Money value={r.balanceAfterAtomic} />
+                  {BigInt(r.belowFloorAtomic) > 0n ? (
+                    <small>
+                      Below reserve by {formatMoney(r.belowFloorAtomic)} USDC
+                    </small>
+                  ) : null}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+export function PaymentOrbit() {
+  const canvas = useRef<HTMLCanvasElement>(null),
+    container = useRef<HTMLDivElement>(null);
+  const [paused, setPaused] = useState(
+      () => localStorage.getItem("runway-orbit-paused") === "true",
+    ),
+    [reduced, setReduced] = useState(
+      () => matchMedia("(prefers-reduced-motion: reduce)").matches,
+    );
+  useEffect(() => {
+    const media = matchMedia("(prefers-reduced-motion: reduce)"),
+      update = () => setReduced(media.matches);
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+  useEffect(() => {
+    const el = canvas.current!,
+      box = container.current!,
+      ctx = el.getContext("2d");
+    if (!ctx) return;
+    let frame = 0,
+      visible = true,
+      last = 0,
+      elapsed = 0,
+      previous = 0,
+      w = 0;
+    const staticMode =
+      paused || reduced || (navigator as any).connection?.saveData;
+    function draw(t: number) {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, w, w);
+      const b = -Math.PI / 10;
+      ctx.save();
+      ctx.translate(w / 2, w / 2);
+      ctx.rotate(b);
+      for (const radius of [0.24, 0.33, 0.42]) {
+        ctx.beginPath();
+        ctx.ellipse(0, 0, w * radius, w * radius * 0.62, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(32,38,31,0.18)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+      for (let i = 0; i < 24; i++) {
+        const a = (i * Math.PI) / 12;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(a) * w * 0.42, Math.sin(a) * w * 0.42 * 0.62);
+        ctx.lineTo(Math.cos(a) * w * 0.435, Math.sin(a) * w * 0.435 * 0.62);
+        ctx.stroke();
+      }
+      for (const [a, color] of [
+        [-0.8, "#245b43"],
+        [0.7, "#8f4b12"],
+        [2.35, "#245b43"],
+        [3.8, "#596356"],
+      ] as const) {
+        ctx.beginPath();
+        ctx.arc(
+          Math.cos(a) * w * 0.33,
+          Math.sin(a) * w * 0.33 * 0.62,
+          5,
+          0,
+          Math.PI * 2,
+        );
+        ctx.fillStyle = color;
+        ctx.fill();
+      }
+      ctx.beginPath();
+      ctx.arc(
+        Math.cos((t / 28000) * Math.PI * 2) * w * 0.42,
+        Math.sin((t / 28000) * Math.PI * 2) * w * 0.42 * 0.62,
+        3,
+        0,
+        Math.PI * 2,
+      );
+      ctx.fillStyle = "#245b43";
+      ctx.fill();
+      ctx.restore();
+    }
+    function tick(now: number) {
+      if (!visible || document.hidden || staticMode) {
+        previous = 0;
+        return;
+      }
+      if (previous) elapsed += Math.min(now - previous, 100);
+      previous = now;
+      if (now - last >= 33) {
+        draw(elapsed);
+        last = now;
+      }
+      frame = requestAnimationFrame(tick);
+    }
+    function start() {
+      cancelAnimationFrame(frame);
+      previous = 0;
+      draw(elapsed);
+      if (!staticMode && visible && !document.hidden)
+        frame = requestAnimationFrame(tick);
+    }
+    const resize = new ResizeObserver(() => {
+      w = box.clientWidth;
+      const dpr = Math.min(devicePixelRatio, 2);
+      el.width = w * dpr;
+      el.height = w * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      draw(elapsed);
+    });
+    resize.observe(box);
+    const observer = new IntersectionObserver((entries) => {
+      visible = entries[0].isIntersecting;
+      start();
+    });
+    observer.observe(box);
+    document.addEventListener("visibilitychange", start);
+    start();
+    return () => {
+      cancelAnimationFrame(frame);
+      resize.disconnect();
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", start);
+    };
+  }, [paused, reduced]);
+  return (
+    <figure className="orbit-figure">
+      <div className="orbit" ref={container}>
+        <svg
+          className="orbit-fallback"
+          viewBox="0 0 480 480"
+          aria-hidden="true"
+        >
+          <g fill="none" stroke="#d8ded3" transform="rotate(-18 240 240)">
+            {[115, 158, 202].map((r) => (
+              <ellipse key={r} cx="240" cy="240" rx={r} ry={r * 0.62} />
+            ))}
+          </g>
+        </svg>
+        <canvas ref={canvas} aria-hidden="true" />
+        <div className="orbit-center">
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <path
+              d="M7 27 13 8M25 27 19 8M10 21h12M12 15h8"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+            <circle cx="16" cy="4" r="1.75" fill="currentColor" />
+          </svg>
+        </div>
+        <div className="orbit-label promised">
+          <span className="dot" />
+          Client's date<strong>Fri 30 Oct</strong>
+        </div>
+        <div className="orbit-label bill">
+          <span className="dot amber" />
+          Rent is due<strong>Mon 2 Nov</strong>
+        </div>
+        <div className="orbit-label remembered">
+          <span className="dot" />
+          From past payments<strong>Tue 3 Nov</strong>
+        </div>
+        <span className="orbit-stamp">
+          THE SPACE BETWEEN PROMISE AND PAYMENT
+        </span>
+      </div>
+      <figcaption>
+        Four past payments. Median delay: four days.
+        <span className="muted">Synthetic example</span>
+      </figcaption>
+      <button
+        className="quiet-button orbit-pause"
+        onClick={() =>
+          setPaused((v) => {
+            localStorage.setItem("runway-orbit-paused", String(!v));
+            return !v;
+          })
+        }
+        disabled={reduced}
+      >
+        {paused || reduced ? <Play size={14} /> : <Pause size={14} />}{" "}
+        {reduced
+          ? "Reduced motion enabled"
+          : paused
+            ? "Resume animation"
+            : "Pause animation"}
+      </button>
+    </figure>
+  );
 }

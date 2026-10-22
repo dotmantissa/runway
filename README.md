@@ -1,4 +1,14 @@
-# Total Recall: research and build strategy
+# Runway
+
+Runway is an implemented cash-flow planner for freelancers paid in stablecoins. It keeps expected income separate from confirmed funds, models payment-delay scenarios, and proposes the smallest permitted reduction in flexible spending. Fixed bills and the reserve remain constraints.
+
+The responsive app includes an isolated wallet-free example, Sui wallet sign-in, invoices and CSV review, expenses, plan acceptance, receipt reconciliation, corrected payment history, activity, and memory inspection. Start with Node 22 and `pnpm install --frozen-lockfile`, then `pnpm dev:all`. Open http://localhost:5174. See the [runbook](docs/RUNBOOK.md) for configuration, tests, production execution, and recovery.
+
+Verified locally: exact optimizer/property cases, scoped API and nonce/CSRF/idempotency tests, persistent restart, browser save/reload journey, responsive accessibility at 1440/390/320 pixels, and production build/startup. Tatum authenticated Sui Mainnet metadata and balance reads succeeded. MemWal signed access succeeded, but the accepted write failed upstream with an embedding-service HTTP 401. Live receipt, completed memory, remote parity, real user trials and hosted release gates remain open. See [sponsor compatibility](docs/integration-compatibility.md).
+
+The sections below preserve the original research and strategy. They describe planned acceptance evidence and award goals, not completed user research or sponsor milestones.
+
+## Research and build strategy
 
 Prepared 21 October 2026 for the [Tatum × Walrus Total Recall hackathon](https://tatum.io/hackathon/total-recall).
 
@@ -24,7 +34,7 @@ Prioritize **Consumer Finance first place** and **Best Walrus Memory**. Pursue *
 
 The published event lists three $500 first-place track awards and three $500 special awards, rather than one overall grand prize. Winning all three special awards alongside one first place would total $2,000 if stacking is allowed. This is a conditional prize scenario, not an expected payout or a probability estimate.
 
-This is a completed research and planning package. Interviews, prototype trials and runtime evaluations are future tasks. No application has been implemented, funded, deployed, posted, or submitted. Sponsor integration behavior still needs live verification with the builder's accounts. Capacity is provisionally one experienced full-stack builder with approximately 120 hours available before the deadline; the schedule must be resized if capacity differs.
+The research and planning package is complete and the local application is implemented. Interviews, prototype trials, completed remote memory proof, a funded live receipt, deployment and submission remain future tasks. No prize or user-validation outcome is claimed. The original 120-hour schedule remains a planning estimate.
 
 The project directory is now **`/home/dotmantissa/hackathons/runway`**. The detailed architecture governs implementation choices; the design specification treats [nearhackathon.com](https://nearhackathon.com/) as a craft benchmark and defines an original Runway layout, payment-date orbit, logo and human product copy. It prohibits authored frontend em dashes and emoji. The browser tab and shortcut assets use the same original brand.
 

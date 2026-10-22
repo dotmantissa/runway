@@ -4,5 +4,8 @@
   "acceptedJobId": "1b65bee7-4539-46de-8bfe-d1e9e7518473",
   "state": "failed",
   "checkedAt": "2026-10-22",
-  "error": "Embedding API returned 401 Unauthorized: User not found."
+  "error": "Embedding API returned 401 Unauthorized: User not found.",
+  "lastStatusCheck": "2026-10-22",
+  "signedAccessVerified": true,
+  "completedRecords": 0
 }

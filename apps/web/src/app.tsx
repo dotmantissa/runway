@@ -1,63 +1,2721 @@
-import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
-import { Routes, Route, Link, NavLink, Navigate, Outlet, useNavigate, useOutletContext, useParams } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useCurrentAccount, useDAppKit } from '@mysten/dapp-kit-react';
-import { ConnectButton } from '@mysten/dapp-kit-react/ui';
-import { ArrowRight, ArrowUpRight, Plus, LayoutDashboard, FileText, ChartNoAxesCombined, History, Settings, LogOut, RotateCcw, ShieldCheck, ArrowDown, AlertCircle, Check, ExternalLink } from 'lucide-react';
-import { api, ApiError } from './api.js';
-import { Brand, Button, CTA, Drawer, ErrorNote, Field, Money, Timeline, PaymentOrbit, SourceLabel, dateLabel } from './components.js';
-import { formatMoney, moneyInput, parseMoney, plan, timing, type Account, type Expense, type Invoice, type PlanResult, type Scenario, localDate, addDays } from '../../../packages/domain/src/index.js';
-import { hero, FIXTURE_CLOCK } from '../../../packages/fixtures/src/index.js';
-import type { State } from '../../server/src/services/state.js';
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  type ReactNode,
+} from "react";
+import {
+  Routes,
+  Route,
+  Link,
+  NavLink,
+  Navigate,
+  Outlet,
+  useNavigate,
+  useOutletContext,
+  useParams,
+} from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Plus,
+  LayoutDashboard,
+  FileText,
+  ChartNoAxesCombined,
+  History,
+  Settings,
+  LogOut,
+  RotateCcw,
+  ShieldCheck,
+  ArrowDown,
+  AlertCircle,
+  Check,
+  ExternalLink,
+} from "lucide-react";
+import { api, ApiError } from "./api.js";
+import {
+  Brand,
+  Button,
+  CTA,
+  Drawer,
+  ErrorNote,
+  Field,
+  Money,
+  Timeline,
+  PaymentOrbit,
+  SourceLabel,
+  dateLabel,
+} from "./components.js";
+import {
+  formatMoney,
+  moneyInput,
+  parseMoney,
+  plan,
+  timing,
+  type Account,
+  type Expense,
+  type Invoice,
+  type PlanResult,
+  type Scenario,
+  localDate,
+  addDays,
+} from "../../../packages/domain/src/index.js";
+import { hero, FIXTURE_CLOCK } from "../../../packages/fixtures/src/index.js";
+import type { State } from "../../server/src/services/state.js";
 
-interface Bootstrap {workspace:{id:string;kind:'sample'|'personal';address:string|null};state:State;stateVersion:number;asOf:string;csrf:string;capabilities:{tatum:boolean;memory:boolean;memoryWrites:boolean};freshness:string}
-interface Context {b:Bootstrap;reload:()=>Promise<unknown>}
-function useWorkspace(){return useOutletContext<Context>();}
-function useAction(){const [busy,setBusy]=useState(false),[error,setError]=useState<unknown>(null),[success,setSuccess]=useState('');return {busy,error,success,setError,setSuccess,run:async(fn:()=>Promise<void>)=>{if(busy)return;setBusy(true);setError(null);setSuccess('');try{await fn();}catch(e){setError(e);}finally{setBusy(false);}}};}
-function PageTitle({eyebrow,title,description,action}:{eyebrow?:string;title:string;description?:string;action?:ReactNode}){return <header className="page-title"><div>{eyebrow?<p className="eyebrow">{eyebrow}</p>:null}<h1>{title}</h1>{description?<p className="muted">{description}</p>:null}</div>{action}</header>;}
-function Loading(){return <div className="loading" role="status"><span className="loading-line"/>Loading your workspace</div>;}
-function Notice({children}:{children:ReactNode}){return <p className="success-note" role="status"><Check size={17}/>{children}</p>;}
+const WalletSignIn = lazy(() => import("./wallet.js"));
+const WalletGuard = lazy(() =>
+  import("./wallet.js").then((m) => ({ default: m.WalletGuard })),
+);
+interface Bootstrap {
+  workspace: {
+    id: string;
+    kind: "sample" | "personal";
+    address: string | null;
+  };
+  state: State;
+  stateVersion: number;
+  asOf: string;
+  csrf: string;
+  capabilities: { tatum: boolean; memory: boolean; memoryWrites: boolean };
+  freshness: string;
+}
+interface Context {
+  b: Bootstrap;
+  reload: () => Promise<unknown>;
+}
+function useWorkspace() {
+  return useOutletContext<Context>();
+}
+function useAction() {
+  const [busy, setBusy] = useState(false),
+    [error, setError] = useState<unknown>(null),
+    [success, setSuccess] = useState("");
+  return {
+    busy,
+    error,
+    success,
+    setError,
+    setSuccess,
+    run: async (fn: () => Promise<void>) => {
+      if (busy) return;
+      setBusy(true);
+      setError(null);
+      setSuccess("");
+      try {
+        await fn();
+      } catch (e) {
+        setError(e);
+      } finally {
+        setBusy(false);
+      }
+    },
+  };
+}
+function PageTitle({
+  eyebrow,
+  title,
+  description,
+  action,
+}: {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  action?: ReactNode;
+}) {
+  return (
+    <header className="page-title">
+      <div>
+        {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
+        <h1>{title}</h1>
+        {description ? <p className="muted">{description}</p> : null}
+      </div>
+      {action}
+    </header>
+  );
+}
+function Loading() {
+  return (
+    <div className="loading" role="status">
+      <span className="loading-line" />
+      Loading your workspace
+    </div>
+  );
+}
+function Notice({ children }: { children: ReactNode }) {
+  return (
+    <p className="success-note" role="status">
+      <Check size={17} />
+      {children}
+    </p>
+  );
+}
 
-export function App(){return <><a className="skip-link" href="#main">Skip to content</a><Routes><Route path="/" element={<Landing/>}/><Route path="/demo" element={<Demo/>}/><Route path="/signin" element={<SignIn/>}/><Route path="/privacy" element={<Privacy/>}/><Route path="/evidence" element={<Evidence/>}/><Route path="/app" element={<Shell/>}><Route index element={<Navigate to="overview" replace/>}/><Route path="overview" element={<Overview/>}/><Route path="invoices" element={<Invoices/>}/><Route path="invoices/:id" element={<InvoiceDetail/>}/><Route path="plan" element={<Plan/>}/><Route path="activity" element={<Activity/>}/><Route path="settings" element={<SettingsPage/>}/><Route path="setup" element={<Setup/>}/></Route><Route path="*" element={<PublicLayout><div className="public-copy"><h1>This page is not here.</h1><CTA to="/">Back to Runway</CTA></div></PublicLayout>}/></Routes></>;}
-function PublicLayout({children}:{children:ReactNode}){return <><header className="public-header"><Brand/><nav><Link to="/evidence">See the evidence</Link><CTA to="/demo">Try the example</CTA></nav></header><main id="main">{children}</main><footer className="public-footer"><Brand/><span>Plan around the next payment.</span><Link to="/privacy">Privacy</Link><Link to="/evidence">Source and evidence</Link></footer></>;}
-function Landing(){
- const h=hero(),input={stateVersion:1,asOf:FIXTURE_CLOCK,localToday:'2026-10-29',horizonEnd:'2026-11-04',timezone:'Africa/Lagos',confirmedFundsAtomic:'800000000',reserveFloorAtomic:'100000000',pendingAtomic:'0',expenses:h.expenses,invoices:h.invoices},result=plan(input,h.outcomes,'history_median','postgres');
- return <><header className="public-header"><Brand/><nav><a href="#how">How it works</a><Link to="/demo">See the example</Link><CTA to="/signin">Open Runway</CTA></nav></header><main id="main"><section className="hero"><div className="hero-copy"><p className="eyebrow"><span className="dot"/> For freelancers paid in stablecoins</p><h1>Your client says <em>Friday.</em><br/>Your history says <em>Tuesday.</em></h1><p className="hero-description">See which bill a late payment puts at risk, and the smallest spending change that covers it.</p><div className="actions"><CTA to="/demo">Try the example</CTA><Link to="/signin" className="text-link">Use my own numbers <ArrowUpRight size={17}/></Link></div><p className="helper">No wallet needed for the example.</p></div><PaymentOrbit/></section><section className="story-section example-section"><div className="section-intro"><p className="eyebrow">A clearer view of the week ahead</p><h2>A late payment should not<br/>be a surprise <em>twice.</em></h2><p>Friday's promise arrives after Monday's rent. Your past payments make the gap visible while there is still time to change the plan.</p><Link to="/demo" className="text-link">Open this plan <ArrowRight size={17}/></Link></div><div className="example-plan"><div className="panel-heading"><span className="eyebrow">Your next few days</span><SourceLabel source="synthetic_replay"/></div><div className="mini-ledger"><div><span>Thu 29 Oct</span><strong>Confirmed funds</strong><Money value="800000000"/></div><div><span>Sat 31 Oct</span><strong>Flexible purchase</strong><Money value="250000000"/></div><div className="risk-row"><span>Mon 2 Nov</span><strong>Rent is due</strong><Money value="600000000"/></div><div><span>Tue 3 Nov</span><strong>Estimated payment</strong><Money value="1200000000"/></div></div><div className="example-action"><span className="small-icon"><ArrowDown size={20}/></span><div><strong>Reduce Saturday's purchase by 150 USDC.</strong><p>Rent stays fixed. Your reserve stays at 100 USDC.</p></div></div></div></section><section id="how" className="story-section how-section"><div className="section-intro"><p className="eyebrow">A plan that learns from what happened</p><h2>One invoice.<br/>A clearer next step.</h2></div><div className="steps">{[['Add the promise','Enter the payment you expect and the bills that cannot wait.'],['Check what arrived','Record an offchain payment or check a Sui USDC receipt through Tatum.'],['Plan around the pattern','Use resolved payment history to compare dates and review the smallest permitted spending change.']].map(([title,copy],i)=><div key={title}><span className="step-number">0{i+1}</span><div><h3>{title}</h3><p>{copy}</p></div></div>)}</div></section><section className="evidence-story"><div><p className="eyebrow">Every recommendation has a reason</p><h2>See what changed,<br/>and why.</h2><p>Each recommendation points to the payments and rules behind it. Inspect the history, correct a date, and see how the calculation changes.</p><Link to="/evidence" className="text-link">Inspect the integration evidence <ArrowUpRight size={17}/></Link></div><div className="evidence-excerpt"><div className="panel-heading"><strong>Cedar Studio</strong><SourceLabel source="synthetic_replay"/></div><p className="large-stat">4 <span>days later</span></p><p>The median of four resolved payments.</p><div className="delay-list">{[3,4,4,5].map((d,i)=><div key={i}><span>Payment 0{i+1}</span><div style={{width:d*28}}/><strong>{d} days</strong></div>)}</div><small>Local fixture history. Mainnet publication is shown separately in the evidence view.</small></div></section><section className="sponsor-row"><div><ShieldCheck size={24}/><h3>Built on receipts and recorded outcomes.</h3></div><p><strong>Tatum</strong> checks Sui balances and receipts.</p><p><strong>Walrus Memory</strong> stores outcomes when publication and retrieval succeed.</p></section><section className="closing"><p className="eyebrow">Give the next week a little room</p><h2>Start with the next bill.</h2><div className="actions"><CTA to="/demo">Try the example</CTA><Link className="text-link" to="/signin">Use my own numbers <ArrowUpRight size={17}/></Link></div></section></main><footer className="public-footer"><Brand/><span>Plan around the next payment.</span><Link to="/privacy">Privacy</Link><Link to="/evidence">Source and evidence</Link></footer></>;
+export function App() {
+  return (
+    <>
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/demo" element={<Demo />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/evidence" element={<Evidence />} />
+        <Route path="/app" element={<Shell />}>
+          <Route index element={<Navigate to="overview" replace />} />
+          <Route path="overview" element={<Overview />} />
+          <Route path="invoices" element={<Invoices />} />
+          <Route path="invoices/:id" element={<InvoiceDetail />} />
+          <Route path="plan" element={<Plan />} />
+          <Route path="activity" element={<Activity />} />
+          <Route path="settings" element={<SettingsPage />} />
+          <Route path="setup" element={<Setup />} />
+        </Route>
+        <Route
+          path="*"
+          element={
+            <PublicLayout>
+              <div className="public-copy">
+                <h1>This page is not here.</h1>
+                <CTA to="/">Back to Runway</CTA>
+              </div>
+            </PublicLayout>
+          }
+        />
+      </Routes>
+    </>
+  );
 }
-function Demo(){const nav=useNavigate(),q=useQueryClient(),action=useAction(),started=useRef(false);useEffect(()=>{if(started.current)return;started.current=true;void action.run(async()=>{await api('/demo/session','POST',{fixtureId:'hero'});q.clear();nav('/app/overview',{replace:true});});},[]);return <PublicLayout><div className="public-copy"><h1>Your next week, in view.</h1><p>Opening a private copy of the example.</p><ErrorNote error={action.error}/>{action.error?<Button onClick={()=>{started.current=false;location.reload();}}>Try again</Button>:<Loading/>}</div></PublicLayout>;}
-function SignIn(){const account=useCurrentAccount(),kit=useDAppKit(),action=useAction(),nav=useNavigate(),q=useQueryClient();return <PublicLayout><div className="signin-layout"><div><p className="eyebrow">A little room to plan ahead</p><h1>Use your own numbers.</h1><p>Connect a Sui wallet to keep your workspace private. You can still try the example without one.</p><p className="muted">This signs you in. It does not move funds.</p></div><div className="signin-panel"><h2>Your private workspace</h2><ConnectButton/>{account?<Button busy={action.busy} onClick={()=>void action.run(async()=>{const ch=await api('/auth/challenge','POST',{address:account.address,network:'mainnet'});const signed=await kit.signPersonalMessage({message:new TextEncoder().encode(ch.message)});await api('/auth/verify','POST',{challengeId:ch.challengeId,...signed});q.clear();nav('/app/setup');})}>Sign in with this wallet <ArrowRight size={17}/></Button>:<p className="helper">Choose a Mainnet Sui wallet, then sign the Runway message.</p>}<ErrorNote error={action.error}/><div className="rule"/><CTA to="/demo" secondary>Try the example instead</CTA></div></div></PublicLayout>;}
-function Shell(){
- const q=useQuery({queryKey:['bootstrap'],queryFn:()=>api<Bootstrap>('/bootstrap')}),client=useQueryClient(),nav=useNavigate(),account=useCurrentAccount(),action=useAction();
- const oldWallet=useRef<string|null|undefined>(undefined);
- useEffect(()=>{if(!q.data||q.data.workspace.kind==='sample')return;const selected=account?.address??null;if(oldWallet.current===undefined){oldWallet.current=selected;return;}if(oldWallet.current!==selected){oldWallet.current=selected;void api('/auth/logout','POST',{}).finally(()=>{client.clear();nav('/signin');});}},[account?.address,q.data?.workspace.kind]);
- useEffect(()=>{document.title=`${location.pathname.split('/').at(-1)?.replace(/^./,s=>s.toUpperCase())||'Overview'} · Runway`;},[location.pathname]);
- const destinations=[['overview','Overview',LayoutDashboard],['invoices','Invoices',FileText],['plan','Plan',ChartNoAxesCombined],['activity','Activity',History]] as const;
- if(q.error instanceof ApiError&&q.error.code==='SESSION_EXPIRED')return <Navigate to="/signin" replace/>;
- const logout=()=>void action.run(async()=>{await api('/auth/logout','POST',{});client.clear();nav('/');});
- return <div className="app-shell"><aside className="sidebar"><Brand/><p className="sidebar-caption">A little room to plan ahead.</p><nav aria-label="Main navigation">{destinations.map(([path,label,Icon])=><NavLink to={'/app/'+path} key={path}><Icon size={19}/>{label}</NavLink>)}</nav><div className="sidebar-bottom"><NavLink to="/app/settings"><Settings size={18}/>Settings</NavLink><button onClick={logout}><LogOut size={18}/>Sign out</button><p>Expected payments<br/>are not available funds.</p></div></aside><div className="app-area"><header className="app-topbar"><div className="mobile-brand"><Brand/></div><span>{q.data?.workspace.kind==='sample'?'Sample workspace':'Your workspace'}</span><div className="topbar-meta">{q.data?.workspace.kind==='sample'?<><span>Example data · 29 Oct 2026</span><button className="icon-button" aria-label="Reset example" onClick={()=>void action.run(async()=>{await api('/demo/reset','POST',{expectedStateVersion:q.data!.stateVersion});await q.refetch();await client.invalidateQueries({queryKey:['activity']});})}><RotateCcw size={16}/></button></>:<span>{q.data?.workspace.address?.slice(0,8)}…{q.data?.workspace.address?.slice(-4)}</span>}<Link to="/app/settings" aria-label="Settings" className="icon-button"><Settings size={18}/></Link></div></header><main id="main" className="app-main"><ErrorNote error={action.error}/>{q.isPending?<Loading/>:q.error?<><ErrorNote error={q.error}/><Button onClick={()=>void q.refetch()}>Try again</Button></>:q.data?<Outlet context={{b:q.data,reload:()=>q.refetch()} satisfies Context}/>:null}</main><nav className="mobile-nav" aria-label="Mobile navigation">{destinations.map(([path,label,Icon])=><NavLink key={path} to={'/app/'+path}><Icon size={20}/><span>{label}</span></NavLink>)}</nav></div></div>;
+function PublicLayout({ children }: { children: ReactNode }) {
+  return (
+    <>
+      <header className="public-header">
+        <Brand />
+        <nav>
+          <Link to="/evidence">See the evidence</Link>
+          <CTA to="/demo">Try the example</CTA>
+        </nav>
+      </header>
+      <main id="main">{children}</main>
+      <footer className="public-footer">
+        <Brand />
+        <span>Plan around the next payment.</span>
+        <Link to="/privacy">Privacy</Link>
+        <Link to="/evidence">Source and evidence</Link>
+      </footer>
+    </>
+  );
 }
-function Overview(){const {b}=useWorkspace(),s=b.state,input={stateVersion:b.stateVersion,asOf:b.asOf,localToday:localDate(b.asOf,s.policy.timezone),horizonEnd:addDays(localDate(b.asOf,s.policy.timezone),s.policy.horizonDays-1),timezone:s.policy.timezone,confirmedFundsAtomic:s.accounts.filter(a=>a.included).reduce((n,a)=>n+BigInt(a.amountAtomic),0n).toString(),reserveFloorAtomic:s.policy.reserveAtomic,pendingAtomic:s.pendingAtomic,expenses:s.expenses,invoices:s.invoices},r=plan(input,[],'no_receipt','none');const expected=s.invoices.filter(i=>!['paid','cancelled'].includes(i.status));return <><PageTitle eyebrow={b.workspace.kind==='sample'?'Thursday, 29 October':'Your current picture'} title="A little room to plan ahead." description="What you have, what is committed, and what still needs to arrive."/><section className="funds-summary"><div className="funds-primary"><p className="eyebrow">Available to plan with now</p><h2><Money value={r.availableNowAtomic}/></h2><p>Expected payments are kept separate.</p></div><div className="funds-equation"><div><span>Confirmed funds</span><Money value={r.confirmedFundsAtomic}/></div><div><span>Planned spending</span><Money value={r.plannedSpendingAtomic}/></div><div><span>Reserve floor</span><Money value={r.reserveFloorAtomic}/></div></div></section>{b.freshness!=='fresh'?<div className="warning-note"><AlertCircle size={19}/><div><strong>Confirm your current funds.</strong><p>A wallet balance is old or a recorded payment needs reconciliation. <Link to="/app/settings">Review included funds</Link>.</p></div></div>:null}{r.firstExposedFixedBill?<section className="exposure"><div><p className="eyebrow">Before the next payment</p><h2>{r.firstExposedFixedBill.label} is exposed by <Money value={r.firstExposedFixedBill.uncoveredAtomic}/>.</h2><p>{dateLabel(r.firstExposedFixedBill.date,true)}. Preserving your reserve needs a {formatMoney(r.firstExposedFixedBill.gapAtomic)} USDC change.</p></div><CTA to="/app/plan">Review a plan</CTA></section>:null}<div className="overview-columns"><section><div className="section-heading"><h2>The next payments</h2><Link to="/app/invoices">All invoices <ArrowUpRight size={16}/></Link></div>{expected.length?expected.map(i=>{const t=timing(s.outcomes,i.clientId);return <Link to={'/app/invoices/'+i.id} className="invoice-summary" key={i.id}><div><strong>{s.clients.find(c=>c.id===i.clientId)?.alias}</strong><p>{i.invoiceReference}</p><small>Client's date · {dateLabel(i.dueDate)}</small>{t.medianDelay!==undefined?<small>Past payments · {t.medianDelay} days later</small>:<small>Not enough history for a timing estimate</small>}</div><div><Money value={(BigInt(i.amountAtomic)-BigInt(i.paidAtomic)).toString()}/><span className="tag">Expected</span></div></Link>;}):<Empty title="No expected payment yet." copy="A plan can still cover your listed bills without a new invoice." to="/app/invoices" cta="Add an invoice"/>}</section><section><div className="section-heading"><h2>What cannot wait</h2><Link to="/app/plan">Spending rules <ArrowUpRight size={16}/></Link></div>{s.expenses.filter(e=>e.status==='planned').map(e=><div className="expense-summary" key={e.id}><span className={'expense-icon '+(e.kind==='fixed'?'fixed':'')}><FileText size={18}/></span><div><strong>{e.label}</strong><small>{dateLabel(e.dueDate)} · {e.kind==='fixed'?'Fixed bill':'Flexible expense'}</small></div><Money value={e.amountAtomic}/></div>)}</section></div><div className="quiet-footer"><ShieldCheck size={16}/>{b.workspace.kind==='sample'?'This is a dated synthetic example. Saving a plan changes only this workspace.':'Funds and forecasts stay separate. Reviewed changes do not move money.'}</div></>;}
-function Empty({title,copy,to,cta}:{title:string;copy:string;to?:string;cta?:string}){return <div className="empty"><h3>{title}</h3><p>{copy}</p>{to?<CTA to={to}>{cta}</CTA>:null}</div>;}
-function InvoiceForm({invoice,onClose}:{invoice?:Invoice;onClose:()=>void}){const {b,reload}=useWorkspace(),action=useAction(),[clientId,setClientId]=useState(invoice?.clientId||b.state.clients[0]?.id||'');async function submit(e:FormEvent<HTMLFormElement>){e.preventDefault();const f=new FormData(e.currentTarget);void action.run(async()=>{let selected=clientId;if(!selected){const created=await api('/clients','POST',{alias:String(f.get('newClient')),expectedStateVersion:b.stateVersion});selected=created.client.id;const latest=await reload() as any;await api('/invoices','POST',{clientId:selected,invoiceReference:f.get('reference'),amountAtomic:parseMoney(String(f.get('amount'))),dueDate:f.get('date'),timezone:b.state.policy.timezone,expectedStateVersion:latest.data.stateVersion});}else await api('/invoices'+(invoice?'/'+invoice.id:''),invoice?'PATCH':'POST',{clientId:selected,invoiceReference:f.get('reference'),amountAtomic:parseMoney(String(f.get('amount'))),dueDate:f.get('date'),timezone:b.state.policy.timezone,expectedStateVersion:b.stateVersion,...(invoice?{expectedVersion:invoice.version}:{})});await reload();onClose();});}return <form onSubmit={submit} className="form"><Field label="Client" name="client"><select id="client" value={clientId} onChange={e=>setClientId(e.target.value)}>{b.state.clients.map(c=><option key={c.id} value={c.id}>{c.alias}</option>)}<option value="">Add a new client</option></select></Field>{!clientId?<Field label="New client name" name="newClient" required maxLength={80}/>:null}<Field label="Invoice reference" name="reference" required defaultValue={invoice?.invoiceReference} maxLength={80}/><Field label="Amount (USDC)" name="amount" inputMode="decimal" required defaultValue={invoice?moneyInput(invoice.amountAtomic):''}/><Field label="Client's payment date" name="date" type="date" required defaultValue={invoice?.dueDate}/><p className="helper">Dates use {b.state.policy.timezone}. This amount stays separate from confirmed funds.</p><ErrorNote error={action.error}/><Button busy={action.busy} type="submit">{action.busy?'Saving invoice':'Save invoice'}</Button></form>;}
-function Invoices(){const {b}=useWorkspace(),[open,setOpen]=useState(false),[importing,setImporting]=useState(false),[filter,setFilter]=useState('all');const rows=b.state.invoices.filter(i=>filter==='all'||(filter==='unresolved'?!['paid','cancelled'].includes(i.status):i.status==='paid'));return <><PageTitle title="Payments you expect." description="A promise is useful. A confirmed receipt tells you what happened." action={<Button onClick={()=>setOpen(true)}><Plus size={17}/>Add invoice</Button>}/><div className="list-toolbar"><div className="segmented">{[['all','All invoices'],['unresolved','Expected'],['paid','Received']].map(([v,l])=><button key={v} aria-pressed={filter===v} onClick={()=>setFilter(v)}>{l}</button>)}</div><button className="text-link" onClick={()=>setImporting(true)}>Import CSV <ArrowUpRight size={15}/></button></div>{rows.length?<div className="table-wrap invoice-table"><table><caption className="sr-only">Invoices in this workspace</caption><thead><tr><th>Client and invoice</th><th>Client's date</th><th>Amount</th><th>Status</th><th><span className="sr-only">Details</span></th></tr></thead><tbody>{rows.map(i=><tr key={i.id}><td><Link to={'/app/invoices/'+i.id}><strong>{b.state.clients.find(c=>c.id===i.clientId)?.alias}</strong><small>{i.invoiceReference}</small></Link></td><td>{dateLabel(i.dueDate)}</td><td><Money value={i.amountAtomic}/>{i.paidAtomic!=='0'?<small>{formatMoney(i.paidAtomic)} received</small>:null}</td><td><span className="tag">{i.status==='expected'?'Expected':i.status==='partial'?'Partly received':i.status==='paid'?'Received':'Cancelled'}</span></td><td><Link to={'/app/invoices/'+i.id} aria-label={'Open '+i.invoiceReference} className="icon-button"><ArrowUpRight size={17}/></Link></td></tr>)}</tbody></table></div>:<Empty title="No invoices in this view." copy="Add the next payment you expect. You can review dates and amounts before saving."/>}<Drawer open={open} onClose={()=>setOpen(false)} title="Add the next payment" description="Record the promise. Confirm what arrived separately."><InvoiceForm onClose={()=>setOpen(false)}/></Drawer><Drawer open={importing} onClose={()=>setImporting(false)} title="Import invoices" description="Preview every row before importing. Historical payments remain user confirmed."><ImportForm onClose={()=>setImporting(false)}/></Drawer></>;}
-function ImportForm({onClose}:{onClose:()=>void}){const {b,reload}=useWorkspace(),action=useAction(),[csv,setCsv]=useState(''),[preview,setPreview]=useState<any>(null);return <div className="form"><Field label="CSV file" name="csv"><input id="csv" type="file" accept=".csv,text/csv" onChange={e=>{const file=e.target.files?.[0];setPreview(null);if(file){if(file.size>262144){action.setError(new Error('Choose a CSV smaller than 256 KB.'));return;}void file.text().then(setCsv);}}}/></Field><p className="helper">Columns: client_alias, invoice_reference, amount_usdc, due_date, paid_date, source. Dates use {b.state.policy.timezone}.</p><Button secondary busy={action.busy} disabled={!csv} onClick={()=>void action.run(async()=>setPreview(await api('/invoices/import/preview','POST',{csv})))}>Preview rows</Button>{preview?<><ul className="preview-list">{preview.rows.map((r:any)=><li key={r.row}><strong>Row {r.row}</strong><span>{r.valid?r.data.invoice_reference:r.error}</span><span className="tag">{r.valid?'Ready':'Needs correction'}</span></li>)}</ul><Button disabled={!preview.rows.length||preview.rows.some((r:any)=>!r.valid)} busy={action.busy} onClick={()=>void action.run(async()=>{await api('/invoices/import/confirm','POST',{csv,previewHash:preview.previewHash,expectedStateVersion:b.stateVersion});await reload();onClose();})}>Import {preview.rows.length} invoices</Button></>:null}<ErrorNote error={action.error}/></div>;}
-function InvoiceDetail(){const {b,reload}=useWorkspace(),{id}=useParams(),query=useQuery({queryKey:['invoice',id,b.stateVersion],queryFn:()=>api('/invoices/'+id)}),[drawer,setDrawer]=useState('');if(query.isPending)return <Loading/>;if(query.error)return <ErrorNote error={query.error}/>;const {invoice:i,client,timing:t,outcomes}=query.data;return <><Link to="/app/invoices" className="text-link back-link">← All invoices</Link><PageTitle eyebrow={client.alias} title={i.invoiceReference} description={'Dates use '+i.timezone} action={i.paidAtomic==='0'?<Button secondary onClick={()=>setDrawer('edit')}>Edit invoice</Button>:null}/><section className="invoice-totals">{[['Expected',i.amountAtomic],['Received',i.paidAtomic],['Remaining',(BigInt(i.amountAtomic)-BigInt(i.paidAtomic)).toString()]].map(([label,value])=><div key={label}><p className="eyebrow">{label}</p><h2><Money value={value}/></h2></div>)}</section><section className="detail-section"><div><h2>The payment timeline</h2><p>Client's date · {dateLabel(i.dueDate,true)}</p><p>{i.status==='paid'?'Full amount recorded. See the source of each outcome below.':'This invoice has not been fully received.'}</p></div><div className="actions">{!['paid','cancelled'].includes(i.status)?<><Button onClick={()=>setDrawer('payment')}>Confirm an offchain payment</Button>{b.workspace.kind!=='sample'?<Button secondary onClick={()=>setDrawer('receipt')}>Check a Sui receipt</Button>:null}</>:null}</div></section><section className="detail-section"><h2>What past payments show</h2><p>{t.medianDelay!==undefined?`The latest ${t.sampleCount} resolved payments arrived a median of ${t.medianDelay} days after the client's date. Observed range: ${t.observedDelayMin} to ${t.observedDelayMax} days.`:'Four resolved payments are needed for a client timing estimate. Your no-receipt plan is still available.'}</p><div className="history-rows">{outcomes.map((o:any)=><div key={o.id}><span>{dateLabel(o.dueDate)} → {dateLabel(o.paidDate)}</span><SourceLabel source={o.source}/>{outcomes.some((n:any)=>n.supersedesId===o.id)?<span className="tag">Superseded</span>:<button className="text-link" onClick={()=>setDrawer('correction:'+o.id)}>Correct record</button>}</div>)}</div></section><Drawer open={drawer==='edit'} onClose={()=>setDrawer('')} title="Edit invoice" description="Update this unresolved promise. Recorded outcomes keep their history."><InvoiceForm invoice={i} onClose={()=>setDrawer('')}/></Drawer><Drawer open={drawer==='payment'} onClose={()=>setDrawer('')} title="Confirm what arrived" description="This records a user-confirmed payment. Confirm your included funds afterward."><PaymentForm invoice={i} onClose={()=>{setDrawer('');void query.refetch();}}/></Drawer><Drawer open={drawer==='receipt'} onClose={()=>setDrawer('')} title="Check a Sui receipt" description="Tatum checks successful native USDC credit to your connected wallet."><ReceiptForm invoice={i} onClose={()=>{setDrawer('');void query.refetch();}}/></Drawer><Drawer open={drawer.startsWith('correction:')} onClose={()=>setDrawer('')} title="Correct payment history" description="The new record replaces the old one in timing calculations.">{drawer.startsWith('correction:')?<CorrectionForm outcome={outcomes.find((o:any)=>o.id===drawer.split(':')[1])} onClose={()=>setDrawer('')}/>:null}</Drawer></>;}
-function PaymentForm({invoice,onClose}:{invoice:Invoice;onClose:()=>void}){const {b,reload}=useWorkspace(),action=useAction();return <form className="form" onSubmit={e=>{e.preventDefault();const f=new FormData(e.currentTarget);void action.run(async()=>{await api(`/invoices/${invoice.id}/confirm-offchain`,'POST',{amountAtomic:parseMoney(String(f.get('amount'))),paidDate:f.get('date'),source:'user_confirmed',expectedStateVersion:b.stateVersion});await reload();onClose();});}}><Field label="Received amount (USDC)" name="amount" inputMode="decimal" defaultValue={moneyInput((BigInt(invoice.amountAtomic)-BigInt(invoice.paidAtomic)).toString())} required/><Field label="Date received" name="date" type="date" defaultValue={b.asOf.slice(0,10)} required/><SourceLabel source="user_confirmed"/><p className="helper">This records the payment, then asks you to reconcile current funds. It does not add the amount to an account automatically.</p><ErrorNote error={action.error}/><Button busy={action.busy} type="submit">Record received payment</Button></form>;}
-function ReceiptForm({invoice,onClose}:{invoice:Invoice;onClose:()=>void}){const {b,reload}=useWorkspace(),action=useAction(),[jobId,setJobId]=useState(''),[receipt,setReceipt]=useState<any>(null);const job=useQuery({queryKey:['job',jobId],queryFn:()=>api('/jobs/'+jobId),enabled:!!jobId,refetchInterval:q=>['done','failed','needs_review'].includes(q.state.data?.job.status)?false:1500});useEffect(()=>{if(job.data?.job.status==='done'){void api('/receipts/'+job.data.job.result.receiptId).then(v=>setReceipt(v.receipt)).catch(action.setError);}},[job.data?.job.status]);return <div className="form"><form onSubmit={e=>{e.preventDefault();const f=new FormData(e.currentTarget);void action.run(async()=>{setReceipt(null);const v=await api('/receipts/verify','POST',{digest:f.get('digest'),expectedStateVersion:b.stateVersion});setJobId(v.jobId);});}}><Field label="Transaction digest" name="digest" required/><Button type="submit" busy={action.busy}>Check receipt</Button></form>{job.data&&!receipt?<p role="status">{job.data.job.status==='failed'?job.data.job.error:'Checking the receipt through Tatum: '+job.data.job.status}</p>:null}{receipt?<><h3>Incoming native USDC confirmed</h3><Money value={receipt.facts.amountAtomic} exact/><SourceLabel source="tatum_verified"/><p className="helper">Recipient: {receipt.facts.recipient}</p><Field label="Allocate to this invoice (USDC)" name="allocate" defaultValue={moneyInput((BigInt(receipt.facts.amountAtomic)-BigInt(receipt.allocated_atomic)).toString())}/><Button busy={action.busy} onClick={()=>void action.run(async()=>{await api(`/receipts/${receipt.id}/allocate`,'POST',{invoiceId:invoice.id,amountAtomic:parseMoney((document.getElementById('allocate') as HTMLInputElement).value),expectedStateVersion:b.stateVersion});await reload();onClose();})}>Use this receipt</Button></>:null}<ErrorNote error={action.error||job.error}/></div>;}
-function CorrectionForm({outcome,onClose}:{outcome:any;onClose:()=>void}){const {b,reload}=useWorkspace(),action=useAction();return <form className="form" onSubmit={e=>{e.preventDefault();const f=new FormData(e.currentTarget);void action.run(async()=>{await api('/outcomes/'+outcome.id+'/correct','POST',{clientId:f.get('client'),dueDate:f.get('due'),paidDate:f.get('paid'),reason:f.get('reason'),expectedStateVersion:b.stateVersion});await reload();onClose();});}}><Field label="Client" name="client"><select id="client" name="client" defaultValue={outcome.clientId}>{b.state.clients.map(c=><option key={c.id} value={c.id}>{c.alias}</option>)}</select></Field><Field label="Original payment date" name="due" type="date" required defaultValue={outcome.dueDate}/><Field label="Date received" name="paid" type="date" required defaultValue={outcome.paidDate} readOnly={outcome.source==='tatum_verified'}/><Field label="Reason for correction" name="reason" required minLength={3} maxLength={300}/><ErrorNote error={action.error}/><Button busy={action.busy} type="submit">Save correction</Button></form>;}
-function ExpenseForm({expense,onClose}:{expense?:Expense;onClose:()=>void}){const {b,reload}=useWorkspace(),action=useAction(),[kind,setKind]=useState(expense?.kind||'fixed');return <form className="form" onSubmit={e=>{e.preventDefault();const f=new FormData(e.currentTarget);void action.run(async()=>{await api('/expenses'+(expense?'/'+expense.id:''),expense?'PATCH':'POST',{label:f.get('label'),amountAtomic:parseMoney(String(f.get('amount'))),dueDate:f.get('date'),kind,maxReductionAtomic:kind==='fixed'?'0':parseMoney(String(f.get('cap'))),hasNotOccurredToday:f.get('notOccurred')==='on',expectedStateVersion:b.stateVersion,...(expense?{expectedVersion:expense.version,status:f.get('status')}:{})});await reload();onClose();});}}><Field label="Expense name" name="label" defaultValue={expense?.label} required/><Field label="Amount (USDC)" name="amount" inputMode="decimal" defaultValue={expense?moneyInput(expense.amountAtomic):''} required/><Field label="Due date" name="date" type="date" defaultValue={expense?.dueDate} required/><Field label="Spending rule" name="kind"><select id="kind" value={kind} onChange={e=>setKind(e.target.value as any)}><option value="fixed">Fixed bill, keep the full amount</option><option value="flexible">Flexible expense, permit a reduction</option></select></Field>{kind==='flexible'?<><Field label="Maximum permitted reduction (USDC)" name="cap" inputMode="decimal" defaultValue={expense?moneyInput(expense.maxReductionAtomic):''} required/><label className="checkbox"><input type="checkbox" name="notOccurred" defaultChecked={expense?.hasNotOccurredToday}/>If due today, I confirm this expense has not occurred.</label></>:<p className="helper">A fixed bill cannot be reduced by the planner.</p>}{expense?<Field label="Expense status" name="status"><select id="status" name="status" defaultValue={expense.status}><option value="planned">Planned</option><option value="paid">Paid</option><option value="cancelled">Cancelled</option><option value="pending">Pending, cannot be reduced</option></select></Field>:null}<ErrorNote error={action.error}/><Button busy={action.busy} type="submit">Save expense</Button></form>;}
-function Plan(){
- const {b,reload}=useWorkspace(),action=useAction(),[scenario,setScenario]=useState<Scenario>(()=>b.state.invoices.some(i=>!['paid','cancelled'].includes(i.status)&&timing(b.state.outcomes,i.clientId).medianDelay===undefined)?'no_receipt':b.state.invoices.length?'history_median':'no_receipt'),[proposal,setProposal]=useState<any>(null),[drawer,setDrawer]=useState(''),[expense,setExpense]=useState<Expense|undefined>(),[explanation,setExplanation]=useState<any>(null);
- const loaded=useRef(false);const stale=proposal&&proposal.result.stateVersion!==b.stateVersion;
- const canHistory=b.state.invoices.filter(i=>!['paid','cancelled'].includes(i.status)).every(i=>timing(b.state.outcomes,i.clientId).medianDelay!==undefined)&&b.state.invoices.length>0;
- async function calculate(next:Scenario=scenario,mode='postgres'){await action.run(async()=>{setExplanation(null);const p=await api('/plans/preview','POST',{scenario:next,historyMode:next==='promised'||next==='no_receipt'?'none':mode,expectedStateVersion:b.stateVersion});setProposal(p);});}
- useEffect(()=>{if(loaded.current)return;loaded.current=true;void calculate();},[]);
- const r=proposal?.result as PlanResult|undefined;
- return <><PageTitle title="Plan around the next payment." description="Compare the dates. Keep fixed bills and your reserve intact." action={<Button secondary onClick={()=>{setExpense(undefined);setDrawer('expense');}}><Plus size={17}/>Add expense</Button>}/><div className="scenario-tabs" role="group" aria-label="Payment scenario">{[['promised',"Client's date"],['history_median','From past payments'],['observed_latest','Latest observed delay'],['no_receipt','No payment in this period']].map(([value,label])=><button key={value} aria-pressed={scenario===value} disabled={action.busy||((value==='history_median'||value==='observed_latest')&&!canHistory)} onClick={()=>{setScenario(value as Scenario);void calculate(value as Scenario);}}>{label}</button>)}</div>{!canHistory?<p className="helper">Four resolved payments per client are needed for the history scenarios.</p>:null}<ErrorNote error={action.error}/>{action.success?<Notice>{action.success}</Notice>:null}{stale?<div className="warning-note"><AlertCircle size={19}/><div><strong>Your numbers changed. Review the updated plan.</strong><p>The saved proposal describes an earlier version of your finances.</p><Button secondary busy={action.busy} onClick={()=>void calculate()}>Recalculate</Button></div></div>:null}{action.busy&&!r?<Loading/>:null}{r?<><div className="plan-context"><div><p>Confirmed funds</p><Money value={r.confirmedFundsAtomic}/></div><div><p>Reserve floor</p><Money value={r.reserveFloorAtomic}/></div><div><p>Available now</p><Money value={r.availableNowAtomic}/></div><span>{b.state.policy.horizonDays} day horizon<br/>Dates use {b.state.policy.timezone}</span></div><section className="plan-timeline"><div className="section-heading"><h2>{scenario==='no_receipt'?'Without another payment':scenario==='promised'?"If the client's date holds":'When history moves the date'}</h2><span className="tag">Projected balances</span></div><Timeline result={r}/></section><section className={'exposure '+(!r.firstExposedFixedBill?'quiet-exposure':'')}><div><p className="eyebrow">What this means</p><h2>{r.firstExposedFixedBill?`${r.firstExposedFixedBill.label} comes before the expected payment.`:r.feasible?'Your listed bills are covered in this scenario.':'The permitted changes cannot cover every gap.'}</h2><p>{r.firstExposedFixedBill?`${dateLabel(r.firstExposedFixedBill.date,true)} is short by ${formatMoney(r.firstExposedFixedBill.uncoveredAtomic)} USDC. Preserving the reserve needs ${formatMoney(r.firstExposedFixedBill.gapAtomic)} USDC.`:r.dependsOnUnsettledReceipt?'This depends on an expected payment arriving. Compare the no-payment scenario as well.':'Expected payments have not increased your available funds.'}</p></div></section><section className="adjustments"><div className="section-heading"><h2>{r.adjustments.length?'The smallest permitted change':'Your spending plan'}</h2><button className="text-link" onClick={()=>{setDrawer('explain');void action.run(async()=>setExplanation(await api(`/plans/${proposal.id}/explain`,'POST',{})));}}>Why this plan? <ArrowUpRight size={16}/></button></div>{r.adjustments.map(a=><div className="adjustment-row" key={a.expenseId}><div><strong>{a.label}</strong><p>{dateLabel(a.dueDate)} · Flexible expense</p></div><div className="before-after"><span><small>Current</small><Money value={a.originalAmountAtomic}/></span><ArrowRight size={18}/><span><small>Proposed</small><Money value={a.newAmountAtomic}/></span></div><span className="tag green">Reduce by {formatMoney(a.reductionAtomic)} USDC</span></div>)}{!r.adjustments.length?<p className="muted">{r.feasible?'No spending change is needed for this scenario.':'There is no permitted change that covers this gap. Review your spending rules.'}</p>:null}{r.residualGaps.length?<p className="warning-text">An uncovered reserve gap remains on {dateLabel(r.residualGaps[0].date)}. This proposal cannot be accepted.</p>:null}<div className="actions"><Button disabled={!r.feasible||!r.adjustments.length||stale||b.freshness!=='fresh'} onClick={()=>setDrawer('review')}>Review changes <ArrowRight size={17}/></Button><button className="text-link" onClick={()=>setDrawer('evidence')}>See the evidence <ArrowUpRight size={16}/></button></div><p className="helper">This updates your plan. It does not move funds.</p>{r.uncertainty.medianDelay!==undefined?<p className="helper">{r.uncertainty.sampleCount} resolved payments. Median delay: {r.uncertainty.medianDelay} days. Observed range: {r.uncertainty.observedDelayMin} to {r.uncertainty.observedDelayMax} days. This is a descriptive estimate.</p>:null}</section></>:null}<section className="spending-rules"><div className="section-heading"><h2>Your spending rules</h2><span>{b.state.expenses.length} of 8 expenses</span></div>{b.state.expenses.map(e=><div className="expense-summary" key={e.id}><div><strong>{e.label}</strong><small>{dateLabel(e.dueDate)} · {e.status} · {e.kind==='fixed'?'Fixed bill':`Up to ${formatMoney(e.maxReductionAtomic)} USDC may be reduced`}</small></div><Money value={e.amountAtomic}/><button className="text-link" onClick={()=>{setExpense(e);setDrawer('expense');}}>Edit</button></div>)}</section><Drawer open={drawer==='expense'} onClose={()=>setDrawer('')} title={expense?'Edit spending rule':'Add an expense'} description="Only explicitly flexible planned expenses can be reduced."><ExpenseForm expense={expense} onClose={()=>setDrawer('')}/></Drawer><Drawer open={drawer==='review'} onClose={()=>setDrawer('')} title="Review these changes" description="You choose which spending rules to change. No funds move.">{r?<div className="review-body">{r.adjustments.map(a=><div key={a.expenseId}><h3>Reduce {a.label.toLowerCase()} by {formatMoney(a.reductionAtomic)} USDC.</h3><p>New amount: <Money value={a.newAmountAtomic}/></p></div>)}<p>Fixed bills stay unchanged. Your reserve stays at {formatMoney(r.reserveFloorAtomic)} USDC.</p><Timeline result={r} adjusted/><ErrorNote error={action.error}/>{stale?<p className="warning-text">Your numbers changed. Recalculate before saving.</p>:null}<Button busy={action.busy} disabled={stale||b.freshness!=='fresh'} onClick={()=>void action.run(async()=>{await api(`/plans/${proposal.id}/accept`,'POST',{expectedStateVersion:b.stateVersion,currentInputHash:proposal.inputHash,confirmedAdjustments:r.adjustments.map(a=>({expenseId:a.expenseId,expectedExpenseVersion:a.expectedExpenseVersion,newAmountAtomic:a.newAmountAtomic}))});await reload();setDrawer('');action.setSuccess('Spending changes saved. No funds moved.');})}>Save these changes</Button><Button secondary busy={action.busy} onClick={()=>void action.run(async()=>{await api(`/plans/${proposal.id}/reject`,'POST',{});setDrawer('');action.setSuccess('Your current spending plan was kept.');})}>Keep my current plan</Button><p className="helper">This updates your plan. It does not move funds.</p></div>:null}</Drawer><Drawer open={drawer==='explain'} onClose={()=>setDrawer('')} title="Why this plan?" description="An explanation of this saved calculation, grounded in its recorded inputs.">{explanation?<div className="form"><p>{explanation.answer}</p><p className="helper">Supporting outcome records: {explanation.citedRecordIds.join(', ')||'No historical outcomes used.'}</p>{!explanation.current?<p className="warning-text">This explanation describes an earlier plan.</p>:null}</div>:<Loading/>}<ErrorNote error={action.error}/></Drawer><Drawer open={drawer==='evidence'} onClose={()=>setDrawer('')} title="The evidence behind this plan" description="History changes client timing. A conservative no-payment plan is available in every condition.">{r?<div className="form"><p>History source: {r.historyMode==='postgres'?'Workspace database':r.historyMode==='walrus'?'Retrieved from Walrus Memory':'No prior outcomes'}. {b.workspace.kind==='sample'?'All example outcomes are synthetic local fixtures.':''}</p><p>Input hash</p><code>{proposal.inputHash}</code><p>Selected history</p><ul>{r.selectedHistoryRecordIds.map(v=><li key={v}><code>{v}</code></li>)}</ul><p>The same history gives the same calculation. Walrus can provide that history only after every required record is stored and retrieved.</p><Button secondary busy={action.busy} onClick={()=>void calculate(scenario,'walrus')}>Check with Walrus history</Button><ErrorNote error={action.error}/><CTA to="/evidence" secondary>View actual sponsor evidence</CTA></div>:null}</Drawer></>;
+function Landing() {
+  const h = hero(),
+    input = {
+      stateVersion: 1,
+      asOf: FIXTURE_CLOCK,
+      localToday: "2026-10-29",
+      horizonEnd: "2026-11-04",
+      timezone: "Africa/Lagos",
+      confirmedFundsAtomic: "800000000",
+      reserveFloorAtomic: "100000000",
+      pendingAtomic: "0",
+      expenses: h.expenses,
+      invoices: h.invoices,
+    },
+    result = plan(input, h.outcomes, "history_median", "postgres");
+  return (
+    <>
+      <header className="public-header">
+        <Brand />
+        <nav>
+          <a href="#how">How it works</a>
+          <Link to="/demo">See the example</Link>
+          <CTA to="/signin">Open Runway</CTA>
+        </nav>
+      </header>
+      <main id="main">
+        <section className="hero">
+          <div className="hero-copy">
+            <p className="eyebrow">
+              <span className="dot" /> For freelancers paid in stablecoins
+            </p>
+            <h1>
+              Your client says <em>Friday.</em>
+              <br />
+              Your history says <em>Tuesday.</em>
+            </h1>
+            <p className="hero-description">
+              See which bill a late payment puts at risk, and the smallest
+              spending change that covers it.
+            </p>
+            <div className="actions">
+              <CTA to="/demo">Try the example</CTA>
+              <Link to="/signin" className="text-link">
+                Use my own numbers <ArrowUpRight size={17} />
+              </Link>
+            </div>
+            <p className="helper">No wallet needed for the example.</p>
+          </div>
+          <PaymentOrbit />
+        </section>
+        <section className="story-section example-section">
+          <div className="section-intro">
+            <p className="eyebrow">A clearer view of the week ahead</p>
+            <h2>
+              A late payment should not
+              <br />
+              be a surprise <em>twice.</em>
+            </h2>
+            <p>
+              Friday's promise arrives after Monday's rent. Your past payments
+              make the gap visible while there is still time to change the plan.
+            </p>
+            <Link to="/demo" className="text-link">
+              Open this plan <ArrowRight size={17} />
+            </Link>
+          </div>
+          <div className="example-plan">
+            <div className="panel-heading">
+              <span className="eyebrow">Your next few days</span>
+              <SourceLabel source="synthetic_replay" />
+            </div>
+            <div className="mini-ledger">
+              <div>
+                <span>Thu 29 Oct</span>
+                <strong>Confirmed funds</strong>
+                <Money value="800000000" />
+              </div>
+              <div>
+                <span>Sat 31 Oct</span>
+                <strong>Flexible purchase</strong>
+                <Money value="250000000" />
+              </div>
+              <div className="risk-row">
+                <span>Mon 2 Nov</span>
+                <strong>Rent is due</strong>
+                <Money value="600000000" />
+              </div>
+              <div>
+                <span>Tue 3 Nov</span>
+                <strong>Estimated payment</strong>
+                <Money value="1200000000" />
+              </div>
+            </div>
+            <div className="example-action">
+              <span className="small-icon">
+                <ArrowDown size={20} />
+              </span>
+              <div>
+                <strong>Reduce Saturday's purchase by 150 USDC.</strong>
+                <p>Rent stays fixed. Your reserve stays at 100 USDC.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section id="how" className="story-section how-section">
+          <div className="section-intro">
+            <p className="eyebrow">A plan that learns from what happened</p>
+            <h2>
+              One invoice.
+              <br />A clearer next step.
+            </h2>
+          </div>
+          <div className="steps">
+            {[
+              [
+                "Add the promise",
+                "Enter the payment you expect and the bills that cannot wait.",
+              ],
+              [
+                "Check what arrived",
+                "Record an offchain payment or check a Sui USDC receipt through Tatum.",
+              ],
+              [
+                "Plan around the pattern",
+                "Use resolved payment history to compare dates and review the smallest permitted spending change.",
+              ],
+            ].map(([title, copy], i) => (
+              <div key={title}>
+                <span className="step-number">0{i + 1}</span>
+                <div>
+                  <h3>{title}</h3>
+                  <p>{copy}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+        <section className="evidence-story">
+          <div>
+            <p className="eyebrow">Every recommendation has a reason</p>
+            <h2>
+              See what changed,
+              <br />
+              and why.
+            </h2>
+            <p>
+              Each recommendation points to the payments and rules behind it.
+              Inspect the history, correct a date, and see how the calculation
+              changes.
+            </p>
+            <Link to="/evidence" className="text-link">
+              Inspect the integration evidence <ArrowUpRight size={17} />
+            </Link>
+          </div>
+          <div className="evidence-excerpt">
+            <div className="panel-heading">
+              <strong>Cedar Studio</strong>
+              <SourceLabel source="synthetic_replay" />
+            </div>
+            <p className="large-stat">
+              4 <span>days later</span>
+            </p>
+            <p>The median of four resolved payments.</p>
+            <div className="delay-list">
+              {[3, 4, 4, 5].map((d, i) => (
+                <div key={i}>
+                  <span>Payment 0{i + 1}</span>
+                  <div style={{ width: d * 28 }} />
+                  <strong>{d} days</strong>
+                </div>
+              ))}
+            </div>
+            <small>
+              Local fixture history. Mainnet publication is shown separately in
+              the evidence view.
+            </small>
+          </div>
+        </section>
+        <section className="sponsor-row">
+          <div>
+            <ShieldCheck size={24} />
+            <h3>Built on receipts and recorded outcomes.</h3>
+          </div>
+          <p>
+            <strong>Tatum</strong> checks Sui balances and receipts.
+          </p>
+          <p>
+            <strong>Walrus Memory</strong> stores outcomes when publication and
+            retrieval succeed.
+          </p>
+        </section>
+        <section className="closing">
+          <p className="eyebrow">Give the next week a little room</p>
+          <h2>Start with the next bill.</h2>
+          <div className="actions">
+            <CTA to="/demo">Try the example</CTA>
+            <Link className="text-link" to="/signin">
+              Use my own numbers <ArrowUpRight size={17} />
+            </Link>
+          </div>
+        </section>
+      </main>
+      <footer className="public-footer">
+        <Brand />
+        <span>Plan around the next payment.</span>
+        <Link to="/privacy">Privacy</Link>
+        <Link to="/evidence">Source and evidence</Link>
+      </footer>
+    </>
+  );
 }
-function Activity(){const {b}=useWorkspace(),q=useQuery({queryKey:['activity',b.stateVersion],queryFn:()=>api('/activity')}),m=useQuery({queryKey:['memory',b.stateVersion],queryFn:()=>api('/memory')}),[filter,setFilter]=useState('all'),[selected,setSelected]=useState<any>(null);const rows=q.data?.items.filter((r:any)=>filter==='all'||r.kind===filter)||[];return <><PageTitle title="What happened, and what changed." description="Payments, decisions, and the records behind the next plan."/><div className="segmented">{[['all','All activity'],['payment','Payments'],['plan','Plan changes'],['memory','Memory']].map(([v,l])=><button key={v} aria-pressed={filter===v} onClick={()=>setFilter(v)}>{l}</button>)}</div><ErrorNote error={q.error||m.error}/>{q.isPending?<Loading/>:rows.length?<div className="activity-list">{rows.map((r:any)=><div key={r.id}><span className="activity-dot"/><div><strong>{r.summary}</strong><small>{new Date(r.created_at).toLocaleString('en-GB')} · {r.kind}</small></div></div>)}</div>:<Empty title="No activity in this view yet." copy="Saving an invoice, confirming a payment, or reviewing a plan will leave a record here."/>}<section className="memory-section"><div className="section-heading"><h2>Payment history and memory</h2><span>{m.data?.items.filter((r:any)=>r.status==='verified').length||0} verified on Mainnet</span></div><p className="muted">Local records remain available even while publication is disabled or the memory service is unavailable.</p>{m.data?.items.map((r:any)=><button className="memory-row" key={r.id} onClick={()=>setSelected(r)}><div><strong>{r.summary}</strong><small>Event date {r.event_at}</small></div><SourceLabel source={r.status}/><ArrowUpRight size={17}/></button>)}</section><Drawer open={!!selected} onClose={()=>setSelected(null)} title="Inspect this record" description="Publication, content, and correction evidence for the selected record.">{selected?<div className="form"><h3>{selected.summary}</h3><SourceLabel source={selected.status}/><dl className="record-details"><dt>Event date</dt><dd>{selected.event_at}</dd><dt>Recorded</dt><dd>{new Date(selected.recorded_at).toLocaleString('en-GB')}</dd><dt>Logical ID</dt><dd><code>{selected.id}</code></dd><dt>Blob ID</dt><dd><code>{selected.blob_id||'Not uploaded'}</code></dd><dt>Remote job</dt><dd><code>{selected.remote_job_id||'Not submitted'}</code></dd><dt>Content hash</dt><dd><code>{selected.payload_hash}</code></dd>{selected.supersedes_id?<><dt>Supersedes</dt><dd><code>{selected.supersedes_id}</code></dd></>:null}</dl>{selected.error?<p className="warning-text">{selected.error}</p>:null}<details><summary>Structured content</summary><pre>{JSON.stringify(selected.payload,null,2)}</pre></details></div>:null}</Drawer></>;}
-function SettingsPage(){const {b,reload}=useWorkspace(),action=useAction(),[account,setAccount]=useState<Account|null>(null),[adding,setAdding]=useState(false),[jobId,setJobId]=useState('');const job=useQuery({queryKey:['job',jobId],queryFn:()=>api('/jobs/'+jobId),enabled:!!jobId,refetchInterval:q=>['done','failed'].includes(q.state.data?.job.status)?false:1500});useEffect(()=>{if(job.data?.job.status==='done')void reload();},[job.data?.job.status]);return <><PageTitle title="Your rules, in plain sight." description="Confirm the funds and constraints every plan should use."/><section className="settings-section"><div><h2>Reserve and dates</h2><p>Keep a floor below every modeled balance.</p></div><form className="form" key={b.state.policy.version} onSubmit={e=>{e.preventDefault();const f=new FormData(e.currentTarget);void action.run(async()=>{await api('/policy','PUT',{reserveAtomic:parseMoney(String(f.get('reserve'))),horizonDays:Number(f.get('horizon')),timezone:f.get('timezone'),expectedStateVersion:b.stateVersion});await reload();action.setSuccess('Your reserve and dates were saved.');});}}><Field label="Reserve floor (USDC)" name="reserve" inputMode="decimal" defaultValue={moneyInput(b.state.policy.reserveAtomic)} required/><div className="form-columns"><Field label="Planning horizon (days)" name="horizon" type="number" min={1} max={14} defaultValue={b.state.policy.horizonDays} required/><Field label="Timezone" name="timezone" defaultValue={b.state.policy.timezone} required/></div><Button type="submit" busy={action.busy}>Save spending rules</Button></form></section><section className="settings-section"><div><h2>Included funds</h2><p>Use a manual account only for funds your wallet balance does not already include.</p><Button secondary onClick={()=>setAdding(true)}><Plus size={16}/>Add manual funds</Button></div><div className="account-list">{b.state.accounts.map(a=><div key={a.id}><div><strong>{a.alias}</strong><SourceLabel source={a.source}/><small>{a.included?'Included in this plan':'Excluded from this plan'}</small><small>Confirmed {a.confirmedAt.slice(0,10)}</small>{a.reconciliationPending?<small className="warning-text">Needs reconciliation</small>:null}</div><Money value={a.amountAtomic}/><div className="actions"><button className="text-link" onClick={()=>setAccount(a)}>Edit</button>{a.kind==='sui'?<Button secondary busy={action.busy} onClick={()=>void action.run(async()=>{const v=await api(`/accounts/${a.id}/refresh`,'POST',{expectedStateVersion:b.stateVersion});setJobId(v.jobId);})}>Refresh</Button>:null}</div></div>)}{job.data?<p role="status">Balance refresh: {job.data.job.status==='failed'?job.data.job.error:job.data.job.status}</p>:null}</div></section><section className="settings-section"><div><h2>Memory and consent</h2><p>Current finances can be saved before you enable publication.</p></div><div><p>Runway's hosted memory account stores these records. The memory service may process their contents.</p><p className="muted">Stopping publication prevents future writes. It does not delete records already uploaded or erase downloaded copies.</p><p>Publication: <strong>{b.state.consent?'Consented':'Not enabled'}</strong>. Server writes: <strong>{b.capabilities.memoryWrites?'Enabled':'Disabled'}</strong>.</p>{b.workspace.kind==='sample'?<p className="helper">Visitors cannot publish the example to the funded memory account.</p>:<Button secondary busy={action.busy} onClick={()=>void action.run(async()=>{await api('/memory/consent','POST',{accepted:!b.state.consent,consentVersion:'1',expectedStateVersion:b.stateVersion});await reload();})}>{b.state.consent?'Stop future publication':'I consent to future memory publication'}</Button>}<Link to="/privacy" className="text-link">Read the privacy details <ArrowUpRight size={16}/></Link></div></section><ErrorNote error={action.error||job.error}/>{action.success?<Notice>{action.success}</Notice>:null}<Drawer open={adding||!!account} onClose={()=>{setAccount(null);setAdding(false);}} title={account?'Confirm included funds':'Add manual funds'} description="Confirm the current amount. Avoid counting the same funds twice."><AccountForm account={account} onClose={()=>{setAccount(null);setAdding(false);}}/></Drawer></>;}
-function AccountForm({account,onClose}:{account:Account|null;onClose:()=>void}){const {b,reload}=useWorkspace(),action=useAction();return <form className="form" onSubmit={e=>{e.preventDefault();const f=new FormData(e.currentTarget);void action.run(async()=>{await api(account?'/accounts/'+account.id:'/accounts/manual',account?'PATCH':'POST',{alias:f.get('alias'),...(account?.kind==='sui'?{}:{amountAtomic:parseMoney(String(f.get('amount')))}),expectedStateVersion:b.stateVersion,...(account?{included:f.get('included')==='on',expectedVersion:account.version}:{})});await reload();onClose();});}}><Field label="Account name" name="alias" defaultValue={account?.alias} required/>{account?.kind==='sui'?<p className="helper">Tatum verifies this wallet amount. Use Refresh to obtain its current balance.</p>:<Field label="Confirmed amount (USDC)" name="amount" inputMode="decimal" defaultValue={account?moneyInput(account.amountAtomic):''} required/>}{account?<label className="checkbox"><input name="included" type="checkbox" defaultChecked={account.included}/>Include these funds in my plan</label>:null}<p className="helper">Only confirm funds you currently have. Expected invoices belong in the invoice list.</p><ErrorNote error={action.error}/><Button type="submit" busy={action.busy}>Confirm funds</Button></form>;}
-function Setup(){const {b}=useWorkspace();return <><PageTitle title="Start with the next bill." description="Three small steps make a usable plan. Add only the numbers you want to model."/><div className="setup-steps">{[['01','Set your reserve','Confirm included funds, timezone, and the amount you want to preserve.','/app/settings','Set my rules'],['02','Add the next bill','Choose what is fixed and what you would permit the planner to reduce.','/app/plan','Add an expense'],['03','Add a payment you expect','Keep the promise separate from confirmed funds. You can skip this and use the no-payment plan.','/app/invoices','Add an invoice']].map(([n,title,copy,to,label])=><div key={n}><span className="step-number">{n}</span><h2>{title}</h2><p>{copy}</p><CTA to={to} secondary>{label}</CTA></div>)}</div><CTA to="/app/overview">Open my overview</CTA></>;}
-function Privacy(){return <PublicLayout><article className="public-copy privacy-copy"><p className="eyebrow">Your records and your choices</p><h1>Privacy in plain language.</h1><h2>Your workspace</h2><p>Wallet sign-in verifies a personal-message signature. Runway stores your public wallet address, current financial entries, recorded outcomes, plan snapshots, and session metadata on its server. The sign-in message does not authorize a transfer.</p><h2>Confirmed funds and receipts</h2><p>Tatum receives wallet addresses and transaction digests when you request a balance refresh or receipt verification. Runway does not hold your primary wallet keys or execute financial transfers.</p><h2>Hosted memory</h2><p>Memory publication is optional and requires consent. Runway uses an operator-managed account. Namespaces isolate application records, but do not give you ownership of the operator's account. The relayer may process record contents before encrypted storage on Walrus.</p><p>Disabling consent stops future publication. It does not delete uploaded records or erase copies other parties may already have downloaded. Do not include private client details you do not want the memory service to process.</p><h2>The example</h2><p>Example payments and balances are synthetic and dated 29 October 2026. Each visitor receives an isolated copy. The example cannot publish to the funded memory account. Its local workspace expires after 24 hours.</p><h2>Current limits</h2><p>Runway helps review cash-flow scenarios. Forecast dates are descriptive estimates, and an expected payment never becomes confirmed funds through a forecast. Review your actual accounts and obligations before acting.</p></article></PublicLayout>;}
-function Evidence(){const q=useQuery({queryKey:['public-evidence'],queryFn:()=>api('/evidence')});return <PublicLayout><article className="public-copy evidence-page"><p className="eyebrow">Actual integration evidence</p><h1>A receipt for the claims.</h1><p>This page separates implemented local behavior from completed sponsor operations. The example uses synthetic data.</p><ErrorNote error={q.error}/>{q.isPending?<Loading/>:q.data?<><section className="evidence-block"><h2>Tatum · Sui Mainnet</h2><SourceLabel source={q.data.tatum.authenticated?'tatum_verified':'Not verified'}/><p>{q.data.tatum.authenticated?'Authenticated native gRPC metadata and total native-USDC balance reads succeeded.':'No authenticated Mainnet read has been recorded.'}</p><dl className="record-details"><dt>Provider</dt><dd>{q.data.tatum.provider}</dd><dt>Checked</dt><dd>{q.data.tatum.checkedAt}</dd><dt>Receipt verification</dt><dd>{q.data.tatum.receipt?'Completed':'A funded live receipt has not yet been demonstrated.'}</dd></dl></section><section className="evidence-block"><h2>Walrus Memory · Mainnet</h2><SourceLabel source={q.data.memory.state==='stored_and_retrieved'?'verified':q.data.memory.state}/><p>{q.data.completedMainnetRecords} completed and content-matched records in the public manifest.</p>{q.data.memory.error?<p className="warning-text">{q.data.memory.error}</p>:null}<p>Signed listing and remember acceptance succeeded. Acceptance alone does not establish storage or retrieval.</p><dl className="record-details"><dt>Accepted job</dt><dd><code>{q.data.memory.jobId||q.data.memory.acceptedJobId||'None'}</code></dd><dt>Blob ID</dt><dd><code>{q.data.memory.blobId||'No completed upload'}</code></dd></dl></section><section className="evidence-block"><h2>The controlled example</h2><p>The same current input has 800 USDC confirmed, 850 USDC committed, and a 100 USDC reserve. All scenarios have zero available-now funds.</p><p>Four synthetic late outcomes move the expected date to Tuesday 3 November, after Monday's rent. A 150 USDC flexible reduction preserves the reserve. A no-payment scenario independently finds the same conservative reduction.</p><p>Walrus and database parity, fresh-process recall, and ten completed Mainnet records remain unverified until actual stored content can be retrieved. No local history is labeled as recalled from Walrus.</p>{q.data.comparison.state==='verified'?<details><summary>View comparison evidence</summary><pre>{JSON.stringify(q.data.comparison,null,2)}</pre></details>:null}</section></>:null}<CTA to="/demo">Explore the example</CTA></article></PublicLayout>;}
+function Demo() {
+  const nav = useNavigate(),
+    q = useQueryClient(),
+    action = useAction(),
+    started = useRef(false);
+  useEffect(() => {
+    if (started.current) return;
+    started.current = true;
+    void action.run(async () => {
+      await api("/demo/session", "POST", { fixtureId: "hero" });
+      q.clear();
+      nav("/app/overview", { replace: true });
+    });
+  }, []);
+  return (
+    <PublicLayout>
+      <div className="public-copy">
+        <h1>Your next week, in view.</h1>
+        <p>Opening a private copy of the example.</p>
+        <ErrorNote error={action.error} />
+        {action.error ? (
+          <Button
+            onClick={() => {
+              started.current = false;
+              location.reload();
+            }}
+          >
+            Try again
+          </Button>
+        ) : (
+          <Loading />
+        )}
+      </div>
+    </PublicLayout>
+  );
+}
+function SignIn() {
+  return (
+    <PublicLayout>
+      <div className="signin-layout">
+        <div>
+          <p className="eyebrow">A little room to plan ahead</p>
+          <h1>Use your own numbers.</h1>
+          <p>
+            Connect a Sui wallet to keep your workspace private. You can still
+            try the example without one.
+          </p>
+          <p className="muted">This signs you in. It does not move funds.</p>
+        </div>
+        <Suspense fallback={<Loading />}>
+          <WalletSignIn />
+        </Suspense>
+      </div>
+    </PublicLayout>
+  );
+}
+function Shell() {
+  const q = useQuery({
+      queryKey: ["bootstrap"],
+      queryFn: () => api<Bootstrap>("/bootstrap"),
+    }),
+    client = useQueryClient(),
+    nav = useNavigate(),
+    action = useAction();
+  useEffect(() => {
+    document.title = `${
+      location.pathname
+        .split("/")
+        .at(-1)
+        ?.replace(/^./, (s) => s.toUpperCase()) || "Overview"
+    } · Runway`;
+  }, [location.pathname]);
+  const destinations = [
+    ["overview", "Overview", LayoutDashboard],
+    ["invoices", "Invoices", FileText],
+    ["plan", "Plan", ChartNoAxesCombined],
+    ["activity", "Activity", History],
+  ] as const;
+  if (q.error instanceof ApiError && q.error.code === "SESSION_EXPIRED")
+    return <Navigate to="/signin" replace />;
+  const logout = () =>
+    void action.run(async () => {
+      await api("/auth/logout", "POST", {});
+      client.clear();
+      nav("/");
+    });
+  return (
+    <div className="app-shell">
+      {q.data?.workspace.kind === "personal" && q.data.workspace.address ? (
+        <Suspense fallback={null}>
+          <WalletGuard address={q.data.workspace.address} />
+        </Suspense>
+      ) : null}
+      <aside className="sidebar">
+        <Brand />
+        <p className="sidebar-caption">A little room to plan ahead.</p>
+        <nav aria-label="Main navigation">
+          {destinations.map(([path, label, Icon]) => (
+            <NavLink to={"/app/" + path} key={path}>
+              <Icon size={19} />
+              {label}
+            </NavLink>
+          ))}
+        </nav>
+        <div className="sidebar-bottom">
+          <NavLink to="/app/settings">
+            <Settings size={18} />
+            Settings
+          </NavLink>
+          <button onClick={logout}>
+            <LogOut size={18} />
+            Sign out
+          </button>
+          <p>
+            Expected payments
+            <br />
+            are not available funds.
+          </p>
+        </div>
+      </aside>
+      <div className="app-area">
+        <header className="app-topbar">
+          <div className="mobile-brand">
+            <Brand />
+          </div>
+          <span>
+            {q.data?.workspace.kind === "sample"
+              ? "Sample workspace"
+              : "Your workspace"}
+          </span>
+          <div className="topbar-meta">
+            {q.data?.workspace.kind === "sample" ? (
+              <>
+                <span>Example data · 29 Oct 2026</span>
+                <button
+                  className="icon-button"
+                  aria-label="Reset example"
+                  onClick={() =>
+                    void action.run(async () => {
+                      await api("/demo/reset", "POST", {
+                        expectedStateVersion: q.data!.stateVersion,
+                      });
+                      await q.refetch();
+                      await client.invalidateQueries({
+                        queryKey: ["activity"],
+                      });
+                    })
+                  }
+                >
+                  <RotateCcw size={16} />
+                </button>
+              </>
+            ) : (
+              <span>
+                {q.data?.workspace.address?.slice(0, 8)}…
+                {q.data?.workspace.address?.slice(-4)}
+              </span>
+            )}
+            <Link
+              to="/app/settings"
+              aria-label="Settings"
+              className="icon-button"
+            >
+              <Settings size={18} />
+            </Link>
+          </div>
+        </header>
+        <main id="main" className="app-main">
+          <ErrorNote error={action.error} />
+          {q.isPending ? (
+            <Loading />
+          ) : q.error ? (
+            <>
+              <ErrorNote error={q.error} />
+              <Button onClick={() => void q.refetch()}>Try again</Button>
+            </>
+          ) : q.data ? (
+            <Outlet
+              context={
+                { b: q.data, reload: () => q.refetch() } satisfies Context
+              }
+            />
+          ) : null}
+        </main>
+        <nav className="mobile-nav" aria-label="Mobile navigation">
+          {destinations.map(([path, label, Icon]) => (
+            <NavLink key={path} to={"/app/" + path}>
+              <Icon size={20} />
+              <span>{label}</span>
+            </NavLink>
+          ))}
+        </nav>
+      </div>
+    </div>
+  );
+}
+function Overview() {
+  const { b } = useWorkspace(),
+    s = b.state,
+    input = {
+      stateVersion: b.stateVersion,
+      asOf: b.asOf,
+      localToday: localDate(b.asOf, s.policy.timezone),
+      horizonEnd: addDays(
+        localDate(b.asOf, s.policy.timezone),
+        s.policy.horizonDays - 1,
+      ),
+      timezone: s.policy.timezone,
+      confirmedFundsAtomic: s.accounts
+        .filter((a) => a.included)
+        .reduce((n, a) => n + BigInt(a.amountAtomic), 0n)
+        .toString(),
+      reserveFloorAtomic: s.policy.reserveAtomic,
+      pendingAtomic: s.pendingAtomic,
+      expenses: s.expenses,
+      invoices: s.invoices,
+    },
+    r = plan(input, [], "no_receipt", "none");
+  const expected = s.invoices.filter(
+    (i) => !["paid", "cancelled"].includes(i.status),
+  );
+  return (
+    <>
+      <PageTitle
+        eyebrow={
+          b.workspace.kind === "sample"
+            ? "Thursday, 29 October"
+            : "Your current picture"
+        }
+        title="A little room to plan ahead."
+        description="What you have, what is committed, and what still needs to arrive."
+      />
+      <section className="funds-summary">
+        <div className="funds-primary">
+          <p className="eyebrow">Available to plan with now</p>
+          <h2>
+            <Money value={r.availableNowAtomic} />
+          </h2>
+          <p>Expected payments are kept separate.</p>
+        </div>
+        <div className="funds-equation">
+          <div>
+            <span>Confirmed funds</span>
+            <Money value={r.confirmedFundsAtomic} />
+          </div>
+          <div>
+            <span>Planned spending</span>
+            <Money value={r.plannedSpendingAtomic} />
+          </div>
+          <div>
+            <span>Reserve floor</span>
+            <Money value={r.reserveFloorAtomic} />
+          </div>
+        </div>
+      </section>
+      {b.freshness !== "fresh" ? (
+        <div className="warning-note">
+          <AlertCircle size={19} />
+          <div>
+            <strong>Confirm your current funds.</strong>
+            <p>
+              A wallet balance is old or a recorded payment needs
+              reconciliation.{" "}
+              <Link to="/app/settings">Review included funds</Link>.
+            </p>
+          </div>
+        </div>
+      ) : null}
+      {r.firstExposedFixedBill ? (
+        <section className="exposure">
+          <div>
+            <p className="eyebrow">Before the next payment</p>
+            <h2>
+              {r.firstExposedFixedBill.label} is exposed by{" "}
+              <Money value={r.firstExposedFixedBill.uncoveredAtomic} />.
+            </h2>
+            <p>
+              {dateLabel(r.firstExposedFixedBill.date, true)}. Preserving your
+              reserve needs a {formatMoney(r.firstExposedFixedBill.gapAtomic)}{" "}
+              USDC change.
+            </p>
+          </div>
+          <CTA to="/app/plan">Review a plan</CTA>
+        </section>
+      ) : null}
+      <div className="overview-columns">
+        <section>
+          <div className="section-heading">
+            <h2>The next payments</h2>
+            <Link to="/app/invoices">
+              All invoices <ArrowUpRight size={16} />
+            </Link>
+          </div>
+          {expected.length ? (
+            expected.map((i) => {
+              const t = timing(s.outcomes, i.clientId);
+              return (
+                <Link
+                  to={"/app/invoices/" + i.id}
+                  className="invoice-summary"
+                  key={i.id}
+                >
+                  <div>
+                    <strong>
+                      {s.clients.find((c) => c.id === i.clientId)?.alias}
+                    </strong>
+                    <p>{i.invoiceReference}</p>
+                    <small>Client's date · {dateLabel(i.dueDate)}</small>
+                    {t.medianDelay !== undefined ? (
+                      <small>Past payments · {t.medianDelay} days later</small>
+                    ) : (
+                      <small>Not enough history for a timing estimate</small>
+                    )}
+                  </div>
+                  <div>
+                    <Money
+                      value={(
+                        BigInt(i.amountAtomic) - BigInt(i.paidAtomic)
+                      ).toString()}
+                    />
+                    <span className="tag">Expected</span>
+                  </div>
+                </Link>
+              );
+            })
+          ) : (
+            <Empty
+              title="No expected payment yet."
+              copy="A plan can still cover your listed bills without a new invoice."
+              to="/app/invoices"
+              cta="Add an invoice"
+            />
+          )}
+        </section>
+        <section>
+          <div className="section-heading">
+            <h2>What cannot wait</h2>
+            <Link to="/app/plan">
+              Spending rules <ArrowUpRight size={16} />
+            </Link>
+          </div>
+          {s.expenses
+            .filter((e) => e.status === "planned")
+            .map((e) => (
+              <div className="expense-summary" key={e.id}>
+                <span
+                  className={
+                    "expense-icon " + (e.kind === "fixed" ? "fixed" : "")
+                  }
+                >
+                  <FileText size={18} />
+                </span>
+                <div>
+                  <strong>{e.label}</strong>
+                  <small>
+                    {dateLabel(e.dueDate)} ·{" "}
+                    {e.kind === "fixed" ? "Fixed bill" : "Flexible expense"}
+                  </small>
+                </div>
+                <Money value={e.amountAtomic} />
+              </div>
+            ))}
+        </section>
+      </div>
+      <div className="quiet-footer">
+        <ShieldCheck size={16} />
+        {b.workspace.kind === "sample"
+          ? "This is a dated synthetic example. Saving a plan changes only this workspace."
+          : "Funds and forecasts stay separate. Reviewed changes do not move money."}
+      </div>
+    </>
+  );
+}
+function Empty({
+  title,
+  copy,
+  to,
+  cta,
+}: {
+  title: string;
+  copy: string;
+  to?: string;
+  cta?: string;
+}) {
+  return (
+    <div className="empty">
+      <h3>{title}</h3>
+      <p>{copy}</p>
+      {to ? <CTA to={to}>{cta}</CTA> : null}
+    </div>
+  );
+}
+function InvoiceForm({
+  invoice,
+  onClose,
+}: {
+  invoice?: Invoice;
+  onClose: () => void;
+}) {
+  const { b, reload } = useWorkspace(),
+    action = useAction(),
+    [clientId, setClientId] = useState(
+      invoice?.clientId || b.state.clients[0]?.id || "",
+    );
+  async function submit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const f = new FormData(e.currentTarget);
+    void action.run(async () => {
+      let selected = clientId;
+      if (!selected) {
+        const created = await api("/clients", "POST", {
+          alias: String(f.get("newClient")),
+          expectedStateVersion: b.stateVersion,
+        });
+        selected = created.client.id;
+        const latest = (await reload()) as any;
+        await api("/invoices", "POST", {
+          clientId: selected,
+          invoiceReference: f.get("reference"),
+          amountAtomic: parseMoney(String(f.get("amount"))),
+          dueDate: f.get("date"),
+          timezone: b.state.policy.timezone,
+          expectedStateVersion: latest.data.stateVersion,
+        });
+      } else
+        await api(
+          "/invoices" + (invoice ? "/" + invoice.id : ""),
+          invoice ? "PATCH" : "POST",
+          {
+            clientId: selected,
+            invoiceReference: f.get("reference"),
+            amountAtomic: parseMoney(String(f.get("amount"))),
+            dueDate: f.get("date"),
+            timezone: b.state.policy.timezone,
+            expectedStateVersion: b.stateVersion,
+            ...(invoice ? { expectedVersion: invoice.version } : {}),
+          },
+        );
+      await reload();
+      onClose();
+    });
+  }
+  return (
+    <form onSubmit={submit} className="form">
+      <Field label="Client" name="client">
+        <select
+          id="client"
+          value={clientId}
+          onChange={(e) => setClientId(e.target.value)}
+        >
+          {b.state.clients.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.alias}
+            </option>
+          ))}
+          <option value="">Add a new client</option>
+        </select>
+      </Field>
+      {!clientId ? (
+        <Field
+          label="New client name"
+          name="newClient"
+          required
+          maxLength={80}
+        />
+      ) : null}
+      <Field
+        label="Invoice reference"
+        name="reference"
+        required
+        defaultValue={invoice?.invoiceReference}
+        maxLength={80}
+      />
+      <Field
+        label="Amount (USDC)"
+        name="amount"
+        inputMode="decimal"
+        required
+        defaultValue={invoice ? moneyInput(invoice.amountAtomic) : ""}
+      />
+      <Field
+        label="Client's payment date"
+        name="date"
+        type="date"
+        required
+        defaultValue={invoice?.dueDate}
+      />
+      <p className="helper">
+        Dates use {b.state.policy.timezone}. This amount stays separate from
+        confirmed funds.
+      </p>
+      <ErrorNote error={action.error} />
+      <Button busy={action.busy} type="submit">
+        {action.busy ? "Saving invoice" : "Save invoice"}
+      </Button>
+    </form>
+  );
+}
+function Invoices() {
+  const { b } = useWorkspace(),
+    [open, setOpen] = useState(false),
+    [importing, setImporting] = useState(false),
+    [filter, setFilter] = useState("all");
+  const rows = b.state.invoices.filter(
+    (i) =>
+      filter === "all" ||
+      (filter === "unresolved"
+        ? !["paid", "cancelled"].includes(i.status)
+        : i.status === "paid"),
+  );
+  return (
+    <>
+      <PageTitle
+        title="Payments you expect."
+        description="A promise is useful. A confirmed receipt tells you what happened."
+        action={
+          <Button onClick={() => setOpen(true)}>
+            <Plus size={17} />
+            Add invoice
+          </Button>
+        }
+      />
+      <div className="list-toolbar">
+        <div className="segmented">
+          {[
+            ["all", "All invoices"],
+            ["unresolved", "Expected"],
+            ["paid", "Received"],
+          ].map(([v, l]) => (
+            <button
+              key={v}
+              aria-pressed={filter === v}
+              onClick={() => setFilter(v)}
+            >
+              {l}
+            </button>
+          ))}
+        </div>
+        <button className="text-link" onClick={() => setImporting(true)}>
+          Import CSV <ArrowUpRight size={15} />
+        </button>
+      </div>
+      {rows.length ? (
+        <div className="table-wrap invoice-table">
+          <table>
+            <caption className="sr-only">Invoices in this workspace</caption>
+            <thead>
+              <tr>
+                <th>Client and invoice</th>
+                <th>Client's date</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>
+                  <span className="sr-only">Details</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((i) => (
+                <tr key={i.id}>
+                  <td>
+                    <Link to={"/app/invoices/" + i.id}>
+                      <strong>
+                        {
+                          b.state.clients.find((c) => c.id === i.clientId)
+                            ?.alias
+                        }
+                      </strong>
+                      <small>{i.invoiceReference}</small>
+                    </Link>
+                  </td>
+                  <td>{dateLabel(i.dueDate)}</td>
+                  <td>
+                    <Money value={i.amountAtomic} />
+                    {i.paidAtomic !== "0" ? (
+                      <small>{formatMoney(i.paidAtomic)} received</small>
+                    ) : null}
+                  </td>
+                  <td>
+                    <span className="tag">
+                      {i.status === "expected"
+                        ? "Expected"
+                        : i.status === "partial"
+                          ? "Partly received"
+                          : i.status === "paid"
+                            ? "Received"
+                            : "Cancelled"}
+                    </span>
+                  </td>
+                  <td>
+                    <Link
+                      to={"/app/invoices/" + i.id}
+                      aria-label={"Open " + i.invoiceReference}
+                      className="icon-button"
+                    >
+                      <ArrowUpRight size={17} />
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <Empty
+          title="No invoices in this view."
+          copy="Add the next payment you expect. You can review dates and amounts before saving."
+        />
+      )}
+      <Drawer
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Add the next payment"
+        description="Record the promise. Confirm what arrived separately."
+      >
+        <InvoiceForm onClose={() => setOpen(false)} />
+      </Drawer>
+      <Drawer
+        open={importing}
+        onClose={() => setImporting(false)}
+        title="Import invoices"
+        description="Preview every row before importing. Historical payments remain user confirmed."
+      >
+        <ImportForm onClose={() => setImporting(false)} />
+      </Drawer>
+    </>
+  );
+}
+function ImportForm({ onClose }: { onClose: () => void }) {
+  const { b, reload } = useWorkspace(),
+    action = useAction(),
+    [csv, setCsv] = useState(""),
+    [preview, setPreview] = useState<any>(null);
+  return (
+    <div className="form">
+      <Field label="CSV file" name="csv">
+        <input
+          id="csv"
+          type="file"
+          accept=".csv,text/csv"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            setPreview(null);
+            if (file) {
+              if (file.size > 262144) {
+                action.setError(new Error("Choose a CSV smaller than 256 KB."));
+                return;
+              }
+              void file.text().then(setCsv);
+            }
+          }}
+        />
+      </Field>
+      <p className="helper">
+        Columns: client_alias, invoice_reference, amount_usdc, due_date,
+        paid_date, source. Dates use {b.state.policy.timezone}.
+      </p>
+      <Button
+        secondary
+        busy={action.busy}
+        disabled={!csv}
+        onClick={() =>
+          void action.run(async () =>
+            setPreview(await api("/invoices/import/preview", "POST", { csv })),
+          )
+        }
+      >
+        Preview rows
+      </Button>
+      {preview ? (
+        <>
+          <ul className="preview-list">
+            {preview.rows.map((r: any) => (
+              <li key={r.row}>
+                <strong>Row {r.row}</strong>
+                <span>{r.valid ? r.data.invoice_reference : r.error}</span>
+                <span className="tag">
+                  {r.valid ? "Ready" : "Needs correction"}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <Button
+            disabled={
+              !preview.rows.length || preview.rows.some((r: any) => !r.valid)
+            }
+            busy={action.busy}
+            onClick={() =>
+              void action.run(async () => {
+                await api("/invoices/import/confirm", "POST", {
+                  csv,
+                  previewHash: preview.previewHash,
+                  expectedStateVersion: b.stateVersion,
+                });
+                await reload();
+                onClose();
+              })
+            }
+          >
+            Import {preview.rows.length} invoices
+          </Button>
+        </>
+      ) : null}
+      <ErrorNote error={action.error} />
+    </div>
+  );
+}
+function InvoiceDetail() {
+  const { b, reload } = useWorkspace(),
+    { id } = useParams(),
+    query = useQuery({
+      queryKey: ["invoice", id, b.stateVersion],
+      queryFn: () => api("/invoices/" + id),
+    }),
+    [drawer, setDrawer] = useState("");
+  if (query.isPending) return <Loading />;
+  if (query.error) return <ErrorNote error={query.error} />;
+  const { invoice: i, client, timing: t, outcomes } = query.data;
+  return (
+    <>
+      <Link to="/app/invoices" className="text-link back-link">
+        ← All invoices
+      </Link>
+      <PageTitle
+        eyebrow={client.alias}
+        title={i.invoiceReference}
+        description={"Dates use " + i.timezone}
+        action={
+          i.paidAtomic === "0" ? (
+            <Button secondary onClick={() => setDrawer("edit")}>
+              Edit invoice
+            </Button>
+          ) : null
+        }
+      />
+      <section className="invoice-totals">
+        {[
+          ["Expected", i.amountAtomic],
+          ["Received", i.paidAtomic],
+          [
+            "Remaining",
+            (BigInt(i.amountAtomic) - BigInt(i.paidAtomic)).toString(),
+          ],
+        ].map(([label, value]) => (
+          <div key={label}>
+            <p className="eyebrow">{label}</p>
+            <h2>
+              <Money value={value} />
+            </h2>
+          </div>
+        ))}
+      </section>
+      <section className="detail-section">
+        <div>
+          <h2>The payment timeline</h2>
+          <p>Client's date · {dateLabel(i.dueDate, true)}</p>
+          <p>
+            {i.status === "paid"
+              ? "Full amount recorded. See the source of each outcome below."
+              : "This invoice has not been fully received."}
+          </p>
+        </div>
+        <div className="actions">
+          {!["paid", "cancelled"].includes(i.status) ? (
+            <>
+              <Button onClick={() => setDrawer("payment")}>
+                Confirm an offchain payment
+              </Button>
+              {b.workspace.kind !== "sample" ? (
+                <Button secondary onClick={() => setDrawer("receipt")}>
+                  Check a Sui receipt
+                </Button>
+              ) : null}
+            </>
+          ) : null}
+        </div>
+      </section>
+      <section className="detail-section">
+        <h2>What past payments show</h2>
+        <p>
+          {t.medianDelay !== undefined
+            ? `The latest ${t.sampleCount} resolved payments arrived a median of ${t.medianDelay} days after the client's date. Observed range: ${t.observedDelayMin} to ${t.observedDelayMax} days.`
+            : "Four resolved payments are needed for a client timing estimate. Your no-receipt plan is still available."}
+        </p>
+        <div className="history-rows">
+          {outcomes.map((o: any) => (
+            <div key={o.id}>
+              <span>
+                {dateLabel(o.dueDate)} → {dateLabel(o.paidDate)}
+              </span>
+              <SourceLabel source={o.source} />
+              {outcomes.some((n: any) => n.supersedesId === o.id) ? (
+                <span className="tag">Superseded</span>
+              ) : (
+                <button
+                  className="text-link"
+                  onClick={() => setDrawer("correction:" + o.id)}
+                >
+                  Correct record
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+      <Drawer
+        open={drawer === "edit"}
+        onClose={() => setDrawer("")}
+        title="Edit invoice"
+        description="Update this unresolved promise. Recorded outcomes keep their history."
+      >
+        <InvoiceForm invoice={i} onClose={() => setDrawer("")} />
+      </Drawer>
+      <Drawer
+        open={drawer === "payment"}
+        onClose={() => setDrawer("")}
+        title="Confirm what arrived"
+        description="This records a user-confirmed payment. Confirm your included funds afterward."
+      >
+        <PaymentForm
+          invoice={i}
+          onClose={() => {
+            setDrawer("");
+            void query.refetch();
+          }}
+        />
+      </Drawer>
+      <Drawer
+        open={drawer === "receipt"}
+        onClose={() => setDrawer("")}
+        title="Check a Sui receipt"
+        description="Tatum checks successful native USDC credit to your connected wallet."
+      >
+        <ReceiptForm
+          invoice={i}
+          onClose={() => {
+            setDrawer("");
+            void query.refetch();
+          }}
+        />
+      </Drawer>
+      <Drawer
+        open={drawer.startsWith("correction:")}
+        onClose={() => setDrawer("")}
+        title="Correct payment history"
+        description="The new record replaces the old one in timing calculations."
+      >
+        {drawer.startsWith("correction:") ? (
+          <CorrectionForm
+            outcome={outcomes.find((o: any) => o.id === drawer.split(":")[1])}
+            onClose={() => setDrawer("")}
+          />
+        ) : null}
+      </Drawer>
+    </>
+  );
+}
+function PaymentForm({
+  invoice,
+  onClose,
+}: {
+  invoice: Invoice;
+  onClose: () => void;
+}) {
+  const { b, reload } = useWorkspace(),
+    action = useAction();
+  return (
+    <form
+      className="form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        const f = new FormData(e.currentTarget);
+        void action.run(async () => {
+          await api(`/invoices/${invoice.id}/confirm-offchain`, "POST", {
+            amountAtomic: parseMoney(String(f.get("amount"))),
+            paidDate: f.get("date"),
+            source: "user_confirmed",
+            expectedStateVersion: b.stateVersion,
+          });
+          await reload();
+          onClose();
+        });
+      }}
+    >
+      <Field
+        label="Received amount (USDC)"
+        name="amount"
+        inputMode="decimal"
+        defaultValue={moneyInput(
+          (
+            BigInt(invoice.amountAtomic) - BigInt(invoice.paidAtomic)
+          ).toString(),
+        )}
+        required
+      />
+      <Field
+        label="Date received"
+        name="date"
+        type="date"
+        defaultValue={b.asOf.slice(0, 10)}
+        required
+      />
+      <SourceLabel source="user_confirmed" />
+      <p className="helper">
+        This records the payment, then asks you to reconcile current funds. It
+        does not add the amount to an account automatically.
+      </p>
+      <ErrorNote error={action.error} />
+      <Button busy={action.busy} type="submit">
+        Record received payment
+      </Button>
+    </form>
+  );
+}
+function ReceiptForm({
+  invoice,
+  onClose,
+}: {
+  invoice: Invoice;
+  onClose: () => void;
+}) {
+  const { b, reload } = useWorkspace(),
+    action = useAction(),
+    [jobId, setJobId] = useState(""),
+    [receipt, setReceipt] = useState<any>(null);
+  const job = useQuery({
+    queryKey: ["job", jobId],
+    queryFn: () => api("/jobs/" + jobId),
+    enabled: !!jobId,
+    refetchInterval: (q) =>
+      ["done", "failed", "needs_review"].includes(q.state.data?.job.status)
+        ? false
+        : 1500,
+  });
+  useEffect(() => {
+    if (job.data?.job.status === "done") {
+      void api("/receipts/" + job.data.job.result.receiptId)
+        .then((v) => setReceipt(v.receipt))
+        .catch(action.setError);
+    }
+  }, [job.data?.job.status]);
+  return (
+    <div className="form">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const f = new FormData(e.currentTarget);
+          void action.run(async () => {
+            setReceipt(null);
+            const v = await api("/receipts/verify", "POST", {
+              digest: f.get("digest"),
+              expectedStateVersion: b.stateVersion,
+            });
+            setJobId(v.jobId);
+          });
+        }}
+      >
+        <Field label="Transaction digest" name="digest" required />
+        <Button type="submit" busy={action.busy}>
+          Check receipt
+        </Button>
+      </form>
+      {job.data && !receipt ? (
+        <p role="status">
+          {job.data.job.status === "failed"
+            ? job.data.job.error
+            : "Checking the receipt through Tatum: " + job.data.job.status}
+        </p>
+      ) : null}
+      {receipt ? (
+        <>
+          <h3>Incoming native USDC confirmed</h3>
+          <Money value={receipt.facts.amountAtomic} exact />
+          <SourceLabel source="tatum_verified" />
+          <p className="helper">Recipient: {receipt.facts.recipient}</p>
+          <Field
+            label="Allocate to this invoice (USDC)"
+            name="allocate"
+            defaultValue={moneyInput(
+              (
+                BigInt(receipt.facts.amountAtomic) -
+                BigInt(receipt.allocated_atomic)
+              ).toString(),
+            )}
+          />
+          <Button
+            busy={action.busy}
+            onClick={() =>
+              void action.run(async () => {
+                await api(`/receipts/${receipt.id}/allocate`, "POST", {
+                  invoiceId: invoice.id,
+                  amountAtomic: parseMoney(
+                    (document.getElementById("allocate") as HTMLInputElement)
+                      .value,
+                  ),
+                  expectedStateVersion: b.stateVersion,
+                });
+                await reload();
+                onClose();
+              })
+            }
+          >
+            Use this receipt
+          </Button>
+        </>
+      ) : null}
+      <ErrorNote error={action.error || job.error} />
+    </div>
+  );
+}
+function CorrectionForm({
+  outcome,
+  onClose,
+}: {
+  outcome: any;
+  onClose: () => void;
+}) {
+  const { b, reload } = useWorkspace(),
+    action = useAction();
+  return (
+    <form
+      className="form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        const f = new FormData(e.currentTarget);
+        void action.run(async () => {
+          await api("/outcomes/" + outcome.id + "/correct", "POST", {
+            clientId: f.get("client"),
+            dueDate: f.get("due"),
+            paidDate: f.get("paid"),
+            reason: f.get("reason"),
+            expectedStateVersion: b.stateVersion,
+          });
+          await reload();
+          onClose();
+        });
+      }}
+    >
+      <Field label="Client" name="client">
+        <select id="client" name="client" defaultValue={outcome.clientId}>
+          {b.state.clients.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.alias}
+            </option>
+          ))}
+        </select>
+      </Field>
+      <Field
+        label="Original payment date"
+        name="due"
+        type="date"
+        required
+        defaultValue={outcome.dueDate}
+      />
+      <Field
+        label="Date received"
+        name="paid"
+        type="date"
+        required
+        defaultValue={outcome.paidDate}
+        readOnly={outcome.source === "tatum_verified"}
+      />
+      <Field
+        label="Reason for correction"
+        name="reason"
+        required
+        minLength={3}
+        maxLength={300}
+      />
+      <ErrorNote error={action.error} />
+      <Button busy={action.busy} type="submit">
+        Save correction
+      </Button>
+    </form>
+  );
+}
+function ExpenseForm({
+  expense,
+  onClose,
+}: {
+  expense?: Expense;
+  onClose: () => void;
+}) {
+  const { b, reload } = useWorkspace(),
+    action = useAction(),
+    [kind, setKind] = useState(expense?.kind || "fixed");
+  return (
+    <form
+      className="form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        const f = new FormData(e.currentTarget);
+        void action.run(async () => {
+          await api(
+            "/expenses" + (expense ? "/" + expense.id : ""),
+            expense ? "PATCH" : "POST",
+            {
+              label: f.get("label"),
+              amountAtomic: parseMoney(String(f.get("amount"))),
+              dueDate: f.get("date"),
+              kind,
+              maxReductionAtomic:
+                kind === "fixed" ? "0" : parseMoney(String(f.get("cap"))),
+              hasNotOccurredToday: f.get("notOccurred") === "on",
+              expectedStateVersion: b.stateVersion,
+              ...(expense
+                ? { expectedVersion: expense.version, status: f.get("status") }
+                : {}),
+            },
+          );
+          await reload();
+          onClose();
+        });
+      }}
+    >
+      <Field
+        label="Expense name"
+        name="label"
+        defaultValue={expense?.label}
+        required
+      />
+      <Field
+        label="Amount (USDC)"
+        name="amount"
+        inputMode="decimal"
+        defaultValue={expense ? moneyInput(expense.amountAtomic) : ""}
+        required
+      />
+      <Field
+        label="Due date"
+        name="date"
+        type="date"
+        defaultValue={expense?.dueDate}
+        required
+      />
+      <Field label="Spending rule" name="kind">
+        <select
+          id="kind"
+          value={kind}
+          onChange={(e) => setKind(e.target.value as any)}
+        >
+          <option value="fixed">Fixed bill, keep the full amount</option>
+          <option value="flexible">Flexible expense, permit a reduction</option>
+        </select>
+      </Field>
+      {kind === "flexible" ? (
+        <>
+          <Field
+            label="Maximum permitted reduction (USDC)"
+            name="cap"
+            inputMode="decimal"
+            defaultValue={expense ? moneyInput(expense.maxReductionAtomic) : ""}
+            required
+          />
+          <label className="checkbox">
+            <input
+              type="checkbox"
+              name="notOccurred"
+              defaultChecked={expense?.hasNotOccurredToday}
+            />
+            If due today, I confirm this expense has not occurred.
+          </label>
+        </>
+      ) : (
+        <p className="helper">A fixed bill cannot be reduced by the planner.</p>
+      )}
+      {expense ? (
+        <Field label="Expense status" name="status">
+          <select id="status" name="status" defaultValue={expense.status}>
+            <option value="planned">Planned</option>
+            <option value="paid">Paid</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="pending">Pending, cannot be reduced</option>
+          </select>
+        </Field>
+      ) : null}
+      <ErrorNote error={action.error} />
+      <Button busy={action.busy} type="submit">
+        Save expense
+      </Button>
+    </form>
+  );
+}
+function Plan() {
+  const { b, reload } = useWorkspace(),
+    action = useAction(),
+    [scenario, setScenario] = useState<Scenario>(() =>
+      b.state.invoices.some(
+        (i) =>
+          !["paid", "cancelled"].includes(i.status) &&
+          timing(b.state.outcomes, i.clientId).medianDelay === undefined,
+      )
+        ? "no_receipt"
+        : b.state.invoices.length
+          ? "history_median"
+          : "no_receipt",
+    ),
+    [proposal, setProposal] = useState<any>(null),
+    [drawer, setDrawer] = useState(""),
+    [expense, setExpense] = useState<Expense | undefined>(),
+    [explanation, setExplanation] = useState<any>(null);
+  const loaded = useRef(false);
+  const stale = proposal && proposal.result.stateVersion !== b.stateVersion;
+  const canHistory =
+    b.state.invoices
+      .filter((i) => !["paid", "cancelled"].includes(i.status))
+      .every(
+        (i) => timing(b.state.outcomes, i.clientId).medianDelay !== undefined,
+      ) && b.state.invoices.length > 0;
+  async function calculate(next: Scenario = scenario, mode = "postgres") {
+    await action.run(async () => {
+      setExplanation(null);
+      const p = await api("/plans/preview", "POST", {
+        scenario: next,
+        historyMode:
+          next === "promised" || next === "no_receipt" ? "none" : mode,
+        expectedStateVersion: b.stateVersion,
+      });
+      setProposal(p);
+    });
+  }
+  useEffect(() => {
+    if (loaded.current) return;
+    loaded.current = true;
+    void calculate();
+  }, []);
+  const r = proposal?.result as PlanResult | undefined;
+  return (
+    <>
+      <PageTitle
+        title="Plan around the next payment."
+        description="Compare the dates. Keep fixed bills and your reserve intact."
+        action={
+          <Button
+            secondary
+            onClick={() => {
+              setExpense(undefined);
+              setDrawer("expense");
+            }}
+          >
+            <Plus size={17} />
+            Add expense
+          </Button>
+        }
+      />
+      <div className="scenario-tabs" role="group" aria-label="Payment scenario">
+        {[
+          ["promised", "Client's date"],
+          ["history_median", "From past payments"],
+          ["observed_latest", "Latest observed delay"],
+          ["no_receipt", "No payment in this period"],
+        ].map(([value, label]) => (
+          <button
+            key={value}
+            aria-pressed={scenario === value}
+            disabled={
+              action.busy ||
+              ((value === "history_median" || value === "observed_latest") &&
+                !canHistory)
+            }
+            onClick={() => {
+              setScenario(value as Scenario);
+              void calculate(value as Scenario);
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      {!canHistory ? (
+        <p className="helper">
+          Four resolved payments per client are needed for the history
+          scenarios.
+        </p>
+      ) : null}
+      <ErrorNote error={action.error} />
+      {action.success ? <Notice>{action.success}</Notice> : null}
+      {stale ? (
+        <div className="warning-note">
+          <AlertCircle size={19} />
+          <div>
+            <strong>Your numbers changed. Review the updated plan.</strong>
+            <p>
+              The saved proposal describes an earlier version of your finances.
+            </p>
+            <Button
+              secondary
+              busy={action.busy}
+              onClick={() => void calculate()}
+            >
+              Recalculate
+            </Button>
+          </div>
+        </div>
+      ) : null}
+      {action.busy && !r ? <Loading /> : null}
+      {r ? (
+        <>
+          <div className="plan-context">
+            <div>
+              <p>Confirmed funds</p>
+              <Money value={r.confirmedFundsAtomic} />
+            </div>
+            <div>
+              <p>Reserve floor</p>
+              <Money value={r.reserveFloorAtomic} />
+            </div>
+            <div>
+              <p>Available now</p>
+              <Money value={r.availableNowAtomic} />
+            </div>
+            <span>
+              {b.state.policy.horizonDays} day horizon
+              <br />
+              Dates use {b.state.policy.timezone}
+            </span>
+          </div>
+          <section className="plan-timeline">
+            <div className="section-heading">
+              <h2>
+                {scenario === "no_receipt"
+                  ? "Without another payment"
+                  : scenario === "promised"
+                    ? "If the client's date holds"
+                    : "When history moves the date"}
+              </h2>
+              <span className="tag">Projected balances</span>
+            </div>
+            <Timeline result={r} />
+          </section>
+          <section
+            className={
+              "exposure " + (!r.firstExposedFixedBill ? "quiet-exposure" : "")
+            }
+          >
+            <div>
+              <p className="eyebrow">What this means</p>
+              <h2>
+                {r.firstExposedFixedBill
+                  ? `${r.firstExposedFixedBill.label} comes before the expected payment.`
+                  : r.feasible
+                    ? "Your listed bills are covered in this scenario."
+                    : "The permitted changes cannot cover every gap."}
+              </h2>
+              <p>
+                {r.firstExposedFixedBill
+                  ? `${dateLabel(r.firstExposedFixedBill.date, true)} is short by ${formatMoney(r.firstExposedFixedBill.uncoveredAtomic)} USDC. Preserving the reserve needs ${formatMoney(r.firstExposedFixedBill.gapAtomic)} USDC.`
+                  : r.dependsOnUnsettledReceipt
+                    ? "This depends on an expected payment arriving. Compare the no-payment scenario as well."
+                    : "Expected payments have not increased your available funds."}
+              </p>
+            </div>
+          </section>
+          <section className="adjustments">
+            <div className="section-heading">
+              <h2>
+                {r.adjustments.length
+                  ? "The smallest permitted change"
+                  : "Your spending plan"}
+              </h2>
+              <button
+                className="text-link"
+                onClick={() => {
+                  setDrawer("explain");
+                  void action.run(async () =>
+                    setExplanation(
+                      await api(`/plans/${proposal.id}/explain`, "POST", {}),
+                    ),
+                  );
+                }}
+              >
+                Why this plan? <ArrowUpRight size={16} />
+              </button>
+            </div>
+            {r.adjustments.map((a) => (
+              <div className="adjustment-row" key={a.expenseId}>
+                <div>
+                  <strong>{a.label}</strong>
+                  <p>{dateLabel(a.dueDate)} · Flexible expense</p>
+                </div>
+                <div className="before-after">
+                  <span>
+                    <small>Current</small>
+                    <Money value={a.originalAmountAtomic} />
+                  </span>
+                  <ArrowRight size={18} />
+                  <span>
+                    <small>Proposed</small>
+                    <Money value={a.newAmountAtomic} />
+                  </span>
+                </div>
+                <span className="tag green">
+                  Reduce by {formatMoney(a.reductionAtomic)} USDC
+                </span>
+              </div>
+            ))}
+            {!r.adjustments.length ? (
+              <p className="muted">
+                {r.feasible
+                  ? "No spending change is needed for this scenario."
+                  : "There is no permitted change that covers this gap. Review your spending rules."}
+              </p>
+            ) : null}
+            {r.residualGaps.length ? (
+              <p className="warning-text">
+                An uncovered reserve gap remains on{" "}
+                {dateLabel(r.residualGaps[0].date)}. This proposal cannot be
+                accepted.
+              </p>
+            ) : null}
+            <div className="actions">
+              <Button
+                disabled={
+                  !r.feasible ||
+                  !r.adjustments.length ||
+                  stale ||
+                  b.freshness !== "fresh"
+                }
+                onClick={() => setDrawer("review")}
+              >
+                Review changes <ArrowRight size={17} />
+              </Button>
+              <button
+                className="text-link"
+                onClick={() => setDrawer("evidence")}
+              >
+                See the evidence <ArrowUpRight size={16} />
+              </button>
+            </div>
+            <p className="helper">
+              This updates your plan. It does not move funds.
+            </p>
+            {r.uncertainty.medianDelay !== undefined ? (
+              <p className="helper">
+                {r.uncertainty.sampleCount} resolved payments. Median delay:{" "}
+                {r.uncertainty.medianDelay} days. Observed range:{" "}
+                {r.uncertainty.observedDelayMin} to{" "}
+                {r.uncertainty.observedDelayMax} days. This is a descriptive
+                estimate.
+              </p>
+            ) : null}
+          </section>
+        </>
+      ) : null}
+      <section className="spending-rules">
+        <div className="section-heading">
+          <h2>Your spending rules</h2>
+          <span>{b.state.expenses.length} of 8 expenses</span>
+        </div>
+        {b.state.expenses.map((e) => (
+          <div className="expense-summary" key={e.id}>
+            <div>
+              <strong>{e.label}</strong>
+              <small>
+                {dateLabel(e.dueDate)} · {e.status} ·{" "}
+                {e.kind === "fixed"
+                  ? "Fixed bill"
+                  : `Up to ${formatMoney(e.maxReductionAtomic)} USDC may be reduced`}
+              </small>
+            </div>
+            <Money value={e.amountAtomic} />
+            <button
+              className="text-link"
+              onClick={() => {
+                setExpense(e);
+                setDrawer("expense");
+              }}
+            >
+              Edit
+            </button>
+          </div>
+        ))}
+      </section>
+      <Drawer
+        open={drawer === "expense"}
+        onClose={() => setDrawer("")}
+        title={expense ? "Edit spending rule" : "Add an expense"}
+        description="Only explicitly flexible planned expenses can be reduced."
+      >
+        <ExpenseForm expense={expense} onClose={() => setDrawer("")} />
+      </Drawer>
+      <Drawer
+        open={drawer === "review"}
+        onClose={() => setDrawer("")}
+        title="Review these changes"
+        description="You choose which spending rules to change. No funds move."
+      >
+        {r ? (
+          <div className="review-body">
+            {r.adjustments.map((a) => (
+              <div key={a.expenseId}>
+                <h3>
+                  Reduce {a.label.toLowerCase()} by{" "}
+                  {formatMoney(a.reductionAtomic)} USDC.
+                </h3>
+                <p>
+                  New amount: <Money value={a.newAmountAtomic} />
+                </p>
+              </div>
+            ))}
+            <p>
+              Fixed bills stay unchanged. Your reserve stays at{" "}
+              {formatMoney(r.reserveFloorAtomic)} USDC.
+            </p>
+            <Timeline result={r} adjusted />
+            <ErrorNote error={action.error} />
+            {stale ? (
+              <p className="warning-text">
+                Your numbers changed. Recalculate before saving.
+              </p>
+            ) : null}
+            <Button
+              busy={action.busy}
+              disabled={stale || b.freshness !== "fresh"}
+              onClick={() =>
+                void action.run(async () => {
+                  await api(`/plans/${proposal.id}/accept`, "POST", {
+                    expectedStateVersion: b.stateVersion,
+                    currentInputHash: proposal.inputHash,
+                    confirmedAdjustments: r.adjustments.map((a) => ({
+                      expenseId: a.expenseId,
+                      expectedExpenseVersion: a.expectedExpenseVersion,
+                      newAmountAtomic: a.newAmountAtomic,
+                    })),
+                  });
+                  await reload();
+                  setDrawer("");
+                  action.setSuccess("Spending changes saved. No funds moved.");
+                })
+              }
+            >
+              Save these changes
+            </Button>
+            <Button
+              secondary
+              busy={action.busy}
+              onClick={() =>
+                void action.run(async () => {
+                  await api(`/plans/${proposal.id}/reject`, "POST", {});
+                  setDrawer("");
+                  action.setSuccess("Your current spending plan was kept.");
+                })
+              }
+            >
+              Keep my current plan
+            </Button>
+            <p className="helper">
+              This updates your plan. It does not move funds.
+            </p>
+          </div>
+        ) : null}
+      </Drawer>
+      <Drawer
+        open={drawer === "explain"}
+        onClose={() => setDrawer("")}
+        title="Why this plan?"
+        description="An explanation of this saved calculation, grounded in its recorded inputs."
+      >
+        {explanation ? (
+          <div className="form">
+            <p>{explanation.answer}</p>
+            <p className="helper">
+              Supporting outcome records:{" "}
+              {explanation.citedRecordIds.join(", ") ||
+                "No historical outcomes used."}
+            </p>
+            {!explanation.current ? (
+              <p className="warning-text">
+                This explanation describes an earlier plan.
+              </p>
+            ) : null}
+          </div>
+        ) : (
+          <Loading />
+        )}
+        <ErrorNote error={action.error} />
+      </Drawer>
+      <Drawer
+        open={drawer === "evidence"}
+        onClose={() => setDrawer("")}
+        title="The evidence behind this plan"
+        description="History changes client timing. A conservative no-payment plan is available in every condition."
+      >
+        {r ? (
+          <div className="form">
+            <p>
+              History source:{" "}
+              {r.historyMode === "postgres"
+                ? "Workspace database"
+                : r.historyMode === "walrus"
+                  ? "Retrieved from Walrus Memory"
+                  : "No prior outcomes"}
+              .{" "}
+              {b.workspace.kind === "sample"
+                ? "All example outcomes are synthetic local fixtures."
+                : ""}
+            </p>
+            <p>Input hash</p>
+            <code>{proposal.inputHash}</code>
+            <p>Selected history</p>
+            <ul>
+              {r.selectedHistoryRecordIds.map((v) => (
+                <li key={v}>
+                  <code>{v}</code>
+                </li>
+              ))}
+            </ul>
+            <p>
+              The same history gives the same calculation. Walrus can provide
+              that history only after every required record is stored and
+              retrieved.
+            </p>
+            <Button
+              secondary
+              busy={action.busy}
+              onClick={() => void calculate(scenario, "walrus")}
+            >
+              Check with Walrus history
+            </Button>
+            <ErrorNote error={action.error} />
+            <CTA to="/evidence" secondary>
+              View actual sponsor evidence
+            </CTA>
+          </div>
+        ) : null}
+      </Drawer>
+    </>
+  );
+}
+function Activity() {
+  const { b } = useWorkspace(),
+    action = useAction(),
+    q = useQuery({
+      queryKey: ["activity", b.stateVersion],
+      queryFn: () => api("/activity"),
+    }),
+    m = useQuery({
+      queryKey: ["memory", b.stateVersion],
+      queryFn: () => api("/memory"),
+    }),
+    [filter, setFilter] = useState("all"),
+    [selected, setSelected] = useState<any>(null);
+  const rows =
+    q.data?.items.filter((r: any) => filter === "all" || r.kind === filter) ||
+    [];
+  return (
+    <>
+      <PageTitle
+        title="What happened, and what changed."
+        description="Payments, decisions, and the records behind the next plan."
+      />
+      <div className="segmented">
+        {[
+          ["all", "All activity"],
+          ["payment", "Payments"],
+          ["plan", "Plan changes"],
+          ["memory", "Memory"],
+        ].map(([v, l]) => (
+          <button
+            key={v}
+            aria-pressed={filter === v}
+            onClick={() => setFilter(v)}
+          >
+            {l}
+          </button>
+        ))}
+      </div>
+      <ErrorNote error={q.error || m.error} />
+      {q.isPending ? (
+        <Loading />
+      ) : rows.length ? (
+        <div className="activity-list">
+          {rows.map((r: any) => (
+            <div key={r.id}>
+              <span className="activity-dot" />
+              <div>
+                <strong>{r.summary}</strong>
+                <small>
+                  {new Date(r.created_at).toLocaleString("en-GB")} · {r.kind}
+                </small>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <Empty
+          title="No activity in this view yet."
+          copy="Saving an invoice, confirming a payment, or reviewing a plan will leave a record here."
+        />
+      )}
+      <section className="memory-section">
+        <div className="section-heading">
+          <h2>Payment history and memory</h2>
+          <span>
+            {m.data?.items.filter((r: any) => r.status === "verified").length ||
+              0}{" "}
+            verified on Mainnet
+          </span>
+        </div>
+        <p className="muted">
+          Local records remain available even while publication is disabled or
+          the memory service is unavailable.
+        </p>
+        {m.data?.items.map((r: any) => (
+          <button
+            className="memory-row"
+            key={r.id}
+            onClick={() => setSelected(r)}
+          >
+            <div>
+              <strong>{r.summary}</strong>
+              <small>Event date {r.event_at}</small>
+            </div>
+            <SourceLabel source={r.status} />
+            <ArrowUpRight size={17} />
+          </button>
+        ))}
+      </section>
+      <Drawer
+        open={!!selected}
+        onClose={() => setSelected(null)}
+        title="Inspect this record"
+        description="Publication, content, and correction evidence for the selected record."
+      >
+        {selected ? (
+          <div className="form">
+            <h3>{selected.summary}</h3>
+            <SourceLabel source={selected.status} />
+            {selected.status === "local" &&
+            b.workspace.kind === "personal" &&
+            b.state.consent &&
+            b.capabilities.memoryWrites ? (
+              <>
+                <p>
+                  Publish this existing record to Runway's hosted memory
+                  account. The memory service may process its contents.
+                </p>
+                <Button
+                  busy={action.busy}
+                  onClick={() =>
+                    void action.run(async () => {
+                      await api("/memory/" + selected.id + "/publish", "POST", {
+                        expectedStateVersion: b.stateVersion,
+                      });
+                      const updated = await api("/memory/" + selected.id);
+                      setSelected(updated.record);
+                      await m.refetch();
+                    })
+                  }
+                >
+                  Publish this record
+                </Button>
+              </>
+            ) : null}
+            <ErrorNote error={action.error} />
+            <dl className="record-details">
+              <dt>Event date</dt>
+              <dd>{selected.event_at}</dd>
+              <dt>Recorded</dt>
+              <dd>{new Date(selected.recorded_at).toLocaleString("en-GB")}</dd>
+              <dt>Logical ID</dt>
+              <dd>
+                <code>{selected.id}</code>
+              </dd>
+              <dt>Blob ID</dt>
+              <dd>
+                <code>{selected.blob_id || "Not uploaded"}</code>
+              </dd>
+              <dt>Remote job</dt>
+              <dd>
+                <code>{selected.remote_job_id || "Not submitted"}</code>
+              </dd>
+              <dt>Content hash</dt>
+              <dd>
+                <code>{selected.payload_hash}</code>
+              </dd>
+              {selected.supersedes_id ? (
+                <>
+                  <dt>Supersedes</dt>
+                  <dd>
+                    <code>{selected.supersedes_id}</code>
+                  </dd>
+                </>
+              ) : null}
+            </dl>
+            {selected.error ? (
+              <p className="warning-text">{selected.error}</p>
+            ) : null}
+            <details>
+              <summary>Structured content</summary>
+              <pre>{JSON.stringify(selected.payload, null, 2)}</pre>
+            </details>
+          </div>
+        ) : null}
+      </Drawer>
+    </>
+  );
+}
+function SettingsPage() {
+  const { b, reload } = useWorkspace(),
+    action = useAction(),
+    [account, setAccount] = useState<Account | null>(null),
+    [adding, setAdding] = useState(false),
+    [jobId, setJobId] = useState("");
+  const job = useQuery({
+    queryKey: ["job", jobId],
+    queryFn: () => api("/jobs/" + jobId),
+    enabled: !!jobId,
+    refetchInterval: (q) =>
+      ["done", "failed"].includes(q.state.data?.job.status) ? false : 1500,
+  });
+  useEffect(() => {
+    if (job.data?.job.status === "done") void reload();
+  }, [job.data?.job.status]);
+  return (
+    <>
+      <PageTitle
+        title="Your rules, in plain sight."
+        description="Confirm the funds and constraints every plan should use."
+      />
+      <section className="settings-section">
+        <div>
+          <h2>Reserve and dates</h2>
+          <p>Keep a floor below every modeled balance.</p>
+        </div>
+        <form
+          className="form"
+          key={b.state.policy.version}
+          onSubmit={(e) => {
+            e.preventDefault();
+            const f = new FormData(e.currentTarget);
+            void action.run(async () => {
+              await api("/policy", "PUT", {
+                reserveAtomic: parseMoney(String(f.get("reserve"))),
+                horizonDays: Number(f.get("horizon")),
+                timezone: f.get("timezone"),
+                expectedStateVersion: b.stateVersion,
+              });
+              await reload();
+              action.setSuccess("Your reserve and dates were saved.");
+            });
+          }}
+        >
+          <Field
+            label="Reserve floor (USDC)"
+            name="reserve"
+            inputMode="decimal"
+            defaultValue={moneyInput(b.state.policy.reserveAtomic)}
+            required
+          />
+          <div className="form-columns">
+            <Field
+              label="Planning horizon (days)"
+              name="horizon"
+              type="number"
+              min={1}
+              max={14}
+              defaultValue={b.state.policy.horizonDays}
+              required
+            />
+            <Field
+              label="Timezone"
+              name="timezone"
+              defaultValue={b.state.policy.timezone}
+              required
+            />
+          </div>
+          <Button type="submit" busy={action.busy}>
+            Save spending rules
+          </Button>
+        </form>
+      </section>
+      <section className="settings-section">
+        <div>
+          <h2>Included funds</h2>
+          <p>
+            Use a manual account only for funds your wallet balance does not
+            already include.
+          </p>
+          <Button secondary onClick={() => setAdding(true)}>
+            <Plus size={16} />
+            Add manual funds
+          </Button>
+        </div>
+        <div className="account-list">
+          {b.state.accounts.map((a) => (
+            <div key={a.id}>
+              <div>
+                <strong>{a.alias}</strong>
+                <SourceLabel source={a.source} />
+                <small>
+                  {a.included
+                    ? "Included in this plan"
+                    : "Excluded from this plan"}
+                </small>
+                <small>Confirmed {a.confirmedAt.slice(0, 10)}</small>
+                {a.reconciliationPending ? (
+                  <small className="warning-text">Needs reconciliation</small>
+                ) : null}
+              </div>
+              <Money value={a.amountAtomic} />
+              <div className="actions">
+                <button className="text-link" onClick={() => setAccount(a)}>
+                  Edit
+                </button>
+                {a.kind === "sui" ? (
+                  <Button
+                    secondary
+                    busy={action.busy}
+                    onClick={() =>
+                      void action.run(async () => {
+                        const v = await api(
+                          `/accounts/${a.id}/refresh`,
+                          "POST",
+                          { expectedStateVersion: b.stateVersion },
+                        );
+                        setJobId(v.jobId);
+                      })
+                    }
+                  >
+                    Refresh
+                  </Button>
+                ) : null}
+              </div>
+            </div>
+          ))}
+          {job.data ? (
+            <p role="status">
+              Balance refresh:{" "}
+              {job.data.job.status === "failed"
+                ? job.data.job.error
+                : job.data.job.status}
+            </p>
+          ) : null}
+        </div>
+      </section>
+      <section className="settings-section">
+        <div>
+          <h2>Memory and consent</h2>
+          <p>Current finances can be saved before you enable publication.</p>
+        </div>
+        <div>
+          <p>
+            Runway's hosted memory account stores these records. The memory
+            service may process their contents.
+          </p>
+          <p className="muted">
+            Stopping publication prevents future writes. It does not delete
+            records already uploaded or erase downloaded copies.
+          </p>
+          <p>
+            Publication:{" "}
+            <strong>{b.state.consent ? "Consented" : "Not enabled"}</strong>.
+            Server writes:{" "}
+            <strong>
+              {b.capabilities.memoryWrites ? "Enabled" : "Disabled"}
+            </strong>
+            .
+          </p>
+          {b.workspace.kind === "sample" ? (
+            <p className="helper">
+              Visitors cannot publish the example to the funded memory account.
+            </p>
+          ) : (
+            <Button
+              secondary
+              busy={action.busy}
+              onClick={() =>
+                void action.run(async () => {
+                  await api("/memory/consent", "POST", {
+                    accepted: !b.state.consent,
+                    consentVersion: "1",
+                    expectedStateVersion: b.stateVersion,
+                  });
+                  await reload();
+                })
+              }
+            >
+              {b.state.consent
+                ? "Stop future publication"
+                : "I consent to future memory publication"}
+            </Button>
+          )}
+          <Link to="/privacy" className="text-link">
+            Read the privacy details <ArrowUpRight size={16} />
+          </Link>
+        </div>
+      </section>
+      <ErrorNote error={action.error || job.error} />
+      {action.success ? <Notice>{action.success}</Notice> : null}
+      <Drawer
+        open={adding || !!account}
+        onClose={() => {
+          setAccount(null);
+          setAdding(false);
+        }}
+        title={account ? "Confirm included funds" : "Add manual funds"}
+        description="Confirm the current amount. Avoid counting the same funds twice."
+      >
+        <AccountForm
+          account={account}
+          onClose={() => {
+            setAccount(null);
+            setAdding(false);
+          }}
+        />
+      </Drawer>
+    </>
+  );
+}
+function AccountForm({
+  account,
+  onClose,
+}: {
+  account: Account | null;
+  onClose: () => void;
+}) {
+  const { b, reload } = useWorkspace(),
+    action = useAction();
+  return (
+    <form
+      className="form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        const f = new FormData(e.currentTarget);
+        void action.run(async () => {
+          await api(
+            account ? "/accounts/" + account.id : "/accounts/manual",
+            account ? "PATCH" : "POST",
+            {
+              alias: f.get("alias"),
+              ...(account?.kind === "sui"
+                ? {}
+                : { amountAtomic: parseMoney(String(f.get("amount"))) }),
+              expectedStateVersion: b.stateVersion,
+              ...(account
+                ? {
+                    included: f.get("included") === "on",
+                    expectedVersion: account.version,
+                  }
+                : {}),
+            },
+          );
+          await reload();
+          onClose();
+        });
+      }}
+    >
+      <Field
+        label="Account name"
+        name="alias"
+        defaultValue={account?.alias}
+        required
+      />
+      {account?.kind === "sui" ? (
+        <p className="helper">
+          Tatum verifies this wallet amount. Use Refresh to obtain its current
+          balance.
+        </p>
+      ) : (
+        <Field
+          label="Confirmed amount (USDC)"
+          name="amount"
+          inputMode="decimal"
+          defaultValue={account ? moneyInput(account.amountAtomic) : ""}
+          required
+        />
+      )}
+      {account ? (
+        <label className="checkbox">
+          <input
+            name="included"
+            type="checkbox"
+            defaultChecked={account.included}
+          />
+          Include these funds in my plan
+        </label>
+      ) : null}
+      <p className="helper">
+        Only confirm funds you currently have. Expected invoices belong in the
+        invoice list.
+      </p>
+      <ErrorNote error={action.error} />
+      <Button type="submit" busy={action.busy}>
+        Confirm funds
+      </Button>
+    </form>
+  );
+}
+function Setup() {
+  const { b } = useWorkspace();
+  return (
+    <>
+      <PageTitle
+        title="Start with the next bill."
+        description="Three small steps make a usable plan. Add only the numbers you want to model."
+      />
+      <div className="setup-steps">
+        {[
+          [
+            "01",
+            "Set your reserve",
+            "Confirm included funds, timezone, and the amount you want to preserve.",
+            "/app/settings",
+            "Set my rules",
+          ],
+          [
+            "02",
+            "Add the next bill",
+            "Choose what is fixed and what you would permit the planner to reduce.",
+            "/app/plan",
+            "Add an expense",
+          ],
+          [
+            "03",
+            "Add a payment you expect",
+            "Keep the promise separate from confirmed funds. You can skip this and use the no-payment plan.",
+            "/app/invoices",
+            "Add an invoice",
+          ],
+        ].map(([n, title, copy, to, label]) => (
+          <div key={n}>
+            <span className="step-number">{n}</span>
+            <h2>{title}</h2>
+            <p>{copy}</p>
+            <CTA to={to} secondary>
+              {label}
+            </CTA>
+          </div>
+        ))}
+      </div>
+      <CTA to="/app/overview">Open my overview</CTA>
+    </>
+  );
+}
+function Privacy() {
+  return (
+    <PublicLayout>
+      <article className="public-copy privacy-copy">
+        <p className="eyebrow">Your records and your choices</p>
+        <h1>Privacy in plain language.</h1>
+        <h2>Your workspace</h2>
+        <p>
+          Wallet sign-in verifies a personal-message signature. Runway stores
+          your public wallet address, current financial entries, recorded
+          outcomes, plan snapshots, and session metadata on its server. The
+          sign-in message does not authorize a transfer.
+        </p>
+        <h2>Confirmed funds and receipts</h2>
+        <p>
+          Tatum receives wallet addresses and transaction digests when you
+          request a balance refresh or receipt verification. Runway does not
+          hold your primary wallet keys or execute financial transfers.
+        </p>
+        <h2>Hosted memory</h2>
+        <p>
+          Memory publication is optional and requires consent. Runway uses an
+          operator-managed account. Namespaces isolate application records, but
+          do not give you ownership of the operator's account. The relayer may
+          process record contents before encrypted storage on Walrus.
+        </p>
+        <p>
+          Disabling consent stops future publication. It does not delete
+          uploaded records or erase copies other parties may already have
+          downloaded. Do not include private client details you do not want the
+          memory service to process.
+        </p>
+        <h2>The example</h2>
+        <p>
+          Example payments and balances are synthetic and dated 29 October 2026.
+          Each visitor receives an isolated copy. The example cannot publish to
+          the funded memory account. Its local workspace expires after 24 hours.
+        </p>
+        <h2>Current limits</h2>
+        <p>
+          Runway helps review cash-flow scenarios. Forecast dates are
+          descriptive estimates, and an expected payment never becomes confirmed
+          funds through a forecast. Review your actual accounts and obligations
+          before acting.
+        </p>
+      </article>
+    </PublicLayout>
+  );
+}
+function Evidence() {
+  const q = useQuery({
+    queryKey: ["public-evidence"],
+    queryFn: () => api("/evidence"),
+  });
+  return (
+    <PublicLayout>
+      <article className="public-copy evidence-page">
+        <p className="eyebrow">Actual integration evidence</p>
+        <h1>A receipt for the claims.</h1>
+        <p>
+          This page separates implemented local behavior from completed sponsor
+          operations. The example uses synthetic data.
+        </p>
+        <ErrorNote error={q.error} />
+        {q.isPending ? (
+          <Loading />
+        ) : q.data ? (
+          <>
+            <section className="evidence-block">
+              <h2>Tatum · Sui Mainnet</h2>
+              <SourceLabel
+                source={
+                  q.data.tatum.authenticated ? "tatum_verified" : "Not verified"
+                }
+              />
+              <p>
+                {q.data.tatum.authenticated
+                  ? "Authenticated native gRPC metadata and total native-USDC balance reads succeeded."
+                  : "No authenticated Mainnet read has been recorded."}
+              </p>
+              <dl className="record-details">
+                <dt>Provider</dt>
+                <dd>{q.data.tatum.provider}</dd>
+                <dt>Checked</dt>
+                <dd>{q.data.tatum.checkedAt}</dd>
+                <dt>Receipt verification</dt>
+                <dd>
+                  {q.data.tatum.receipt
+                    ? "Completed"
+                    : "A funded live receipt has not yet been demonstrated."}
+                </dd>
+              </dl>
+            </section>
+            <section className="evidence-block">
+              <h2>Walrus Memory · Mainnet</h2>
+              <SourceLabel
+                source={
+                  q.data.memory.state === "stored_and_retrieved"
+                    ? "verified"
+                    : q.data.memory.state
+                }
+              />
+              <p>
+                {q.data.completedMainnetRecords} completed and content-matched
+                records in the public manifest.
+              </p>
+              {q.data.memory.error ? (
+                <p className="warning-text">{q.data.memory.error}</p>
+              ) : null}
+              <p>
+                Signed listing and remember acceptance succeeded. Acceptance
+                alone does not establish storage or retrieval.
+              </p>
+              <dl className="record-details">
+                <dt>Accepted job</dt>
+                <dd>
+                  <code>
+                    {q.data.memory.jobId ||
+                      q.data.memory.acceptedJobId ||
+                      "None"}
+                  </code>
+                </dd>
+                <dt>Blob ID</dt>
+                <dd>
+                  <code>{q.data.memory.blobId || "No completed upload"}</code>
+                </dd>
+              </dl>
+            </section>
+            <section className="evidence-block">
+              <h2>The controlled example</h2>
+              <p>
+                The same current input has 800 USDC confirmed, 850 USDC
+                committed, and a 100 USDC reserve. All scenarios have zero
+                available-now funds.
+              </p>
+              <p>
+                Four synthetic late outcomes move the expected date to Tuesday 3
+                November, after Monday's rent. A 150 USDC flexible reduction
+                preserves the reserve. A no-payment scenario independently finds
+                the same conservative reduction.
+              </p>
+              <p>
+                Walrus and database parity, fresh-process recall, and ten
+                completed Mainnet records remain unverified until actual stored
+                content can be retrieved. No local history is labeled as
+                recalled from Walrus.
+              </p>
+              {q.data.comparison.state === "verified" ? (
+                <details>
+                  <summary>View comparison evidence</summary>
+                  <pre>{JSON.stringify(q.data.comparison, null, 2)}</pre>
+                </details>
+              ) : null}
+            </section>
+          </>
+        ) : null}
+        <CTA to="/demo">Explore the example</CTA>
+      </article>
+    </PublicLayout>
+  );
+}
