@@ -1,6 +1,24 @@
 # Runway implementation work packages
 
-Revision: 21 October 2026. These are actionable future build tasks, not completed implementation. Read [ARCHITECTURE.md](ARCHITECTURE.md), [DESIGN_SPEC.md](DESIGN_SPEC.md) and [VALIDATION.md](VALIDATION.md) before starting. Maintain the ignored root `TASKS.md` with actual work, changed files, verification and exact next step.
+Original plan: 21 October 2026. Delivery status reconciled: 23 October 2026. The work packages below retain the original requirements and estimates; verified delivery status is recorded here. Read [ARCHITECTURE.md](ARCHITECTURE.md), [DESIGN_SPEC.md](DESIGN_SPEC.md) and [VALIDATION.md](VALIDATION.md) before starting. Maintain the ignored root `TASKS.md` with actual work, changed files, verification and exact next step.
+
+## Verified delivery status
+
+The core application and optional invoice tools are implemented. The current source passes all 69 domain/integration tests and eight browser journeys. Node 22 is required; the shell's older Node 20 cannot run the PDF and current CommonJS/ESM dependencies correctly.
+
+| Package | Delivered implementation                                                                                    | Remaining acceptance dependency                                                                                             |
+| ------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| P01     | Authenticated Tatum reads, Walrus write/recall, versioned compatibility evidence.                           | Recheck remote availability through judging.                                                                                |
+| P02     | Original brand, responsive interface, exact domain model and optimizer.                                     | Actual interviews and consented histories.                                                                                  |
+| P03     | Scoped wallet/sample sessions, finance forms, CSV, plans, review/save, receipt verification and allocation. | Owner-signed allocation of the builder's known receipt.                                                                     |
+| P04     | Durable jobs/outbox, thirteen synthetic Mainnet records, corrections and controlled parity.                 | Personal publication only after content choice and consent.                                                                 |
+| P05     | Restart recovery, export/rebuild, scoped recall and fresh-process parity.                                   | Observed target-user trials.                                                                                                |
+| P06     | Bounded invoice extraction, actual MPP protocol, budgets, approval and same-operation recovery.             | Funded tool wallet and a user-approved Mainnet purchase.                                                                    |
+| P07     | Frozen temporal evaluation, full adverse results and reliability checks.                                    | Real consented held-out histories and three observed trials.                                                                |
+| P08     | Brand assets, hosted app, build story and actual-browser demo.                                              | English male narrated actual-browser demo rendered with Remotion; media verification tracked in the ignored root checklist. |
+| P09     | Public app/source/evidence and prepared submission package.                                                 | Builder identity, eligibility review, terms and final submission.                                                           |
+
+These dependencies do not justify claiming user validation, personal consent or a funded purchase. [HANDOFF.md](docs/HANDOFF.md) gives the concrete owner actions. Client Memory plugin installation is a separate reported marketplace failure, not an app implementation gap.
 
 ## 1. How to execute this plan
 

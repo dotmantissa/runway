@@ -23,3 +23,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+The demo composition uses [Remotion](https://www.remotion.dev/license). Its `video/src/basic-captions.tsx` source is copied unchanged from the published [Basic Captions element](https://www.remotion.dev/elements/captions/basic-captions.md). Remotion and associated packages retain their own licenses.
+
+The English male demo narration is generated locally using [kokoro-onnx](https://github.com/thewh1teagle/kokoro-onnx) and [Kokoro v1.0](https://huggingface.co/hexgrad/Kokoro-82M), with the `am_michael` voice. Model and voice weights are not bundled with the app or committed in this repository. Generated speech clips are provided so the demo can be re-rendered without a speech-service account.

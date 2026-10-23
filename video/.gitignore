@@ -1,0 +1,4 @@
+node_modules/
+out/
+public/browser-capture*
+public/capture-timing.json

@@ -1,6 +1,6 @@
 # Remaining actions requiring the builder
 
-The implementation, synthetic Mainnet correction proof, engineering replay, build story and 2m36s captioned demo are complete. No funded agent purchase, personal-record publication, user study or final submission has been performed.
+The implementation, synthetic Mainnet correction proof, engineering replay, build story and narrated actual-app demo are complete. No funded agent purchase, personal-record publication, user study or final submission has been performed.
 
 ## 1. Fund and approve the isolated invoice tool wallet
 
@@ -26,7 +26,7 @@ No outreach or user sessions have occurred. Use [USER_STUDY_KIT.md](USER_STUDY_K
 
 [SUBMISSION.md](SUBMISSION.md) contains ready project/build-experience answers and public app, blog, source and video links. Existing public Memory account/delegate IDs and the proposed Sui address are prepared in ignored mode600 `research/submission-fields.private.json`. Supply or confirm contact/referral details, first-Web3 status, Tatum dashboard ID and intended wallet/account identity. Review eligibility and the terms yourself before final submission. No terms have been accepted or form sent on your behalf.
 
-Current deadline is 10 November 2026, 17:00 UTC / 18:00 Lagos. The rules' mission contradiction and special-award interpretation remain organizer questions; the application does not claim AI Builder qualification. The demo video is silent with visible English narration, optional captions and a written transcript; no recording is needed from you to use this package.
+Current deadline is 10 November 2026, 17:00 UTC / 18:00 Lagos. The rules' mission contradiction and special-award interpretation remain organizer questions; the application does not claim AI Builder qualification. The demo video has English male neural narration synchronized to the actual app flow, optional English captions and a written transcript; no recording is needed from you to use this package.
 
 ## Separate technical blocker: Codex Memory plugin
 

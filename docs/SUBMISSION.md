@@ -1,11 +1,11 @@
 # Runway submission package
 
-Prepared 22 October 2026. **Draft; not submitted.** Intended primary track: **Consumer Finance Apps**. The primary product and synthetic Walrus evidence are ready to review. The Agent Payments award is conditional on a real approved purchase; no AI Builder award qualification is claimed.
+Prepared 22 October 2026; narrated media updated 23 October 2026. **Draft; not submitted.** Intended primary track: **Consumer Finance Apps**. The primary product and synthetic Walrus evidence are ready to review. The Agent Payments award is conditional on a real approved purchase; no AI Builder award qualification is claimed.
 
 - Live app: https://runway-ten-xi.vercel.app
 - Wallet-free example: https://runway-ten-xi.vercel.app/demo
 - Published build story and embedded demo: https://runway-ten-xi.vercel.app/story
-- Demo video: https://runway-ten-xi.vercel.app/demo/runway-demo.mp4
+- Demo video: https://runway-ten-xi.vercel.app/demo/runway-demo.mp4 (2m59s actual app flow with English male neural narration and captions)
 - Evidence: https://runway-ten-xi.vercel.app/evidence
 - Public source: https://github.com/dotmantissa/runway
 

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import demoNarration from "../../../video/narration.json";
 export default function Story() {
   return (
     <article className="public-copy build-story">
@@ -30,7 +31,7 @@ export default function Story() {
           playsInline
           preload="metadata"
           poster="/demo/runway-demo-poster.jpg"
-          aria-label="Runway demonstration with on-screen English captions"
+          aria-label="Runway demonstration with English male narration and captions"
         >
           <source src="/demo/runway-demo.mp4" type="video/mp4" />
           <source src="/demo/runway-demo.webm" type="video/webm" />
@@ -43,44 +44,15 @@ export default function Story() {
           Your browser cannot play this video. Read the transcript below.
         </video>
         <p className="helper">
-          A captioned recording of the running app. All financial examples are
-          synthetic. No agent payment is made.
+          An actual app recording with English male narration and captions. All
+          financial examples are synthetic. No agent payment is made.
         </p>
         <details>
           <summary>Read the demo transcript</summary>
           <ol className="story-transcript">
-            <li>Runway separates confirmed funds from promised payments.</li>
-            <li>
-              The example has 800 USDC, a 100 USDC reserve, a 250 USDC purchase
-              and 600 USDC rent.
-            </li>
-            <li>
-              The client promises Friday. Four past payments have delays of 3,
-              4, 4 and 5 days, putting the median estimate on Tuesday.
-            </li>
-            <li>
-              Monday rent is exposed. Reducing the flexible purchase by 150 USDC
-              preserves the reserve. The no-payment scenario independently gives
-              the same conservative adjustment.
-            </li>
-            <li>
-              Review and save changes explicitly. No funds move. Reloading
-              preserves the accepted plan.
-            </li>
-            <li>
-              The invoice assistant extracts a free sample into a draft. Review
-              the fields before saving. A sample never makes a payment.
-            </li>
-            <li>
-              Real Tatum Mainnet reads and Walrus write/recall evidence are
-              separate from the synthetic scenario. Fresh-process correction
-              proof retrieves both versions.
-            </li>
-            <li>
-              Synthetic evaluation exposes missed delays and unnecessary
-              reductions. Real user validation and a funded parser purchase
-              remain open.
-            </li>
+            {demoNarration.scenes.map((scene) => (
+              <li key={scene.id}>{scene.text}</li>
+            ))}
           </ol>
         </details>
       </section>

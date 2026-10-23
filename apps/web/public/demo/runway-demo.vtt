@@ -1,61 +1,201 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:12.003
-Runway · Synthetic example
-A client promises Friday. Payment history suggests Tuesday. Plan around the bill that cannot wait.
+00:00:00.150 --> 00:00:03.179
+Let me show you Runway. If you're paid
 
 2
-00:00:12.004 --> 00:00:29.004
-Confirmed money and expected income stay separate
-800 USDC confirmed. A 1,200 USDC invoice is still expected. Rent and the reserve leave zero available now.
+00:00:03.179 --> 00:00:06.209
+in stablecoins, a promised invoice can make your
 
 3
-00:00:29.005 --> 00:00:41.005
-Compare the client's promised date
-If the invoice arrives Friday, Monday rent is covered in that scenario. The receipt remains uncertain.
+00:00:06.209 --> 00:00:09.238
+balance look safer than it is. Here, the
 
 4
-00:00:41.005 --> 00:01:00.007
-Four past payments change the timing estimate
-Delays of 3, 4, 4 and 5 days put the median on Tuesday, after Monday rent. Reducing the purchase by 150 USDC preserves the reserve.
+00:00:09.238 --> 00:00:12.267
+client says Friday, but their history says Tuesday.
 
 5
-00:01:00.007 --> 00:01:10.007
-A separate stress test
-No payment in the period also requires a 150 USDC reduction. History gives a client-specific reason to consider that risk.
+00:00:14.799 --> 00:00:18.235
+I'm opening the example. We have eight hundred
 
 6
-00:01:10.008 --> 00:01:22.009
-Review before accepting
-Only the flexible purchase changes: 250 to 100 USDC. Fixed bills and the 100 USDC reserve remain constraints.
+00:00:18.235 --> 00:00:21.671
+USDC confirmed, and twelve hundred still expected. Once
 
 7
-00:01:22.009 --> 00:01:32.011
-Saved across a reload
-The accepted spending plan persists. Saving a plan moves no funds and does not turn an invoice into cash.
+00:00:21.671 --> 00:00:25.107
+we account for rent and the reserve, there's
 
 8
-00:01:32.011 --> 00:01:49.012
-Invoice assistant · Free synthetic sample
-The parser extracts an invoice draft. Review and edit the fields before saving. No payment was made.
+00:00:25.107 --> 00:00:27.684
+nothing available to spend right now.
 
 9
-00:01:49.012 --> 00:01:59.011
-An expectation needs explicit confirmation
-This sample is saved only after review. The optional 0.01 USDC paid service requires an isolated wallet and per-purchase approval.
+00:00:29.457 --> 00:00:32.451
+Let's look at the plan. On the client's
 
 10
-00:01:59.012 --> 00:02:12.012
-Actual sponsor operations, separate from the sample
-Authenticated Tatum Mainnet reads and thirteen synthetic Walrus records have evidence. A fresh process reproduces the remote history calculation.
+00:00:32.451 --> 00:00:35.445
+promised Friday, rent is covered. That's a possible
 
 11
-00:02:12.012 --> 00:02:24.014
-Corrections supersede old facts
-Fresh recall retrieves both versions. A corrected reserve changes the action; a corrected client association prevents a stale timing estimate.
+00:00:35.445 --> 00:00:38.438
+outcome, but the invoice hasn't been paid yet.
 
 12
-00:02:24.014 --> 00:02:36.015
-Evidence includes the limits
-The synthetic replay includes missed delays and unnecessary reductions. Real user trials and a funded paid-parser purchase remain unverified.
+00:00:39.556 --> 00:00:43.128
+Now I switch to past payments. This client's
+
+13
+00:00:43.128 --> 00:00:46.699
+last four invoices arrived three, four, four, and
+
+14
+00:00:46.699 --> 00:00:50.271
+five days late. The median moves this payment
+
+15
+00:00:50.271 --> 00:00:53.842
+to Tuesday, after Monday's rent. Runway suggests reducing
+
+16
+00:00:53.842 --> 00:00:57.414
+the flexible purchase by a hundred and fifty
+
+17
+00:00:57.414 --> 00:00:57.860
+USDC.
+
+18
+00:01:02.811 --> 00:01:06.232
+We can also check what happens if nothing
+
+19
+00:01:06.232 --> 00:01:09.653
+arrives. The same reduction protects the reserve. The
+
+20
+00:01:09.653 --> 00:01:12.646
+history explains why this delay deserves attention.
+
+21
+00:01:13.909 --> 00:01:17.427
+I'll review that change before saving. The purchase
+
+22
+00:01:17.427 --> 00:01:20.946
+goes from two hundred and fifty to one
+
+23
+00:01:20.946 --> 00:01:24.464
+hundred USDC. Rent stays fixed, and the reserve
+
+24
+00:01:24.464 --> 00:01:25.344
+stays protected.
+
+25
+00:01:28.492 --> 00:01:31.362
+I'll save it, then reload the app. The
+
+26
+00:01:31.362 --> 00:01:34.231
+spending plan is still there. Saving changes the
+
+27
+00:01:34.231 --> 00:01:37.101
+plan; it doesn't move money or count the
+
+28
+00:01:37.101 --> 00:01:38.177
+invoice as cash.
+
+29
+00:01:41.868 --> 00:01:44.758
+Next, let's add an invoice with the assistant.
+
+30
+00:01:44.758 --> 00:01:47.649
+I'm using the free sample. It extracts a
+
+31
+00:01:47.649 --> 00:01:50.539
+draft, then asks me to check the amount,
+
+32
+00:01:50.539 --> 00:01:53.068
+dates, and client before anything is saved.
+
+33
+00:01:59.296 --> 00:02:02.329
+I'll edit the reference and save the reviewed
+
+34
+00:02:02.329 --> 00:02:05.361
+draft. The paid parser is optional. It needs
+
+35
+00:02:05.361 --> 00:02:08.394
+a separate tool wallet and explicit approval for
+
+36
+00:02:08.394 --> 00:02:09.152
+each purchase.
+
+37
+00:02:10.643 --> 00:02:14.836
+Finally, here's the evidence page. Tatum verifies Sui
+
+38
+00:02:14.836 --> 00:02:19.028
+Mainnet reads. Walrus holds thirteen verified synthetic records,
+
+39
+00:02:19.028 --> 00:02:23.221
+including two corrections. A fresh process recalled the
+
+40
+00:02:23.221 --> 00:02:26.366
+history and reproduced the same calculation.
+
+41
+00:02:26.731 --> 00:02:30.201
+Those corrections matter. Updating the reserve changes the
+
+42
+00:02:30.201 --> 00:02:33.671
+proposed reduction. Correcting a payment's client removes it
+
+43
+00:02:33.671 --> 00:02:37.142
+from the wrong history, so an old fact
+
+44
+00:02:37.142 --> 00:02:39.744
+can't quietly drive the next estimate.
+
+45
+00:02:40.182 --> 00:02:43.835
+We publish the misses too. This synthetic replay
+
+46
+00:02:43.835 --> 00:02:47.488
+had fewer reserve breaches, but worse timing accuracy
+
+47
+00:02:47.488 --> 00:02:51.141
+and some unnecessary reductions. Real user trials and
+
+48
+00:02:51.141 --> 00:02:54.794
+a funded parser purchase still need verification. That's
+
+49
+00:02:54.794 --> 00:02:58.447
+Runway: a clear decision you can inspect, review,
+
+50
+00:02:58.447 --> 00:02:59.361
+and keep.

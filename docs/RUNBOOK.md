@@ -96,13 +96,26 @@ The memory smoke command checks an existing job without enabling writes. When no
 pnpm evidence:corrections verify
 pnpm evaluate
 pnpm demo:record
+pnpm demo:prepare
 pnpm demo:encode
+pnpm demo:verify
+pnpm demo:verify:browser
 ```
 
 The correction verifier is read-only and recalls seven exact manifest records in a new process. It proves a changed reserve interpretation and a superseded client association; it never overwrites the frozen original comparison or publishes personal data. `MEMORY_WRITES_ENABLED=true pnpm evidence:corrections publish` resumes the two existing correction jobs; it does not create new logical versions. If a submission response is unknown, reconcile it before rerunning.
 
 The evaluation fixture in `docs/evaluation-fixture.json` is frozen and synthetic. Its report preserves every included/excluded row and unfavorable outcomes. Do not tune against those rows and claim independent user performance.
 
-The recording script needs the local app and Playwright Chromium with its normal system libraries (`pnpm exec playwright install --with-deps chromium` on a suitable development machine). It captures real browser interactions without mocked API responses, uses only the isolated synthetic example, and writes a WebM with visible English captions, a VTT and sanitized media evidence. Run `pnpm demo:encode` with FFmpeg on PATH (or `DEMO_FFMPEG=/path/to/ffmpeg`). The published MP4 is a H.264 transcode of that capture. Rerecording changes generated media and must be verified before release. It is silent with complete on-screen narration and a text transcript.
+The narrated demo uses a separate [Remotion project](../video/README.md). Install its pinned dependencies with `cd video && npm ci`, then run `npm run dev` to open Studio. The app and Playwright Chromium must be running/installed (`pnpm exec playwright install --with-deps chromium` on a suitable development machine). FFmpeg must be on PATH or selected with `DEMO_FFMPEG=/absolute/path/to/ffmpeg`.
+
+Committed English male speech clips and measured timing are in `video/public/voiceover` and `video/public/narration-timing.json`. To regenerate them locally, install `kokoro-onnx==0.4.9`, `soundfile` and `espeakng-loader` in an isolated Python 3.12 environment. Download the [Kokoro v1.0 model and voices](https://github.com/thewh1teagle/kokoro-onnx/releases/tag/model-files-v1.0) outside public assets, then run:
+
+```sh
+python scripts/generate-demo-voice.py --model /absolute/path/kokoro-v1.0.int8.onnx --voices /absolute/path/voices-v1.0.bin
+```
+
+Run the media commands above from the repository root. Recording executes actual browser actions with no mocked API responses and paces each scene from the measured speech length. Preparation removes a capture-only sync slate and authors twelve independently editable Remotion groups with footage, audio and captions. Encoding renders Remotion to H.264/AAC, normalizes speech loudness, and creates a VP9/Opus fallback, poster, VTT and sanitized media evidence. The final video has natural-speed English male neural narration synchronized to the app; phrase-caption positions are estimated within the measured clips.
+
+`DEMO_BASE_URL` selects a compatible running app (default localhost:5174), and `DEMO_BROWSER_EXECUTABLE` optionally selects Chromium for rendering. Raw footage and rendered intermediates stay ignored. Rerecording replaces public media only after capture/preparation/rendering succeeds; verify full media decoding, audio presence, duration, scene alignment and actual browser playback before release. The financial example remains synthetic and the optional funded payment remains unperformed.
 
 An ignored mode600 `.env.agent` now contains a prepared **unfunded** isolated tool wallet and parser challenge secret. Do not generate a replacement or print its contents. Proposed owner/recipient values are copied from the existing private receipt evidence and await confirmation. Flags remain false, and no host configuration or payment has been changed by this preparation. Funding details are in ignored `research/tool-wallet-public.json`; public submission identifiers are in ignored `research/submission-fields.private.json`. These private handoff files must never be staged.

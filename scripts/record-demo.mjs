@@ -1,78 +1,78 @@
-// Actual browser recording; overlays are documentary captions, never app data.
+// Actual browser capture, paced by measured English male narration for Remotion.
 import { chromium } from "@playwright/test";
 import { mkdir, writeFile, rename, readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 const baseURL = process.env.DEMO_BASE_URL || "http://localhost:5174";
 await mkdir("research/demo-recording", { recursive: true });
 await mkdir("apps/web/public/demo", { recursive: true });
+const narration = JSON.parse(
+  await readFile("video/public/narration-timing.json", "utf8"),
+);
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({
-  viewport: { width: 1440, height: 1000 },
+  viewport: { width: 1600, height: 820 },
   deviceScaleFactor: 1,
   reducedMotion: "reduce",
   recordVideo: {
     dir: "research/demo-recording",
-    size: { width: 1440, height: 1000 },
+    size: { width: 1600, height: 820 },
   },
+});
+await context.addInitScript(() => {
+  document.addEventListener("DOMContentLoaded", () => {
+    const cursor = document.createElement("div");
+    cursor.style.cssText =
+      "position:fixed;width:18px;height:18px;border:2px solid #277448;border-radius:50%;background:#c8e3d6aa;pointer-events:none;z-index:2147483646;display:none";
+    document.body.append(cursor);
+    document.addEventListener("pointermove", (event) => {
+      cursor.style.display = "block";
+      cursor.style.left = `${event.clientX - 9}px`;
+      cursor.style.top = `${event.clientY - 9}px`;
+    });
+  });
 });
 const page = await context.newPage();
 const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
-const started = Date.now(),
-  scenes = [];
-async function caption(title, text) {
-  await page.evaluate(
-    ({ title, text }) => {
-      let el = document.getElementById("recording-caption");
-      if (!el) {
-        el = document.createElement("aside");
-        el.id = "recording-caption";
-        document.body.append(el);
-      }
-      el.setAttribute("aria-label", "Recording caption");
-      Object.assign(el.style, {
-        position: "fixed",
-        left: "24px",
-        right: "24px",
-        bottom: "18px",
-        zIndex: "2147483647",
-        padding: "18px 28px",
-        borderRadius: "12px",
-        background: "#172c23",
-        color: "#ffffff",
-        boxShadow: "0 4px 26px #0003",
-        pointerEvents: "none",
-        fontFamily: "Public Sans, Arial, sans-serif",
-        lineHeight: "1.5",
-      });
-      el.replaceChildren();
-      const h = document.createElement("strong");
-      h.textContent = title;
-      h.style.cssText =
-        "display:block;font-size:18px;letter-spacing:0.01em;color:#d2e9d4;margin-bottom:4px";
-      const p = document.createElement("div");
-      p.textContent = text;
-      p.style.cssText = "font-size:23px;max-width:1260px";
-      el.append(h, p);
-    },
-    { title, text },
-  );
-}
-async function scene(title, text, seconds, action) {
+let started;
+const scenes = [];
+async function scene(_title, _text, _seconds, action) {
+  const spoken = narration.scenes[scenes.length];
+  if (!spoken) throw new Error("Missing narration for scene.");
   const start = (Date.now() - started) / 1000;
   await action();
-  await caption(title, text);
-  await page.waitForTimeout(
-    Math.max(
-      1000,
-      seconds * 1000 - ((Date.now() - started) / 1000 - start) * 1000,
-    ),
-  );
+  const speechStart = (Date.now() - started) / 1000 + 0.2;
+  await page.waitForTimeout(spoken.audioDurationSeconds * 1000 + 800);
   const end = (Date.now() - started) / 1000;
-  scenes.push({ start, end, title, text });
-  console.log(`Scene complete: ${title} (${end.toFixed(1)}s)`);
+  scenes.push({
+    ...spoken,
+    start,
+    speechStart,
+    end,
+    title: spoken.title,
+    text: spoken.text,
+  });
+  console.log(`Scene complete: ${spoken.title} (${end.toFixed(1)}s)`);
 }
 try {
+  await page.goto(baseURL);
+  await page
+    .getByRole("heading", {
+      name: "Your client says Friday. Your history says Tuesday.",
+    })
+    .waitFor();
+  await page.evaluate(() => {
+    const slate = document.createElement("div");
+    slate.id = "recording-sync-slate";
+    slate.style.cssText =
+      "position:fixed;inset:0;background:#00ff00;z-index:2147483647";
+    document.body.append(slate);
+  });
+  await page.waitForTimeout(700);
+  await page.evaluate(() =>
+    document.getElementById("recording-sync-slate").remove(),
+  );
+  started = Date.now();
   await scene(
     "Runway · Synthetic example",
     "A client promises Friday. Payment history suggests Tuesday. Plan around the bill that cannot wait.",
@@ -240,22 +240,8 @@ try {
   const video = page.video();
   await context.close();
   const raw = await video.path();
-  const dest = "apps/web/public/demo/runway-demo.webm";
+  const dest = "video/public/browser-capture.webm";
   await rename(raw, dest);
-  const stamp = (seconds) => {
-    const ms = Math.round(seconds * 1000);
-    return `${String(Math.floor(ms / 3600000)).padStart(2, "0")}:${String(Math.floor(ms / 60000) % 60).padStart(2, "0")}:${String(Math.floor(ms / 1000) % 60).padStart(2, "0")}.${String(ms % 1000).padStart(3, "0")}`;
-  };
-  await writeFile(
-    "apps/web/public/demo/runway-demo.vtt",
-    "WEBVTT\n\n" +
-      scenes
-        .map(
-          (s, i) =>
-            `${i + 1}\n${stamp(s.start)} --> ${stamp(s.end)}\n${s.title}\n${s.text}\n`,
-        )
-        .join("\n"),
-  );
   const bytes = await readFile(dest);
   const evidence = {
     state: "recorded",
@@ -265,23 +251,28 @@ try {
     syntheticFinancialData: true,
     mockedApiResponses: false,
     fundedPaymentPerformed: false,
-    silentWithVisibleEnglishCaptions: true,
+    silentWithVisibleEnglishCaptions: false,
+    narration: { ...narration, scenes: undefined },
     durationSeconds: scenes.at(-1).end,
-    dimensions: { width: 1440, height: 1000 },
-    webmSha256: createHash("sha256").update(bytes).digest("hex"),
-    webmBytes: bytes.length,
+    captureDimensions: { width: 1600, height: 820 },
+    browserCaptureSha256: createHash("sha256").update(bytes).digest("hex"),
+    browserCaptureBytes: bytes.length,
     scenes,
     pageErrors: errors,
   };
   await writeFile(
-    "docs/demo-gate.json",
+    "video/public/capture-timing.json.tmp",
     JSON.stringify(evidence, null, 2) + "\n",
+  );
+  await rename(
+    "video/public/capture-timing.json.tmp",
+    "video/public/capture-timing.json",
   );
   console.log(
     JSON.stringify({
       state: evidence.state,
       durationSeconds: evidence.durationSeconds,
-      webmBytes: bytes.length,
+      browserCaptureBytes: bytes.length,
     }),
   );
 } finally {

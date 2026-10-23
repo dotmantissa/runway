@@ -11,3 +11,6 @@ AGENTS.md
 test-results
 playwright-report
 coverage
+
+video/public/browser-capture*
+video/out

@@ -29,7 +29,10 @@
     "evidence:corrections": "tsx scripts/memory-corrections.ts",
     "evaluate": "tsx scripts/evaluate.ts",
     "demo:record": "node scripts/record-demo.mjs",
-    "demo:encode": "node scripts/encode-demo.mjs"
+    "demo:encode": "node scripts/encode-demo.mjs",
+    "demo:prepare": "node scripts/prepare-demo.mjs",
+    "demo:verify": "node scripts/verify-demo.mjs",
+    "demo:verify:browser": "node scripts/verify-demo-browser.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "0.3.14",
