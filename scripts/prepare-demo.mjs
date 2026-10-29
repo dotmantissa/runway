@@ -96,7 +96,10 @@ evidence.scenes = evidence.scenes.map((scene, index) => {
     index === 0 ? Math.max(scene.start, scene.speechStart - 0.15) : scene.start;
   const sourceEnd = Math.min(
     scene.end,
-    scene.speechStart + scene.audioDurationSeconds + 0.08,
+    Math.max(
+      scene.actionEnd || 0,
+      scene.speechStart + scene.audioDurationSeconds,
+    ) + 0.08,
   );
   const updated = {
     ...scene,
@@ -120,6 +123,12 @@ if (cursor < 120 || cursor > 180)
     "Prepared demo is outside the 2–3 minute submission limit: " + cursor,
   );
 // Each group owns its footage, spoken clip, chapter and inline editable captions.
+const indexLabel = (id) =>
+  ["scene-02", "scene-03"].includes(id)
+    ? "Live wallet / Sui Mainnet"
+    : ["scene-10", "scene-11"].includes(id)
+      ? "Live Mainnet recall / Synthetic records"
+      : "Consumer Finance / Synthetic example";
 const nodes = evidence.scenes.map((scene) => {
   const captions = scene.captions.map((cue) => ({
     ...cue,
@@ -129,7 +138,7 @@ const nodes = evidence.scenes.map((scene) => {
   return `      <Sequence name=${JSON.stringify(scene.title)} from={Math.round(${scene.start} * fps)} trimBefore={Math.round(${scene.sourceStart} * fps)} durationInFrames={Math.round(${scene.end} * fps) - Math.round(${scene.start} * fps)}>
         <Video name="Actual app footage" src={staticFile("browser-capture-trimmed.webm")} muted style={{position:"absolute",left:56,top:40,width:1808,height:926.6}} />
         <Audio name="English male narration" src={staticFile(${JSON.stringify(scene.audio)})} from={Math.round(${scene.captureSpeechStart} * fps)} />
-        <div style={{position:"absolute",top:11,left:56,fontFamily:"Arial, sans-serif",fontSize:18,color:"#c3d8c8"}}>Runway / ${scene.title} / Synthetic example</div>
+        <div style={{position:"absolute",top:11,left:56,fontFamily:"Arial, sans-serif",fontSize:18,color:"#c3d8c8"}}>Runway / ${scene.title} / ${indexLabel(scene.id)}</div>
         <div style={{position:"absolute",left:60,bottom:24,width:1800,height:72,display:"flex",alignItems:"center",justifyContent:"center"}}>
           <BasicCaptions name="English captions" width={3000} combineTokensWithinMilliseconds={0} style={{scale:0.6,flexShrink:0}} captions={${JSON.stringify(captions, null, 2)}} />
         </div>

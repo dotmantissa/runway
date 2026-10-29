@@ -7,7 +7,7 @@ const evidence = JSON.parse(await readFile("docs/demo-gate.json", "utf8"));
 const root = "apps/web/public/demo/";
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 function run(args, binary = false) {
-  const result = spawnSync(ffmpeg, ["-hide_banner", ...args], {
+  const result = spawnSync(ffmpeg, ["-hide_banner", "-threads", "1", ...args], {
     encoding: binary ? undefined : "utf8",
     maxBuffer: 64 * 1024 * 1024,
   });

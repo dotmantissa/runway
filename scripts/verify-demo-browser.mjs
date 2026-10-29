@@ -61,7 +61,9 @@ try {
     selected.height !== 1080 ||
     selected.muted
   )
-    throw new Error("Unexpected narrated video metadata.");
+    throw new Error(
+      "Unexpected narrated video metadata: " + JSON.stringify(selected),
+    );
   for (const seconds of [50, 81, 118, 155]) {
     await video.evaluate((element, time) => {
       element.currentTime = time;

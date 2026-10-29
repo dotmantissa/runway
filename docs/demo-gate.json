@@ -1,12 +1,38 @@
 {
   "state": "encoded",
-  "recordedAt": "2026-10-23T14:58:05.206Z",
+  "recordedAt": "2026-10-29T11:28:48.473Z",
   "source": "http://localhost:5174",
   "actualBrowser": true,
   "syntheticFinancialData": true,
   "mockedApiResponses": false,
   "fundedPaymentPerformed": false,
   "silentWithVisibleEnglishCaptions": false,
+  "track": "Consumer Finance Apps",
+  "wallet": {
+    "address": "0xc337837a511fd7e3ac9214e57fcabd25e1dbbd3ce21f19a816962676207be59b",
+    "actualSignatures": 1,
+    "balance": {
+      "id": "2bb7e0f8-2aa1-4a91-8475-2bdc6db061ea",
+      "kind": "sui",
+      "alias": "Sui wallet",
+      "source": "tatum_verified",
+      "address": "0xc337837a511fd7e3ac9214e57fcabd25e1dbbd3ce21f19a816962676207be59b",
+      "version": 5,
+      "included": true,
+      "confirmedAt": "2026-10-29T11:26:31.942Z",
+      "amountAtomic": "25000",
+      "reconciliationPending": false
+    },
+    "secretLocation": "Node process only; never exposed to the page"
+  },
+  "liveRecall": {
+    "verifiedAt": "2026-10-29T11:28:01.331Z",
+    "source": "walrus",
+    "recordsRetrieved": 12,
+    "historyHash": "d87ff97e35545535d36ae7d5a0ab95c3aa0c77be15e991206d68824565d3edee",
+    "originalReductionAtomic": "150000000",
+    "correctedReductionAtomic": "100000000"
+  },
   "narration": {
     "provider": "local Kokoro ONNX",
     "model": "Kokoro v1.0 int8 / 82M",
@@ -18,647 +44,652 @@
     "speed": 1,
     "captionTiming": "phrase cues estimated within each measured speech clip"
   },
-  "durationSeconds": 179.43333333333334,
+  "durationSeconds": 156.3,
   "captureDimensions": {
     "width": 1600,
     "height": 820
   },
-  "browserCaptureSha256": "f1160dd04eb57b3029242c875794786f36f2f874005ea4bb9162fc9cc1758e08",
-  "browserCaptureBytes": 10832972,
   "scenes": [
     {
       "id": "scene-01",
-      "title": "Runway · Synthetic example",
-      "text": "Let me show you Runway. If you're paid in stablecoins, a promised invoice can make your balance look safer than it is. Here, the client says Friday, but their history says Tuesday.",
+      "title": "Consumer Finance Apps",
+      "text": "Let me show you Runway, built for the Consumer Finance track. When you freelance for stablecoins, a late invoice can leave rent uncovered, even when your expected income looks healthy.",
       "audio": "voiceover/scene-01.wav",
-      "audioDurationSeconds": 12.117333333333333,
-      "audioSha256": "2fbf74a8a03a6274d590326b6dc3bb00501c2b910ee0e265f522c8e5dc46f97f",
+      "audioDurationSeconds": 12.224,
+      "audioSha256": "b8aa068e39acca3dbfcf4743ad9f2da74002ae19080a78cbbda03c3576092d77",
       "captions": [
         {
-          "text": "Let me show you Runway. If you're paid",
+          "text": "Let me show you Runway, built for the",
           "startMs": 0,
-          "endMs": 3029,
+          "endMs": 3260,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "in stablecoins, a promised invoice can make your",
-          "startMs": 3029,
-          "endMs": 6059,
+          "text": "Consumer Finance track. When you freelance for stablecoins,",
+          "startMs": 3260,
+          "endMs": 6519,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "balance look safer than it is. Here, the",
-          "startMs": 6059,
-          "endMs": 9088,
+          "text": "a late invoice can leave rent uncovered, even",
+          "startMs": 6519,
+          "endMs": 9779,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "client says Friday, but their history says Tuesday.",
-          "startMs": 9088,
-          "endMs": 12117,
+          "text": "when your expected income looks healthy.",
+          "startMs": 9779,
+          "endMs": 12224,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         }
       ],
       "start": 0,
-      "speechStart": 0.1499999999999999,
-      "end": 12.347333333333331,
-      "captureStart": 0.001,
-      "captureSpeechStart": 2.18,
-      "captureEnd": 14.899,
-      "sourceStart": 2.0300000000000002,
-      "sourceEnd": 14.377333333333333
+      "speechStart": 0.15,
+      "actionEnd": 0.015,
+      "end": 12.454,
+      "captureStart": 0,
+      "captureSpeechStart": 0.25,
+      "captureEnd": 13.075,
+      "sourceStart": 0.1,
+      "sourceEnd": 12.554
     },
     {
       "id": "scene-02",
-      "title": "Confirmed funds",
-      "text": "I'm opening the example. We have eight hundred USDC confirmed, and twelve hundred still expected. Once we account for rent and the reserve, there's nothing available to spend right now.",
+      "title": "Signed Sui wallet",
+      "text": "I am connecting the supplied Sui wallet and signing Runway’s login message. This opens a private workspace. The signature does not transfer funds.",
       "audio": "voiceover/scene-02.wav",
-      "audioDurationSeconds": 12.885333333333334,
-      "audioSha256": "c33ea8de686bcfa66685a150a7922a5c9160482cd7f397c6b4e69db46354426b",
+      "audioDurationSeconds": 10.282666666666668,
+      "audioSha256": "933dd483770169db9606fceedd8216057476519704e1669d966c0a7fca2b56a6",
       "captions": [
         {
-          "text": "I'm opening the example. We have eight hundred",
+          "text": "I am connecting the supplied Sui wallet and",
           "startMs": 0,
-          "endMs": 3436,
+          "endMs": 3577,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "USDC confirmed, and twelve hundred still expected. Once",
-          "startMs": 3436,
-          "endMs": 6872,
+          "text": "signing Runway’s login message. This opens a private",
+          "startMs": 3577,
+          "endMs": 7153,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "we account for rent and the reserve, there's",
-          "startMs": 6872,
-          "endMs": 10308,
-          "timestampMs": null,
-          "confidence": null,
-          "pageBreakAfter": true
-        },
-        {
-          "text": "nothing available to spend right now.",
-          "startMs": 10308,
-          "endMs": 12885,
+          "text": "workspace. The signature does not transfer funds.",
+          "startMs": 7153,
+          "endMs": 10283,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         }
       ],
-      "start": 12.347333333333331,
-      "speechStart": 14.799333333333331,
-      "end": 27.764666666666663,
-      "captureStart": 14.899,
-      "captureSpeechStart": 17.351,
-      "captureEnd": 30.837,
-      "sourceStart": 14.899,
-      "sourceEnd": 30.316333333333333
+      "start": 12.454,
+      "speechStart": 12.704,
+      "actionEnd": 15.01,
+      "end": 23.066666666666666,
+      "captureStart": 13.075,
+      "captureSpeechStart": 13.325,
+      "captureEnd": 24.207,
+      "sourceStart": 13.075,
+      "sourceEnd": 23.687666666666665
     },
     {
       "id": "scene-03",
-      "title": "The client's date",
-      "text": "Let's look at the plan. On the client's promised Friday, rent is covered. That's a possible outcome, but the invoice hasn't been paid yet.",
+      "title": "Live Tatum balance",
+      "text": "Here I refresh the wallet through Tatum on Sui Mainnet. This is the actual balance, separate from the example we are about to run.",
       "audio": "voiceover/scene-03.wav",
-      "audioDurationSeconds": 8.981333333333334,
-      "audioSha256": "ae609b95d88edd23c9642a8cc35bec87e8ac150c7b580e5bed2c9d49e4fe397d",
+      "audioDurationSeconds": 8.576,
+      "audioSha256": "6282f769a770f47a166132325d280c161a6fad80e56ae3d540174715adf5c7e1",
       "captions": [
         {
-          "text": "Let's look at the plan. On the client's",
+          "text": "Here I refresh the wallet through Tatum on",
           "startMs": 0,
-          "endMs": 2994,
+          "endMs": 2859,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "promised Friday, rent is covered. That's a possible",
-          "startMs": 2994,
-          "endMs": 5988,
+          "text": "Sui Mainnet. This is the actual balance, separate",
+          "startMs": 2859,
+          "endMs": 5717,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "outcome, but the invoice hasn't been paid yet.",
-          "startMs": 5988,
-          "endMs": 8981,
+          "text": "from the example we are about to run.",
+          "startMs": 5717,
+          "endMs": 8576,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         }
       ],
-      "start": 27.764666666666663,
-      "speechStart": 29.456666666666663,
-      "end": 38.517999999999994,
-      "captureStart": 30.838,
-      "captureSpeechStart": 32.53,
-      "captureEnd": 42.113,
-      "sourceStart": 30.838,
-      "sourceEnd": 41.59133333333333
+      "start": 23.066666666666666,
+      "speechStart": 23.316666666666663,
+      "actionEnd": 27,
+      "end": 31.97266666666667,
+      "captureStart": 24.208,
+      "captureSpeechStart": 24.458,
+      "captureEnd": 33.633,
+      "sourceStart": 24.208,
+      "sourceEnd": 33.114
     },
     {
       "id": "scene-04",
-      "title": "Payment history",
-      "text": "Now I switch to past payments. This client's last four invoices arrived three, four, four, and five days late. The median moves this payment to Tuesday, after Monday's rent. Runway suggests reducing the flexible purchase by a hundred and fifty USDC.",
+      "title": "A late invoice, a fixed bill",
+      "text": "Now let’s open the labelled example. Eight hundred USDC is confirmed. Twelve hundred is still expected. We have a Saturday purchase, Monday rent, and a hundred USDC reserve.",
       "audio": "voiceover/scene-04.wav",
-      "audioDurationSeconds": 18.304,
-      "audioSha256": "c08c3996ebbfd78531550979f7cfca111fe9c46d342b818fc27b033e7ef9db2f",
+      "audioDurationSeconds": 13.248,
+      "audioSha256": "0980f1d664f7cb64b24577361ec52c37d9cd68c959b6397df320c66ddab9bb4d",
       "captions": [
         {
-          "text": "Now I switch to past payments. This client's",
+          "text": "Now let’s open the labelled example. Eight hundred",
           "startMs": 0,
-          "endMs": 3572,
+          "endMs": 3785,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "last four invoices arrived three, four, four, and",
-          "startMs": 3572,
-          "endMs": 7143,
+          "text": "USDC is confirmed. Twelve hundred is still expected.",
+          "startMs": 3785,
+          "endMs": 7570,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "five days late. The median moves this payment",
-          "startMs": 7143,
-          "endMs": 10715,
+          "text": "We have a Saturday purchase, Monday rent, and",
+          "startMs": 7570,
+          "endMs": 11355,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "to Tuesday, after Monday's rent. Runway suggests reducing",
-          "startMs": 10715,
-          "endMs": 14286,
-          "timestampMs": null,
-          "confidence": null,
-          "pageBreakAfter": true
-        },
-        {
-          "text": "the flexible purchase by a hundred and fifty",
-          "startMs": 14286,
-          "endMs": 17858,
-          "timestampMs": null,
-          "confidence": null,
-          "pageBreakAfter": true
-        },
-        {
-          "text": "USDC.",
-          "startMs": 17858,
-          "endMs": 18304,
+          "text": "a hundred USDC reserve.",
+          "startMs": 11355,
+          "endMs": 13248,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         }
       ],
-      "start": 38.517999999999994,
-      "speechStart": 39.556,
-      "end": 57.94,
-      "captureStart": 42.113,
-      "captureSpeechStart": 43.151,
-      "captureEnd": 62.059,
-      "sourceStart": 42.113,
-      "sourceEnd": 61.535
+      "start": 31.97266666666667,
+      "speechStart": 32.222666666666676,
+      "actionEnd": 33.96,
+      "end": 45.550666666666665,
+      "captureStart": 33.633,
+      "captureSpeechStart": 33.883,
+      "captureEnd": 47.732,
+      "sourceStart": 33.633,
+      "sourceEnd": 47.211
     },
     {
       "id": "scene-05",
-      "title": "No-payment stress test",
-      "text": "We can also check what happens if nothing arrives. The same reduction protects the reserve. The history explains why this delay deserves attention.",
+      "title": "A promise is not cash",
+      "text": "On the client’s promised Friday, the projection covers rent. But an unpaid invoice is still a promise. It never increases the money available now.",
       "audio": "voiceover/scene-05.wav",
-      "audioDurationSeconds": 9.834666666666667,
-      "audioSha256": "147519018b7f7770bb161c7179d127801a6171f80c6f94fdb78766ec2779457e",
+      "audioDurationSeconds": 10.112,
+      "audioSha256": "1334fc6e58e2ba12200da54d71d6ab249b9fac1bfee3178840c0624bfd6e1e74",
       "captions": [
         {
-          "text": "We can also check what happens if nothing",
+          "text": "On the client’s promised Friday, the projection covers",
           "startMs": 0,
-          "endMs": 3421,
+          "endMs": 3371,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "arrives. The same reduction protects the reserve. The",
-          "startMs": 3421,
-          "endMs": 6842,
+          "text": "rent. But an unpaid invoice is still a",
+          "startMs": 3371,
+          "endMs": 6741,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "history explains why this delay deserves attention.",
-          "startMs": 6842,
-          "endMs": 9835,
+          "text": "promise. It never increases the money available now.",
+          "startMs": 6741,
+          "endMs": 10112,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         }
       ],
-      "start": 57.94,
-      "speechStart": 62.81100000000001,
-      "end": 72.72566666666668,
-      "captureStart": 62.059,
-      "captureSpeechStart": 66.93,
-      "captureEnd": 77.365,
-      "sourceStart": 62.059,
-      "sourceEnd": 76.84466666666667
+      "start": 45.550666666666665,
+      "speechStart": 45.800666666666665,
+      "actionEnd": 48.654,
+      "end": 55.99266666666666,
+      "captureStart": 47.733,
+      "captureSpeechStart": 47.983,
+      "captureEnd": 58.696,
+      "sourceStart": 47.733,
+      "sourceEnd": 58.175
     },
     {
       "id": "scene-06",
-      "title": "Review the change",
-      "text": "I'll review that change before saving. The purchase goes from two hundred and fifty to one hundred USDC. Rent stays fixed, and the reserve stays protected.",
+      "title": "History changes the decision",
+      "text": "Switch to past payments. Four invoices arrived three, four, four, and five days late. That moves Friday to Tuesday, after rent. The smallest permitted fix is reducing the flexible purchase by a hundred and fifty USDC.",
       "audio": "voiceover/scene-06.wav",
-      "audioDurationSeconds": 11.434666666666667,
-      "audioSha256": "834201dbdeb18de4ba013f3d90380f838481e8c10654c9a10f71b20ec0c6e1b2",
+      "audioDurationSeconds": 16,
+      "audioSha256": "045bb7a8ee670636038d8d3c04cd7f0a302f43c6b004698c05da2b8756879e48",
       "captions": [
         {
-          "text": "I'll review that change before saving. The purchase",
+          "text": "Switch to past payments. Four invoices arrived three,",
           "startMs": 0,
-          "endMs": 3518,
+          "endMs": 3556,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "goes from two hundred and fifty to one",
-          "startMs": 3518,
-          "endMs": 7037,
+          "text": "four, four, and five days late. That moves",
+          "startMs": 3556,
+          "endMs": 7111,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "hundred USDC. Rent stays fixed, and the reserve",
-          "startMs": 7037,
-          "endMs": 10555,
+          "text": "Friday to Tuesday, after rent. The smallest permitted",
+          "startMs": 7111,
+          "endMs": 10667,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "stays protected.",
-          "startMs": 10555,
-          "endMs": 11435,
+          "text": "fix is reducing the flexible purchase by a",
+          "startMs": 10667,
+          "endMs": 14222,
+          "timestampMs": null,
+          "confidence": null,
+          "pageBreakAfter": true
+        },
+        {
+          "text": "hundred and fifty USDC.",
+          "startMs": 14222,
+          "endMs": 16000,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         }
       ],
-      "start": 72.72566666666668,
-      "speechStart": 73.90866666666668,
-      "end": 85.42333333333335,
-      "captureStart": 77.376,
-      "captureSpeechStart": 78.559,
-      "captureEnd": 90.595,
-      "sourceStart": 77.376,
-      "sourceEnd": 90.07366666666667
+      "start": 55.99266666666666,
+      "speechStart": 56.24266666666665,
+      "actionEnd": 59.101,
+      "end": 72.32266666666666,
+      "captureStart": 58.696,
+      "captureSpeechStart": 58.946,
+      "captureEnd": 75.547,
+      "sourceStart": 58.696,
+      "sourceEnd": 75.026
     },
     {
       "id": "scene-07",
-      "title": "Save and reload",
-      "text": "I'll save it, then reload the app. The spending plan is still there. Saving changes the plan; it doesn't move money or count the invoice as cash.",
+      "title": "An inspectable reason",
+      "text": "Here is the evidence behind that decision: which past payments were used, the observed range, and the median delay. You can inspect the reason before accepting the plan.",
       "audio": "voiceover/scene-07.wav",
-      "audioDurationSeconds": 9.685333333333332,
-      "audioSha256": "f2db1453d58a0a85f2dfde530e418c5a1da8f24c2b289bb714aa1a95ec73af6d",
+      "audioDurationSeconds": 10.922666666666666,
+      "audioSha256": "052c8d6adb691ac8a42d7dbe32aa849a71c2834dce6c838dccefc2dda06b3ed4",
       "captions": [
         {
-          "text": "I'll save it, then reload the app. The",
+          "text": "Here is the evidence behind that decision: which",
           "startMs": 0,
-          "endMs": 2870,
+          "endMs": 3121,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "spending plan is still there. Saving changes the",
-          "startMs": 2870,
-          "endMs": 5739,
+          "text": "past payments were used, the observed range, and",
+          "startMs": 3121,
+          "endMs": 6242,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "plan; it doesn't move money or count the",
-          "startMs": 5739,
-          "endMs": 8609,
+          "text": "the median delay. You can inspect the reason",
+          "startMs": 6242,
+          "endMs": 9362,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "invoice as cash.",
-          "startMs": 8609,
-          "endMs": 9685,
+          "text": "before accepting the plan.",
+          "startMs": 9362,
+          "endMs": 10923,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         }
       ],
-      "start": 85.42333333333335,
-      "speechStart": 88.49233333333333,
-      "end": 98.25766666666667,
-      "captureStart": 90.607,
-      "captureSpeechStart": 93.676,
-      "captureEnd": 103.976,
-      "sourceStart": 90.607,
-      "sourceEnd": 103.44133333333333
+      "start": 72.32266666666666,
+      "speechStart": 72.57266666666666,
+      "actionEnd": 76.043,
+      "end": 83.57533333333333,
+      "captureStart": 75.547,
+      "captureSpeechStart": 75.797,
+      "captureEnd": 87.32,
+      "sourceStart": 75.547,
+      "sourceEnd": 86.79966666666667
     },
     {
       "id": "scene-08",
-      "title": "Invoice assistant · Free sample",
-      "text": "Next, let's add an invoice with the assistant. I'm using the free sample. It extracts a draft, then asks me to check the amount, dates, and client before anything is saved.",
+      "title": "Protect rent and the reserve",
+      "text": "The no-payment stress test checks the downside too. I review the change: the purchase drops from two hundred and fifty to one hundred. Rent stays fixed.",
       "audio": "voiceover/scene-08.wav",
-      "audioDurationSeconds": 11.2,
-      "audioSha256": "d26afb83b036233896e03940d3110e560362b5a669715062473c4c52e968e3e4",
+      "audioDurationSeconds": 9.962666666666667,
+      "audioSha256": "12ee646853ccf421470888a91a849dabdc9a42dad95eec52908f29c32cbefa39",
       "captions": [
         {
-          "text": "Next, let's add an invoice with the assistant.",
+          "text": "The no-payment stress test checks the downside too.",
           "startMs": 0,
-          "endMs": 2890,
+          "endMs": 3065,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "I'm using the free sample. It extracts a",
-          "startMs": 2890,
-          "endMs": 5781,
+          "text": "I review the change: the purchase drops from",
+          "startMs": 3065,
+          "endMs": 6131,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "draft, then asks me to check the amount,",
-          "startMs": 5781,
-          "endMs": 8671,
+          "text": "two hundred and fifty to one hundred. Rent",
+          "startMs": 6131,
+          "endMs": 9196,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "dates, and client before anything is saved.",
-          "startMs": 8671,
-          "endMs": 11200,
+          "text": "stays fixed.",
+          "startMs": 9196,
+          "endMs": 9963,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         }
       ],
-      "start": 98.25766666666667,
-      "speechStart": 101.86766666666665,
-      "end": 113.14766666666668,
-      "captureStart": 103.976,
-      "captureSpeechStart": 107.586,
-      "captureEnd": 119.391,
-      "sourceStart": 103.976,
-      "sourceEnd": 118.866
+      "start": 83.57533333333333,
+      "speechStart": 83.82533333333333,
+      "actionEnd": 89.391,
+      "end": 93.868,
+      "captureStart": 87.32,
+      "captureSpeechStart": 87.57,
+      "captureEnd": 98.133,
+      "sourceStart": 87.32,
+      "sourceEnd": 97.61266666666666
     },
     {
       "id": "scene-09",
-      "title": "Confirm the invoice",
-      "text": "I'll edit the reference and save the reviewed draft. The paid parser is optional. It needs a separate tool wallet and explicit approval for each purchase.",
+      "title": "Save and return",
+      "text": "I save the plan and reload. The change survives. We have preserved the reserve without treating expected income as cash, and without moving any funds.",
       "audio": "voiceover/scene-09.wav",
-      "audioDurationSeconds": 9.856,
-      "audioSha256": "a93e6b22679fd6a6b431a69bbb7af163798a8aa0766eb325158c61892eb95cde",
+      "audioDurationSeconds": 10.197333333333333,
+      "audioSha256": "d7653482912e3f79af7afd9f7dd4fc040f0a7ba369cc068490f9ede769f44c14",
       "captions": [
         {
-          "text": "I'll edit the reference and save the reviewed",
+          "text": "I save the plan and reload. The change",
           "startMs": 0,
-          "endMs": 3033,
+          "endMs": 3263,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "draft. The paid parser is optional. It needs",
-          "startMs": 3033,
-          "endMs": 6065,
+          "text": "survives. We have preserved the reserve without treating",
+          "startMs": 3263,
+          "endMs": 6526,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "a separate tool wallet and explicit approval for",
-          "startMs": 6065,
-          "endMs": 9098,
+          "text": "expected income as cash, and without moving any",
+          "startMs": 6526,
+          "endMs": 9789,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "each purchase.",
-          "startMs": 9098,
-          "endMs": 9856,
+          "text": "funds.",
+          "startMs": 9789,
+          "endMs": 10197,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         }
       ],
-      "start": 113.14766666666668,
-      "speechStart": 119.29566666666668,
-      "end": 129.23166666666668,
-      "captureStart": 119.394,
-      "captureSpeechStart": 125.542,
-      "captureEnd": 136.001,
-      "sourceStart": 119.394,
-      "sourceEnd": 135.478
+      "start": 93.868,
+      "speechStart": 94.11799999999998,
+      "actionEnd": 100.153,
+      "end": 104.39533333333331,
+      "captureStart": 98.133,
+      "captureSpeechStart": 98.383,
+      "captureEnd": 109.182,
+      "sourceStart": 98.133,
+      "sourceEnd": 108.66033333333333
     },
     {
       "id": "scene-10",
-      "title": "Mainnet evidence",
-      "text": "Finally, here's the evidence page. Tatum verifies Sui Mainnet reads. Walrus holds thirteen verified synthetic records, including two corrections. A fresh process recalled the history and reproduced the same calculation.",
+      "title": "Recall from Walrus, live",
+      "text": "Now I click Recall from Walrus. This makes a real Mainnet request for the published synthetic records. Their identifiers and content hashes must match. The recalled history reproduces the same hundred-and-fifty USDC decision.",
       "audio": "voiceover/scene-10.wav",
-      "audioDurationSeconds": 15.722666666666667,
-      "audioSha256": "676b85f80b5c18b5404be865b4fbf406b613029034392e669b5e03336df02a56",
+      "audioDurationSeconds": 16.298666666666666,
+      "audioSha256": "831e4d90425b6f665b29a866be8e1f3b5e207837aa440d2093110ed22081444f",
       "captions": [
         {
-          "text": "Finally, here's the evidence page. Tatum verifies Sui",
+          "text": "Now I click Recall from Walrus. This makes",
           "startMs": 0,
-          "endMs": 4193,
+          "endMs": 3951,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "Mainnet reads. Walrus holds thirteen verified synthetic records,",
-          "startMs": 4193,
-          "endMs": 8385,
+          "text": "a real Mainnet request for the published synthetic",
+          "startMs": 3951,
+          "endMs": 7902,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "including two corrections. A fresh process recalled the",
-          "startMs": 8385,
-          "endMs": 12578,
+          "text": "records. Their identifiers and content hashes must match.",
+          "startMs": 7902,
+          "endMs": 11854,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "history and reproduced the same calculation.",
-          "startMs": 12578,
-          "endMs": 15723,
+          "text": "The recalled history reproduces the same hundred-and-fifty USDC",
+          "startMs": 11854,
+          "endMs": 15805,
+          "timestampMs": null,
+          "confidence": null,
+          "pageBreakAfter": true
+        },
+        {
+          "text": "decision.",
+          "startMs": 15805,
+          "endMs": 16299,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         }
       ],
-      "start": 129.23166666666668,
-      "speechStart": 130.64266666666668,
-      "end": 146.44533333333334,
-      "captureStart": 136.002,
-      "captureSpeechStart": 137.41299999999998,
-      "captureEnd": 153.737,
-      "sourceStart": 136.002,
-      "sourceEnd": 153.21566666666666
+      "start": 104.39533333333331,
+      "speechStart": 104.64533333333331,
+      "actionEnd": 115.64,
+      "end": 121.02399999999996,
+      "captureStart": 109.182,
+      "captureSpeechStart": 109.432,
+      "captureEnd": 126.332,
+      "sourceStart": 109.182,
+      "sourceEnd": 125.81066666666666
     },
     {
       "id": "scene-11",
-      "title": "Corrections survive recall",
-      "text": "Those corrections matter. Updating the reserve changes the proposed reduction. Correcting a payment's client removes it from the wrong history, so an old fact can't quietly drive the next estimate.",
+      "title": "Remember corrections too",
+      "text": "Memory must also remember corrections. The recalled reserve update changes the reduction to one hundred USDC. A separate client correction removes the wrong payment from that history, so an old fact cannot quietly drive the next forecast.",
       "audio": "voiceover/scene-11.wav",
-      "audioDurationSeconds": 13.013333333333334,
-      "audioSha256": "7ce59db64f3992e72a617669011f93903bdede88295d51785bca54ea36beb77b",
+      "audioDurationSeconds": 17.002666666666666,
+      "audioSha256": "0ca83f581017b7918dfef5fa67eaa2ca3af86d1ecfb6e2a9e218c3595b75766d",
       "captions": [
         {
-          "text": "Those corrections matter. Updating the reserve changes the",
+          "text": "Memory must also remember corrections. The recalled reserve",
           "startMs": 0,
-          "endMs": 3470,
+          "endMs": 3676,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "proposed reduction. Correcting a payment's client removes it",
-          "startMs": 3470,
-          "endMs": 6940,
+          "text": "update changes the reduction to one hundred USDC.",
+          "startMs": 3676,
+          "endMs": 7353,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "from the wrong history, so an old fact",
-          "startMs": 6940,
-          "endMs": 10411,
+          "text": "A separate client correction removes the wrong payment",
+          "startMs": 7353,
+          "endMs": 11029,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "can't quietly drive the next estimate.",
-          "startMs": 10411,
-          "endMs": 13013,
+          "text": "from that history, so an old fact cannot",
+          "startMs": 11029,
+          "endMs": 14705,
+          "timestampMs": null,
+          "confidence": null,
+          "pageBreakAfter": true
+        },
+        {
+          "text": "quietly drive the next forecast.",
+          "startMs": 14705,
+          "endMs": 17003,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         }
       ],
-      "start": 146.44533333333334,
-      "speechStart": 146.73133333333337,
-      "end": 159.82466666666667,
-      "captureStart": 153.737,
-      "captureSpeechStart": 154.023,
-      "captureEnd": 167.642,
-      "sourceStart": 153.737,
-      "sourceEnd": 167.11633333333333
+      "start": 121.02399999999996,
+      "speechStart": 121.27399999999994,
+      "actionEnd": 126.36,
+      "end": 138.35666666666663,
+      "captureStart": 126.332,
+      "captureSpeechStart": 126.582,
+      "captureEnd": 144.185,
+      "sourceStart": 126.332,
+      "sourceEnd": 143.66466666666668
     },
     {
       "id": "scene-12",
-      "title": "What the results show",
-      "text": "We publish the misses too. This synthetic replay had fewer reserve breaches, but worse timing accuracy and some unnecessary reductions. Real user trials and a funded parser purchase still need verification. That's Runway: a clear decision you can inspect, review, and keep.",
+      "title": "A finance decision you can keep",
+      "text": "This is the Consumer Finance idea: separate cash from promises, protect bills before a late payment, and carry payment lessons between sessions. The replay publishes its misses too. Runway gives freelancers a decision they can inspect, review, and keep.",
       "audio": "voiceover/scene-12.wav",
-      "audioDurationSeconds": 19.17866666666667,
-      "audioSha256": "56a16bf99377927dd99d5d6c3fa31fd8c0ad218a835e44c57e53521797b87ebf",
+      "audioDurationSeconds": 17.6,
+      "audioSha256": "f4fa153b9b36dfd63287b76e05fb1976bb7c58d7c3f4aab05b764b2a752e660f",
       "captions": [
         {
-          "text": "We publish the misses too. This synthetic replay",
+          "text": "This is the Consumer Finance idea: separate cash",
           "startMs": 0,
-          "endMs": 3653,
+          "endMs": 3610,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "had fewer reserve breaches, but worse timing accuracy",
-          "startMs": 3653,
-          "endMs": 7306,
+          "text": "from promises, protect bills before a late payment,",
+          "startMs": 3610,
+          "endMs": 7221,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "and some unnecessary reductions. Real user trials and",
-          "startMs": 7306,
-          "endMs": 10959,
+          "text": "and carry payment lessons between sessions. The replay",
+          "startMs": 7221,
+          "endMs": 10831,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "a funded parser purchase still need verification. That's",
-          "startMs": 10959,
-          "endMs": 14612,
+          "text": "publishes its misses too. Runway gives freelancers a",
+          "startMs": 10831,
+          "endMs": 14441,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         },
         {
-          "text": "Runway: a clear decision you can inspect, review,",
-          "startMs": 14612,
-          "endMs": 18265,
-          "timestampMs": null,
-          "confidence": null,
-          "pageBreakAfter": true
-        },
-        {
-          "text": "and keep.",
-          "startMs": 18265,
-          "endMs": 19179,
+          "text": "decision they can inspect, review, and keep.",
+          "startMs": 14441,
+          "endMs": 17600,
           "timestampMs": null,
           "confidence": null,
           "pageBreakAfter": true
         }
       ],
-      "start": 159.82466666666667,
-      "speechStart": 160.18166666666664,
-      "end": 179.44033333333337,
-      "captureStart": 167.643,
-      "captureSpeechStart": 168,
-      "captureEnd": 187.791,
-      "sourceStart": 167.643,
-      "sourceEnd": 187.25866666666667
+      "start": 138.35666666666663,
+      "speechStart": 138.60666666666663,
+      "actionEnd": 144.22,
+      "end": 156.28666666666663,
+      "captureStart": 144.185,
+      "captureSpeechStart": 144.435,
+      "captureEnd": 162.634,
+      "sourceStart": 144.185,
+      "sourceEnd": 162.115
     }
   ],
   "pageErrors": [],
-  "captureTrimSeconds": 12.12,
+  "browserCaptureSha256": "76b781b079c856d87726d73be2f5354baa5c8bb6774bcde41333d488f7f93296",
+  "browserCaptureBytes": 9154985,
+  "captureTrimSeconds": 1.36,
   "synchronizationToleranceSeconds": 0.07333333333333333,
-  "preparedCaptureSha256": "5846ad90c27080c65931824f6dbc4d264f329c09f45df1acb373d6403a0be182",
-  "captureDurationSeconds": 187.791,
+  "preparedCaptureSha256": "f556227362157f6a4ad608541ef452643fe5edd90a9ad4b58534192a2c373f84",
+  "captureDurationSeconds": 162.634,
   "editing": "Natural-speed actual app interactions; initial loading and brief silent holds after speech trimmed.",
-  "renderedAt": "2026-10-23T17:11:50.120Z",
+  "renderEngine": "FFmpeg export of the measured Remotion scene timeline",
+  "renderedAt": "2026-10-29T12:16:36.280Z",
   "dimensions": {
     "width": 1920,
     "height": 1080
   },
-  "mp4Sha256": "eeef2c3cbc0284715adf6607cf62009eebac7be5d9b9130c8f19a6250c195def",
-  "mp4Bytes": 10023058,
-  "webmSha256": "1c32afb875f0cbd20a0c3df8c4e0b8a90431e174f516102fa02a190d53218a3d",
-  "webmBytes": 7647980,
-  "encoding": "Remotion 4.0.538; actual browser footage at natural speed; H.264/AAC MP4 faststart and VP9/Opus WebM; English male neural speech, normalized to -16 LUFS with -1.5 dBTP target",
+  "mp4Sha256": "248660fe8bf67947e0ad449dd5652fca4f3779de5a2af5a71b7bb28be74e70e1",
+  "mp4Bytes": 6443374,
+  "webmSha256": "283e26c56c2acfa0b2f2d21bfac549e7dc6e1260311b6bfc627284d9b70cd59d",
+  "webmBytes": 5848511,
+  "encoding": "FFmpeg export of the measured Remotion scene timeline; actual browser footage at natural speed; H.264/AAC MP4 faststart and VP9/Opus WebM; English male neural speech, normalized to -16 LUFS with -1.5 dBTP target",
   "publishedPaths": {
     "video": "/demo/runway-demo.mp4",
     "fallback": "/demo/runway-demo.webm",
@@ -667,7 +698,7 @@
   },
   "mp4FullDecodeVerified": true,
   "mediaVerified": {
-    "checkedAt": "2026-10-23T17:18:07.573Z",
+    "checkedAt": "2026-10-29T12:18:02.475Z",
     "streams": {
       "mp4": {
         "fullDecode": true,
@@ -680,86 +711,91 @@
         "audio": "Opus"
       }
     },
-    "audioSeconds": 179.43466666666666,
+    "audioSeconds": 156.33066666666667,
     "sceneAudio": [
       {
         "id": "scene-01",
-        "rmsDb": -17.5,
-        "peak": 0.844
+        "rmsDb": -17.8,
+        "peak": 0.85
       },
       {
         "id": "scene-02",
-        "rmsDb": -17.7,
-        "peak": 0.843
+        "rmsDb": -17.6,
+        "peak": 0.846
       },
       {
         "id": "scene-03",
-        "rmsDb": -17.7,
-        "peak": 0.839
+        "rmsDb": -17.6,
+        "peak": 0.851
       },
       {
         "id": "scene-04",
-        "rmsDb": -17.6,
-        "peak": 0.842
+        "rmsDb": -17.8,
+        "peak": 0.848
       },
       {
         "id": "scene-05",
-        "rmsDb": -17.3,
-        "peak": 0.852
+        "rmsDb": -17.4,
+        "peak": 0.861
       },
       {
         "id": "scene-06",
-        "rmsDb": -17.6,
-        "peak": 0.843
+        "rmsDb": -17.5,
+        "peak": 0.856
       },
       {
         "id": "scene-07",
-        "rmsDb": -17.5,
-        "peak": 0.839
+        "rmsDb": -17.2,
+        "peak": 0.841
       },
       {
         "id": "scene-08",
-        "rmsDb": -17.5,
-        "peak": 0.852
+        "rmsDb": -17.3,
+        "peak": 0.849
       },
       {
         "id": "scene-09",
-        "rmsDb": -17.2,
-        "peak": 0.855
+        "rmsDb": -17.1,
+        "peak": 0.85
       },
       {
         "id": "scene-10",
-        "rmsDb": -17.7,
-        "peak": 0.845
+        "rmsDb": -17.5,
+        "peak": 0.853
       },
       {
         "id": "scene-11",
-        "rmsDb": -17.5,
-        "peak": 0.843
+        "rmsDb": -17.4,
+        "peak": 0.856
       },
       {
         "id": "scene-12",
-        "rmsDb": -17.4,
-        "peak": 0.849
+        "rmsDb": -17.5,
+        "peak": 0.85
       }
     ],
     "measuredSpeechTimeline": true,
     "captionTiming": "phrase cues estimated within each measured speech clip"
   },
   "playbackVerified": {
-    "checkedAt": "2026-10-23T17:18:13.722Z",
+    "checkedAt": "2026-10-29T12:18:07.866Z",
     "environment": "actual Playwright Chromium selected source with user-gesture playback and Web Audio signal",
-    "duration": 179.507,
+    "duration": 156.407,
     "width": 1920,
     "height": 1080,
     "source": "http://localhost:5174/demo/runway-demo.webm",
     "muted": false,
     "volume": 1,
     "playing": true,
-    "currentTime": 6.037333,
+    "currentTime": 6.029333,
     "audioContext": "running",
-    "seekedSeconds": [50, 81, 118, 155],
-    "captionCues": 50,
+    "seekedSeconds": [
+      50,
+      81,
+      118,
+      155
+    ],
+    "captionCues": 49,
     "audibleSignalVerified": true,
     "pageErrors": []
   }

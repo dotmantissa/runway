@@ -3,19 +3,28 @@ import { spawnSync } from "node:child_process";
 import { readFile, writeFile, rename, mkdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { chromium } from "@playwright/test";
+import { renderFfmpegTimeline } from "./render-demo-ffmpeg.mjs";
 const ffmpeg = process.env.DEMO_FFMPEG || "ffmpeg";
 const root = "apps/web/public/demo/";
 const evidence = JSON.parse(
   await readFile("video/public/capture-timing.json", "utf8"),
 );
 await mkdir("video/out", { recursive: true });
+if (process.env.DEMO_REUSE_RENDER === "1") {
+  const previous = JSON.parse(await readFile("docs/demo-gate.json", "utf8"));
+  if (previous.browserCaptureSha256 !== evidence.browserCaptureSha256)
+    throw new Error("The reused render belongs to another browser capture.");
+  evidence.renderEngine = previous.renderEngine || "Remotion 4.0.538";
+}
 function run(executable, args, cwd) {
   const result = spawnSync(executable, args, { cwd, stdio: "inherit" });
   if (result.error) throw result.error;
   if (result.status !== 0)
     throw new Error("Media operation failed: " + executable);
 }
-if (process.env.DEMO_REUSE_RENDER !== "1") {
+if (process.env.DEMO_RENDER_ENGINE === "ffmpeg") {
+  evidence.renderEngine = await renderFfmpegTimeline(evidence, ffmpeg);
+} else if (process.env.DEMO_REUSE_RENDER !== "1") {
   run(
     process.execPath,
     [
@@ -28,8 +37,11 @@ if (process.env.DEMO_REUSE_RENDER !== "1") {
       "--audio-codec=aac",
       "--crf=21",
       "--pixel-format=yuv420p",
-      "--concurrency=2",
+      "--concurrency=1",
       "--offthread-video-threads=1",
+      "--media-cache-size-in-bytes=268435456",
+      "--offthreadvideo-cache-size-in-bytes=134217728",
+      "--timeout=120000",
       "--log=error",
       "--browser-executable=" +
         (process.env.DEMO_BROWSER_EXECUTABLE ||
@@ -146,7 +158,8 @@ evidence.mp4Bytes = mp4.length;
 evidence.webmSha256 = digest(webm);
 evidence.webmBytes = webm.length;
 evidence.encoding =
-  "Remotion 4.0.538; actual browser footage at natural speed; H.264/AAC MP4 faststart and VP9/Opus WebM; English male neural speech, normalized to -16 LUFS with -1.5 dBTP target";
+  (evidence.renderEngine || "Remotion 4.0.538") +
+  "; actual browser footage at natural speed; H.264/AAC MP4 faststart and VP9/Opus WebM; English male neural speech, normalized to -16 LUFS with -1.5 dBTP target";
 evidence.publishedPaths = {
   video: "/demo/runway-demo.mp4",
   fallback: "/demo/runway-demo.webm",

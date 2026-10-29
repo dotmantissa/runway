@@ -1,201 +1,197 @@
 WEBVTT
 
 1
-00:00:00.150 --> 00:00:03.179
-Let me show you Runway. If you're paid
+00:00:00.150 --> 00:00:03.410
+Let me show you Runway, built for the
 
 2
-00:00:03.179 --> 00:00:06.209
-in stablecoins, a promised invoice can make your
+00:00:03.410 --> 00:00:06.669
+Consumer Finance track. When you freelance for stablecoins,
 
 3
-00:00:06.209 --> 00:00:09.238
-balance look safer than it is. Here, the
+00:00:06.669 --> 00:00:09.929
+a late invoice can leave rent uncovered, even
 
 4
-00:00:09.238 --> 00:00:12.267
-client says Friday, but their history says Tuesday.
+00:00:09.929 --> 00:00:12.374
+when your expected income looks healthy.
 
 5
-00:00:14.799 --> 00:00:18.235
-I'm opening the example. We have eight hundred
+00:00:12.704 --> 00:00:16.281
+I am connecting the supplied Sui wallet and
 
 6
-00:00:18.235 --> 00:00:21.671
-USDC confirmed, and twelve hundred still expected. Once
+00:00:16.281 --> 00:00:19.857
+signing Runway’s login message. This opens a private
 
 7
-00:00:21.671 --> 00:00:25.107
-we account for rent and the reserve, there's
+00:00:19.857 --> 00:00:22.987
+workspace. The signature does not transfer funds.
 
 8
-00:00:25.107 --> 00:00:27.684
-nothing available to spend right now.
+00:00:23.317 --> 00:00:26.176
+Here I refresh the wallet through Tatum on
 
 9
-00:00:29.457 --> 00:00:32.451
-Let's look at the plan. On the client's
+00:00:26.176 --> 00:00:29.034
+Sui Mainnet. This is the actual balance, separate
 
 10
-00:00:32.451 --> 00:00:35.445
-promised Friday, rent is covered. That's a possible
+00:00:29.034 --> 00:00:31.893
+from the example we are about to run.
 
 11
-00:00:35.445 --> 00:00:38.438
-outcome, but the invoice hasn't been paid yet.
+00:00:32.223 --> 00:00:36.008
+Now let’s open the labelled example. Eight hundred
 
 12
-00:00:39.556 --> 00:00:43.128
-Now I switch to past payments. This client's
+00:00:36.008 --> 00:00:39.793
+USDC is confirmed. Twelve hundred is still expected.
 
 13
-00:00:43.128 --> 00:00:46.699
-last four invoices arrived three, four, four, and
+00:00:39.793 --> 00:00:43.578
+We have a Saturday purchase, Monday rent, and
 
 14
-00:00:46.699 --> 00:00:50.271
-five days late. The median moves this payment
+00:00:43.578 --> 00:00:45.471
+a hundred USDC reserve.
 
 15
-00:00:50.271 --> 00:00:53.842
-to Tuesday, after Monday's rent. Runway suggests reducing
+00:00:45.801 --> 00:00:49.172
+On the client’s promised Friday, the projection covers
 
 16
-00:00:53.842 --> 00:00:57.414
-the flexible purchase by a hundred and fifty
+00:00:49.172 --> 00:00:52.542
+rent. But an unpaid invoice is still a
 
 17
-00:00:57.414 --> 00:00:57.860
-USDC.
+00:00:52.542 --> 00:00:55.913
+promise. It never increases the money available now.
 
 18
-00:01:02.811 --> 00:01:06.232
-We can also check what happens if nothing
+00:00:56.243 --> 00:00:59.799
+Switch to past payments. Four invoices arrived three,
 
 19
-00:01:06.232 --> 00:01:09.653
-arrives. The same reduction protects the reserve. The
+00:00:59.799 --> 00:01:03.354
+four, four, and five days late. That moves
 
 20
-00:01:09.653 --> 00:01:12.646
-history explains why this delay deserves attention.
+00:01:03.354 --> 00:01:06.910
+Friday to Tuesday, after rent. The smallest permitted
 
 21
-00:01:13.909 --> 00:01:17.427
-I'll review that change before saving. The purchase
+00:01:06.910 --> 00:01:10.465
+fix is reducing the flexible purchase by a
 
 22
-00:01:17.427 --> 00:01:20.946
-goes from two hundred and fifty to one
+00:01:10.465 --> 00:01:12.243
+hundred and fifty USDC.
 
 23
-00:01:20.946 --> 00:01:24.464
-hundred USDC. Rent stays fixed, and the reserve
+00:01:12.573 --> 00:01:15.694
+Here is the evidence behind that decision: which
 
 24
-00:01:24.464 --> 00:01:25.344
-stays protected.
+00:01:15.694 --> 00:01:18.815
+past payments were used, the observed range, and
 
 25
-00:01:28.492 --> 00:01:31.362
-I'll save it, then reload the app. The
+00:01:18.815 --> 00:01:21.935
+the median delay. You can inspect the reason
 
 26
-00:01:31.362 --> 00:01:34.231
-spending plan is still there. Saving changes the
+00:01:21.935 --> 00:01:23.496
+before accepting the plan.
 
 27
-00:01:34.231 --> 00:01:37.101
-plan; it doesn't move money or count the
+00:01:23.825 --> 00:01:26.890
+The no-payment stress test checks the downside too.
 
 28
-00:01:37.101 --> 00:01:38.177
-invoice as cash.
+00:01:26.890 --> 00:01:29.956
+I review the change: the purchase drops from
 
 29
-00:01:41.868 --> 00:01:44.758
-Next, let's add an invoice with the assistant.
+00:01:29.956 --> 00:01:33.021
+two hundred and fifty to one hundred. Rent
 
 30
-00:01:44.758 --> 00:01:47.649
-I'm using the free sample. It extracts a
+00:01:33.021 --> 00:01:33.788
+stays fixed.
 
 31
-00:01:47.649 --> 00:01:50.539
-draft, then asks me to check the amount,
+00:01:34.118 --> 00:01:37.381
+I save the plan and reload. The change
 
 32
-00:01:50.539 --> 00:01:53.068
-dates, and client before anything is saved.
+00:01:37.381 --> 00:01:40.644
+survives. We have preserved the reserve without treating
 
 33
-00:01:59.296 --> 00:02:02.329
-I'll edit the reference and save the reviewed
+00:01:40.644 --> 00:01:43.907
+expected income as cash, and without moving any
 
 34
-00:02:02.329 --> 00:02:05.361
-draft. The paid parser is optional. It needs
+00:01:43.907 --> 00:01:44.315
+funds.
 
 35
-00:02:05.361 --> 00:02:08.394
-a separate tool wallet and explicit approval for
+00:01:44.645 --> 00:01:48.596
+Now I click Recall from Walrus. This makes
 
 36
-00:02:08.394 --> 00:02:09.152
-each purchase.
+00:01:48.596 --> 00:01:52.547
+a real Mainnet request for the published synthetic
 
 37
-00:02:10.643 --> 00:02:14.836
-Finally, here's the evidence page. Tatum verifies Sui
+00:01:52.547 --> 00:01:56.499
+records. Their identifiers and content hashes must match.
 
 38
-00:02:14.836 --> 00:02:19.028
-Mainnet reads. Walrus holds thirteen verified synthetic records,
+00:01:56.499 --> 00:02:00.450
+The recalled history reproduces the same hundred-and-fifty USDC
 
 39
-00:02:19.028 --> 00:02:23.221
-including two corrections. A fresh process recalled the
+00:02:00.450 --> 00:02:00.944
+decision.
 
 40
-00:02:23.221 --> 00:02:26.366
-history and reproduced the same calculation.
+00:02:01.274 --> 00:02:04.950
+Memory must also remember corrections. The recalled reserve
 
 41
-00:02:26.731 --> 00:02:30.201
-Those corrections matter. Updating the reserve changes the
+00:02:04.950 --> 00:02:08.627
+update changes the reduction to one hundred USDC.
 
 42
-00:02:30.201 --> 00:02:33.671
-proposed reduction. Correcting a payment's client removes it
+00:02:08.627 --> 00:02:12.303
+A separate client correction removes the wrong payment
 
 43
-00:02:33.671 --> 00:02:37.142
-from the wrong history, so an old fact
+00:02:12.303 --> 00:02:15.979
+from that history, so an old fact cannot
 
 44
-00:02:37.142 --> 00:02:39.744
-can't quietly drive the next estimate.
+00:02:15.979 --> 00:02:18.277
+quietly drive the next forecast.
 
 45
-00:02:40.182 --> 00:02:43.835
-We publish the misses too. This synthetic replay
+00:02:18.607 --> 00:02:22.217
+This is the Consumer Finance idea: separate cash
 
 46
-00:02:43.835 --> 00:02:47.488
-had fewer reserve breaches, but worse timing accuracy
+00:02:22.217 --> 00:02:25.828
+from promises, protect bills before a late payment,
 
 47
-00:02:47.488 --> 00:02:51.141
-and some unnecessary reductions. Real user trials and
+00:02:25.828 --> 00:02:29.438
+and carry payment lessons between sessions. The replay
 
 48
-00:02:51.141 --> 00:02:54.794
-a funded parser purchase still need verification. That's
+00:02:29.438 --> 00:02:33.048
+publishes its misses too. Runway gives freelancers a
 
 49
-00:02:54.794 --> 00:02:58.447
-Runway: a clear decision you can inspect, review,
-
-50
-00:02:58.447 --> 00:02:59.361
-and keep.
+00:02:33.048 --> 00:02:36.207
+decision they can inspect, review, and keep.

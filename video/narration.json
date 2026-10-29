@@ -5,63 +5,63 @@
   "scenes": [
     {
       "id": "scene-01",
-      "title": "Runway \u00b7 Synthetic example",
-      "text": "Let me show you Runway. If you're paid in stablecoins, a promised invoice can make your balance look safer than it is. Here, the client says Friday, but their history says Tuesday."
+      "title": "Consumer Finance Apps",
+      "text": "Let me show you Runway, built for the Consumer Finance track. When you freelance for stablecoins, a late invoice can leave rent uncovered, even when your expected income looks healthy."
     },
     {
       "id": "scene-02",
-      "title": "Confirmed funds",
-      "text": "I'm opening the example. We have eight hundred USDC confirmed, and twelve hundred still expected. Once we account for rent and the reserve, there's nothing available to spend right now."
+      "title": "Signed Sui wallet",
+      "text": "I am connecting the supplied Sui wallet and signing Runway’s login message. This opens a private workspace. The signature does not transfer funds."
     },
     {
       "id": "scene-03",
-      "title": "The client's date",
-      "text": "Let's look at the plan. On the client's promised Friday, rent is covered. That's a possible outcome, but the invoice hasn't been paid yet."
+      "title": "Live Tatum balance",
+      "text": "Here I refresh the wallet through Tatum on Sui Mainnet. This is the actual balance, separate from the example we are about to run."
     },
     {
       "id": "scene-04",
-      "title": "Payment history",
-      "text": "Now I switch to past payments. This client's last four invoices arrived three, four, four, and five days late. The median moves this payment to Tuesday, after Monday's rent. Runway suggests reducing the flexible purchase by a hundred and fifty USDC."
+      "title": "A late invoice, a fixed bill",
+      "text": "Now let’s open the labelled example. Eight hundred USDC is confirmed. Twelve hundred is still expected. We have a Saturday purchase, Monday rent, and a hundred USDC reserve."
     },
     {
       "id": "scene-05",
-      "title": "No-payment stress test",
-      "text": "We can also check what happens if nothing arrives. The same reduction protects the reserve. The history explains why this delay deserves attention."
+      "title": "A promise is not cash",
+      "text": "On the client’s promised Friday, the projection covers rent. But an unpaid invoice is still a promise. It never increases the money available now."
     },
     {
       "id": "scene-06",
-      "title": "Review the change",
-      "text": "I'll review that change before saving. The purchase goes from two hundred and fifty to one hundred USDC. Rent stays fixed, and the reserve stays protected."
+      "title": "History changes the decision",
+      "text": "Switch to past payments. Four invoices arrived three, four, four, and five days late. That moves Friday to Tuesday, after rent. The smallest permitted fix is reducing the flexible purchase by a hundred and fifty USDC."
     },
     {
       "id": "scene-07",
-      "title": "Save and reload",
-      "text": "I'll save it, then reload the app. The spending plan is still there. Saving changes the plan; it doesn't move money or count the invoice as cash."
+      "title": "An inspectable reason",
+      "text": "Here is the evidence behind that decision: which past payments were used, the observed range, and the median delay. You can inspect the reason before accepting the plan."
     },
     {
       "id": "scene-08",
-      "title": "Invoice assistant \u00b7 Free sample",
-      "text": "Next, let's add an invoice with the assistant. I'm using the free sample. It extracts a draft, then asks me to check the amount, dates, and client before anything is saved."
+      "title": "Protect rent and the reserve",
+      "text": "The no-payment stress test checks the downside too. I review the change: the purchase drops from two hundred and fifty to one hundred. Rent stays fixed."
     },
     {
       "id": "scene-09",
-      "title": "Confirm the invoice",
-      "text": "I'll edit the reference and save the reviewed draft. The paid parser is optional. It needs a separate tool wallet and explicit approval for each purchase."
+      "title": "Save and return",
+      "text": "I save the plan and reload. The change survives. We have preserved the reserve without treating expected income as cash, and without moving any funds."
     },
     {
       "id": "scene-10",
-      "title": "Mainnet evidence",
-      "text": "Finally, here's the evidence page. Tatum verifies Sui Mainnet reads. Walrus holds thirteen verified synthetic records, including two corrections. A fresh process recalled the history and reproduced the same calculation."
+      "title": "Recall from Walrus, live",
+      "text": "Now I click Recall from Walrus. This makes a real Mainnet request for the published synthetic records. Their identifiers and content hashes must match. The recalled history reproduces the same hundred-and-fifty USDC decision."
     },
     {
       "id": "scene-11",
-      "title": "Corrections survive recall",
-      "text": "Those corrections matter. Updating the reserve changes the proposed reduction. Correcting a payment's client removes it from the wrong history, so an old fact can't quietly drive the next estimate."
+      "title": "Remember corrections too",
+      "text": "Memory must also remember corrections. The recalled reserve update changes the reduction to one hundred USDC. A separate client correction removes the wrong payment from that history, so an old fact cannot quietly drive the next forecast."
     },
     {
       "id": "scene-12",
-      "title": "What the results show",
-      "text": "We publish the misses too. This synthetic replay had fewer reserve breaches, but worse timing accuracy and some unnecessary reductions. Real user trials and a funded parser purchase still need verification. That's Runway: a clear decision you can inspect, review, and keep."
+      "title": "A finance decision you can keep",
+      "text": "This is the Consumer Finance idea: separate cash from promises, protect bills before a late payment, and carry payment lessons between sessions. The replay publishes its misses too. Runway gives freelancers a decision they can inspect, review, and keep."
     }
   ]
 }

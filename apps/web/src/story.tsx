@@ -3,7 +3,7 @@ import demoNarration from "../../../video/narration.json";
 export default function Story() {
   return (
     <article className="public-copy build-story">
-      <p className="eyebrow">Build notes · 22 October 2026</p>
+      <p className="eyebrow">Consumer Finance Apps · Updated 29 October 2026</p>
       <h1>
         My client said Friday.
         <br />
@@ -44,8 +44,9 @@ export default function Story() {
           Your browser cannot play this video. Read the transcript below.
         </video>
         <p className="helper">
-          An actual app recording with English male narration and captions. All
-          financial examples are synthetic. No agent payment is made.
+          An actual app recording with English male narration and captions:
+          signed Sui wallet, live Tatum balance, a labelled synthetic finance
+          example, and live Walrus recall. No funds are transferred.
         </p>
         <details>
           <summary>Read the demo transcript</summary>
@@ -90,6 +91,14 @@ export default function Story() {
         builder's receipt evidence stay private.
       </p>
       <h2>What Walrus remembers</h2>
+      <p>
+        Click Recall from Walrus on the evidence page to retrieve the published
+        synthetic history and policy versions now. All twelve useful records
+        must match their identifiers, blobs and content hashes before the app
+        recomputes the original 150 USDC adjustment and corrected 100 USDC
+        result. A remote failure remains visible instead of falling back to
+        local history.
+      </p>
       <p>
         Ten useful synthetic records capture resolved payments, reserve policy,
         obligations, an invoice expectation, a lesson and a proposal. Each

@@ -6,13 +6,13 @@ The implementation, synthetic Mainnet correction proof, engineering replay, buil
 
 A dedicated unfunded wallet and challenge secret are already prepared in ignored mode600 `.env.agent`; do not generate another key or paste this file into chat. The public funding address and proposed owner/recipient are in ignored `research/tool-wallet-public.json`.
 
-Confirm that the proposed owner/recipient is your intended Sui wallet. Back up the dedicated tool key through your usual secure process. Fund only that tool wallet with native Sui Mainnet USDC and SUI for gas; each parser call costs 0.01 USDC plus gas. It stays outside planner balances. No funding transfer has been submitted by the agent.
+The supplied demo wallet was verified on 29 October and matches the previously proposed receiving address. Back up the dedicated tool key through your usual secure process. Fund only that tool wallet with native Sui Mainnet USDC and SUI for gas; each parser call costs 0.01 USDC plus gas. It stays outside planner balances. No funding transfer has been submitted by the agent.
 
 After funding/confirmation, the deployment can be configured from these secure files. In your allowlisted signed workspace, approve spending limits, request a quote and explicitly approve one purchase. Review the resulting draft before saving. [INVOICE_AGENT.md](INVOICE_AGENT.md) describes exact limits and same-operation recovery. An agent must not approve the purchase as though it were you.
 
 ## 2. Sign in and verify your receiving-wallet allocation
 
-The existing receipt passed the real Tatum adapter. Its digest/recipient remain in ignored `research/tatum-smoke.json`. Sign into the receiving wallet's Runway workspace, open the intended invoice, verify the known digest and allocate the appropriate amount. This requires the owner signature and invoice choice; the backend does not need your primary private key.
+The existing receipt passed the real Tatum adapter. Its digest/recipient remain in ignored `research/tatum-smoke.json`. Sign into the receiving wallet's Runway workspace, open the intended invoice, verify the known digest and allocate the appropriate amount. The supplied wallet has now completed a real signed demo session and Tatum balance refresh. Allocating that receipt still requires choosing the intended invoice; the backend does not need your primary private key.
 
 ## 3. Choose whether to publish personal memory
 
@@ -24,7 +24,7 @@ No outreach or user sessions have occurred. Use [USER_STUDY_KIT.md](USER_STUDY_K
 
 ## 5. Review identity, eligibility and submit
 
-[SUBMISSION.md](SUBMISSION.md) contains ready project/build-experience answers and public app, blog, source and video links. Existing public Memory account/delegate IDs and the proposed Sui address are prepared in ignored mode600 `research/submission-fields.private.json`. Supply or confirm contact/referral details, first-Web3 status, Tatum dashboard ID and intended wallet/account identity. Review eligibility and the terms yourself before final submission. No terms have been accepted or form sent on your behalf.
+[SUBMISSION.md](SUBMISSION.md) contains ready project/build-experience answers and public app, blog, source and video links. The supplied Sui wallet and current public Memory account/delegate IDs were re-derived on 29 October in ignored mode600 `research/form-identifiers-2026-10-29.json`. Supply or confirm contact/referral details, first-Web3 status, Tatum dashboard ID and review the supplied wallet/account identity. Review eligibility and the terms yourself before final submission. No terms have been accepted or form sent on your behalf.
 
 Current deadline is 10 November 2026, 17:00 UTC / 18:00 Lagos. The rules' mission contradiction and special-award interpretation remain organizer questions; the application does not claim AI Builder qualification. The demo video has English male neural narration synchronized to the actual app flow, optional English captions and a written transcript; no recording is needed from you to use this package.
 
