@@ -2703,6 +2703,8 @@ function Privacy() {
   );
 }
 function Evidence() {
+  const recallAction = useAction(),
+    [recalled, setRecalled] = useState<any>(null);
   const q = useQuery({
     queryKey: ["public-evidence"],
     queryFn: () => api("/evidence"),
@@ -2717,6 +2719,66 @@ function Evidence() {
           operations. The example uses synthetic data.
         </p>
         <ErrorNote error={q.error} />
+        <section className="evidence-block">
+          <h2>Recall the published example</h2>
+          <p>
+            Retrieve the synthetic payment history and corrections from Walrus
+            Mainnet, then calculate the decision again.
+          </p>
+          <Button
+            busy={recallAction.busy}
+            onClick={() =>
+              void recallAction.run(async () => {
+                setRecalled(null);
+                setRecalled(await api("/evidence/recall"));
+              })
+            }
+          >
+            Recall from Walrus
+          </Button>
+          <ErrorNote error={recallAction.error} />
+          {recalled ? (
+            <div role="status" aria-live="polite">
+              <p>
+                <strong>
+                  Recalled now: {recalled.recordsRetrieved} matching records
+                </strong>
+              </p>
+              <dl className="record-details">
+                <dt>Past payment delays</dt>
+                <dd>3, 4, 4 and 5 days</dd>
+                <dt>Expected payment</dt>
+                <dd>Tuesday 3 November, after Monday rent</dd>
+                <dt>Original reserve: 100 USDC</dt>
+                <dd>
+                  Reduce by{" "}
+                  {formatMoney(recalled.original.totalReductionAtomic)} USDC
+                </dd>
+                <dt>Corrected reserve: 50 USDC</dt>
+                <dd>
+                  Reduce by{" "}
+                  {formatMoney(recalled.corrected.totalReductionAtomic)} USDC
+                </dd>
+                <dt>Corrected client association</dt>
+                <dd>
+                  {recalled.correctedClientHistory.sampleCount} active payments;
+                  insufficient history for a timing estimate
+                </dd>
+                <dt>Retrieved at</dt>
+                <dd>{new Date(recalled.verifiedAt).toLocaleString("en-GB")}</dd>
+              </dl>
+              <p className="helper">
+                The reserve comparison holds the original history fixed.
+                Correcting the client association is a separate check. This
+                synthetic recall writes no records and moves no funds.
+              </p>
+              <details>
+                <summary>Inspect this live recall</summary>
+                <pre>{JSON.stringify(recalled, null, 2)}</pre>
+              </details>
+            </div>
+          ) : null}
+        </section>
         {q.isPending ? (
           <Loading />
         ) : q.data ? (

@@ -47,6 +47,7 @@ import { scheduledJobs } from "./scheduled-jobs.js";
 import { InvoiceAgent } from "./services/invoice-agent.js";
 import { PaidParser } from "./services/paid-parser.js";
 import { registerInvoiceTools } from "./invoice-tools.js";
+import { recallPublishedExample } from "./services/published-recall.js";
 
 type Session = { workspace_id: string; csrf: string; token_hash: string };
 const API = "/api/v1";
@@ -80,12 +81,13 @@ export async function createApp(
     serveStatic?: boolean;
     background?: (operation: Promise<unknown>) => void;
     tools?: InvoiceAgent;
+    memory?: MemoryAdapter;
   } = {},
 ) {
   const db = options.db || new Database();
   await db.initialize();
   const chain = options.chain || new TatumAdapter(),
-    mem = new MemoryAdapter(),
+    mem = options.memory || new MemoryAdapter(),
     tools = options.tools || new InvoiceAgent(db, chain);
   const drainJobs = scheduledJobs(db, chain, mem, tools);
   const app = Fastify({
@@ -178,6 +180,7 @@ export async function createApp(
     if (
       path.startsWith(API + "/health/") ||
       path === API + "/evidence" ||
+      path === API + "/evidence/recall" ||
       [
         API + "/demo/session",
         API + "/auth/challenge",
@@ -373,6 +376,21 @@ export async function createApp(
       ),
     });
   });
+  let publicRecall: ReturnType<typeof recallPublishedExample> | undefined;
+  app.get(
+    API + "/evidence/recall",
+    {
+      config: { rateLimit: { max: 3, timeWindow: "1 minute" } },
+    },
+    async (req, reply) => {
+      reply.header("Cache-Control", "no-store");
+      // Share concurrent in-flight work only. A later click always retrieves again.
+      publicRecall ??= recallPublishedExample(mem).finally(() => {
+        publicRecall = undefined;
+      });
+      return data(req, await publicRecall);
+    },
+  );
   app.post(
     API + "/demo/session",
     { config: { rateLimit: { max: 12, timeWindow: "1 minute" } } },

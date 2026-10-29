@@ -1,47 +1,59 @@
 # Runway
 
-Try the hosted app at **https://runway-ten-xi.vercel.app**.
+**Your client says Friday. Your payment history says Tuesday. Rent is due Monday.**
 
-Runway is an implemented cash-flow planner for freelancers paid in stablecoins. It keeps expected income separate from confirmed funds, models payment-delay scenarios, and proposes the smallest permitted reduction in flexible spending. Fixed bills and the reserve remain constraints.
+Runway helps freelancers paid in stablecoins make a spending decision before a late invoice becomes a missed bill. Built for the **Consumer Finance Apps** track of the [Tatum × Walrus Total Recall hackathon](https://tatum.io/hackathon/total-recall).
 
-The responsive app includes an isolated wallet-free example, Sui wallet sign-in, invoices and CSV review, expenses, plan acceptance, receipt reconciliation, corrected payment history, activity, and memory inspection. The invoice assistant adds a free synthetic sample and an optional paid text/PDF extraction flow with Sui MPP, separate tool-wallet limits, durable payment recovery and explicit draft confirmation. Paid execution requires configuration and is disabled by default; no funded parser purchase is claimed. Start with Node 22 and `pnpm install --frozen-lockfile`, then `pnpm dev:all`. Open http://localhost:5174. See the [runbook](docs/RUNBOOK.md) and [invoice agent guide](docs/INVOICE_AGENT.md) for configuration, tests, production execution, and recovery.
+- [Live app](https://runway-ten-xi.vercel.app)
+- [Try the wallet-free example](https://runway-ten-xi.vercel.app/demo)
+- [Watch the narrated demo and read the build story](https://runway-ten-xi.vercel.app/story)
+- [Inspect the evidence and trigger live Walrus recall](https://runway-ten-xi.vercel.app/evidence)
+- [Submission answers](docs/SUBMISSION.md)
 
-Verified locally: exact optimizer/property cases, scoped API and nonce/CSRF/idempotency tests, persistent restart, browser save/reload journey, responsive accessibility at 1440/390/320 pixels, and production build/startup. Tatum authenticated Sui Mainnet metadata, balance and a funded native-USDC receipt passed the real adapter checks. Authenticated invoice allocation remains pending. Walrus Memory recovered during verification: a reconciled compatibility record and ten useful synthetic records were stored and retrieved on Mainnet. A fresh process reproduced the database-backed history result from remote content with matching hashes; historical provider failures remain preserved. Two additional synthetic corrections now pass fresh-process retrieval and supersession checks, bringing total content-verified Mainnet records to thirteen including compatibility. A frozen synthetic temporal replay reports all adverse cases and does not establish better forecasting. Real user trials and a funded agent purchase remain open. An administrative recovery command now verifies existing completed jobs and preserves interrupted submission evidence without resubmitting. The Vercel release passed hosted save/reload, responsive accessibility, wallet-module and authenticated Tatum-job checks; evidence is recorded in `docs/deployment-gate.json`. See [sponsor compatibility](docs/integration-compatibility.md) and the [recovery runbook](docs/RUNBOOK.md#sponsor-gates-and-memory-recovery).
+## The decision
 
-The [published build story and narrated demo](https://runway-ten-xi.vercel.app/story), [submission draft](docs/SUBMISSION.md), and [user study kit](docs/USER_STUDY_KIT.md) provide the current presentation package. Run `pnpm evaluate` for the synthetic temporal replay and `pnpm evidence:corrections verify` for read-only remote supersession proof with configured credentials. See [the evaluation report](docs/evaluation.json) for complete denominators and failures. History performed worse on mean timing error in this authored mixture; these results are not real-user evidence.
+A dated synthetic example starts with **800 USDC confirmed**, a **1,200 USDC unpaid invoice**, a **250 USDC Saturday purchase**, **600 USDC Monday rent**, and a **100 USDC reserve**.
 
-The [handoff](docs/HANDOFF.md) lists the exact remaining wallet, consent, user-research and submission actions.
+The promised Friday payment makes the projection look comfortable. Four past payments arrived 3, 4, 4 and 5 days late, moving the estimate to Tuesday. Runway identifies Monday rent as exposed and proposes the smallest permitted adjustment: **reduce the flexible purchase by 150 USDC**, leaving it at 100. The user reviews and saves the plan; fixed bills and the reserve remain constraints. Saving moves no funds. Expected income never increases funds available now.
 
-The sections below preserve the original research and strategy. They describe planned acceptance evidence and award goals, not completed user research or sponsor milestones.
+The no-payment stress test independently finds the same conservative adjustment. History supplies an inspectable reason to consider that delay, rather than a guarantee of when the client will pay.
 
-## Research and build strategy
+## What makes the memory useful
 
-Prepared 21 October 2026 for the [Tatum × Walrus Total Recall hackathon](https://tatum.io/hackathon/total-recall).
+**Tatum** performs authenticated Sui Mainnet gRPC reads for native-USDC metadata, balances and known-digest receipt verification. Wallet sign-in uses a real Sui personal-message signature. Receipt allocation is explicit and limited to the signed workspace; merely finding a transaction does not settle an invoice.
 
-**Recommendation: build Runway, a cash-flow agent for freelancers paid in stablecoins.** Its distinctive feature is a payment-delay stress test: identify the first obligation exposed by a late invoice and the smallest permitted spending adjustment that covers it. Tatum verifies Sui receipts; Walrus Memory carries payment lessons and user corrections between sessions.
+**Walrus Memory** persists structured outcomes, policy, obligations, expectations, lessons and decision evidence. Thirteen synthetic Mainnet records have completed, content-matched evidence: ten useful originals, two corrections and one compatibility record.
 
-The core promise: **“Your client says Friday. Your payment history says Tuesday. Runway remembers the difference.”** Runway is a working name, not a cleared trademark or domain.
+On the evidence page, **Recall from Walrus** makes a live request for all twelve useful records, verifies namespace, logical IDs, blobs and content hashes, and recalculates the decision. The original history reproduces the 150 USDC adjustment. A recalled reserve correction from 100 to 50 USDC changes it to 100 USDC. Separately, correcting a client's payment association leaves only three active payments, so the engine refuses to reuse the stale four-payment estimate. Remote failure is shown as a failure; local history is never substituted for this recall.
 
-The revised plan targets **9/10 competitiveness**, conditional on three pieces of evidence: target users demonstrate a costly timing problem, a controlled comparison shows history changes the right decision, and the stress test produces an exact, understandable action. The earlier 7/10 assessment does not rise merely because features were added. Neither rating is a win probability.
+Current financial state remains in PostgreSQL. Memory continuity and correction handling are demonstrated; better forecasting than another store holding identical records is not claimed. The relayer processes plaintext and hosted namespaces are operator-managed. Personal publication requires consent and is disabled on the public deployment.
 
-In the hero replay, 800 USDC must cover a 250 USDC flexible purchase, 600 USDC rent and a 100 USDC reserve. An invoice promised Friday is forecast for Tuesday from prior outcomes. Runway identifies Monday's rent exposure and proposes reducing the purchase by **150 USDC**. Expected income stays separate from confirmed funds. A fresh runtime reproduces the recommendation from authorized memories.
+## Run locally
 
-| Document                                          | What it contains                                                                                                      |
-| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| [Research dossier](RESEARCH.md)                   | Verified winners, pain points, implementation patterns, competitors, candidate comparison, source register            |
-| [Product and technical plan](BUILD_PLAN.md)       | Scope, memory loop, architecture, reconciliation, agent payments, evaluation, demo                                    |
-| [Implementation architecture](ARCHITECTURE.md)    | Exact modules, domain rules, schemas, API contracts, workflows, sponsor adapters, concurrency and operational gates   |
-| [Frontend design specification](DESIGN_SPEC.md)   | Original visual system, every screen/state, circle motion, copy, logo/icons, accessibility and performance acceptance |
-| [Implementation work packages](IMPLEMENTATION.md) | Dependency-ordered build steps, requirement trace, dates, hour budgets, outputs and verification                      |
-| [Validation protocol](VALIDATION.md)              | Interview gates, controlled history comparison, exact stress-test cases and evidence needed for the 9/10 target       |
-| [Delivery plan](DELIVERY.md)                      | Dated milestones, time and cost estimates, fallback gates, judge evidence, submission checklist                       |
+Requires **Node 22** and **pnpm 9**.
 
-Prioritize **Consumer Finance first place** and **Best Walrus Memory**. Pursue **Best Use of Agent Payments** after the validated stress-test and memory loop work. Add the AI Builder award only if the project is genuinely built primarily there and remains technically maintainable. One submission can demonstrate finance and agent workflows; qualification for the Markets track is weaker and requires organizer confirmation.
+```sh
+pnpm install --frozen-lockfile
+cp .env.example .env
+pnpm dev:all
+```
 
-The published event lists three $500 first-place track awards and three $500 special awards, rather than one overall grand prize. Winning all three special awards alongside one first place would total $2,000 if stacking is allowed. This is a conditional prize scenario, not an expected payout or a probability estimate.
+Open http://localhost:5174. The example needs no wallet, funding or sponsor keys. Personal Tatum reads and live published-memory recall require the server-only credentials documented in [.env.example](.env.example). Development uses persistent PGlite; production uses PostgreSQL. Alternate API ports are documented in the [runbook](docs/RUNBOOK.md).
 
-The research and planning package is complete and the local application is implemented. Interviews, prototype trials, authenticated receipt allocation, a funded agent purchase, and actual submission remain future tasks. The build story, narrated recording and submission/research templates are prepared. Completed remote memory and fresh-process parity evidence use labelled synthetic fixtures. No prize or user-validation outcome is claimed. The original 120-hour schedule remains a planning estimate.
+```sh
+pnpm typecheck
+pnpm test
+pnpm copy:check
+pnpm test:e2e
+pnpm build
+```
 
-The project directory is now **`/home/dotmantissa/hackathons/runway`**. The detailed architecture governs implementation choices; the design specification treats [nearhackathon.com](https://nearhackathon.com/) as a craft benchmark and defines an original Runway layout, payment-date orbit, logo and human product copy. It prohibits authored frontend em dashes and emoji. The browser tab and shortcut assets use the same original brand.
+The browser suite expects a running app. The [runbook](docs/RUNBOOK.md) covers deployment, remote recall, recovery, synthetic evaluation and reproducible demo recording.
 
-Full public-page and source-file snapshots are retained in the locally ignored `research/` directory for recovery. Public-facing documents link to their original sources and distinguish verified facts, project authors' claims, and our recommendations. The local recovery checklist is Git ignored and must never be committed.
+## Scope and evidence
+
+The responsive app includes invoices and CSV review, flexible and fixed expenses, scenario comparison, review/save/reload, receipt reconciliation, history corrections, activity and record inspection. An optional invoice assistant extracts selectable text/PDF into a draft that must be reviewed before saving. Its 0.01 native-USDC MPP service is disabled publicly; a funded parser purchase remains unverified. See the [invoice agent guide](docs/INVOICE_AGENT.md).
+
+The [frozen synthetic evaluation](docs/evaluation.json) publishes all 16 eligible forecasts and 19 sparse-history opportunities, including adverse results: timing mean error was 2.1875 days with history versus 1.9375 for promised dates, while simulated reserve breaches fell from five to two with some unnecessary reductions. No customer savings, interviews or real-user trials are claimed. Run `pnpm evaluate` to reproduce it.
+
+See [architecture](ARCHITECTURE.md), [sponsor compatibility](docs/integration-compatibility.md), [evaluation methodology](docs/EVALUATION.md) and [handoff](docs/HANDOFF.md) for implementation details and remaining acceptance work. The original [research](RESEARCH.md), [build plan](BUILD_PLAN.md), [design specification](DESIGN_SPEC.md), [implementation packages](IMPLEMENTATION.md) and [validation protocol](VALIDATION.md) remain available as planning history.

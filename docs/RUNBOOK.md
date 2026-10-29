@@ -10,6 +10,10 @@ pnpm dev:all
 
 Open http://localhost:5174. The API listens on port 3001; Vite proxies `/api`. Configure `APP_ORIGIN` to the exact browser origin. The strict frontend port avoids silently changing the origin. Credentials are server-only and must never use a `VITE_` prefix. The example needs no wallet, chain funding, or memory publication.
 
+If port 3001 is occupied, start the API with `PORT=3017 pnpm dev` and the frontend with `RUNWAY_API_ORIGIN=http://127.0.0.1:3017 pnpm dev:web`. Keep `APP_ORIGIN=http://localhost:5174` for both processes.
+
+The evidence page includes **Recall from Walrus**. Each click calls the read-only `/api/v1/evidence/recall` endpoint, retrieves all twelve published synthetic records with matching namespace, blob and content hashes, and recalculates the original and corrected reserve decisions. It cannot select a personal namespace, writes no memories, and never substitutes local history after a remote failure. Concurrent clicks share only in-flight work; later clicks retrieve again. The endpoint allows three requests per minute per client.
+
 To use local PostgreSQL, run `docker compose up -d postgres` and configure `DATABASE_URL` from `.env.example`. Run `pnpm db:migrate`. Use `INLINE_WORKER=false` with `pnpm worker:dev` only against PostgreSQL. Keep the default inline worker for the embedded database.
 
 ```sh
